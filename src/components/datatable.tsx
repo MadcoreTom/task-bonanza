@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, Table, Text } from "gestalt";
-import { useSelector } from "react-redux";
-import { RootState } from "../state/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, openColumnModal } from "../state/store";
 
 export function DataTable() {
   const headings = useSelector((state: RootState) => state.main.headings);
@@ -21,6 +21,8 @@ export function DataTable() {
 }
 
 function Headings(props: { headings: string[] }) {
+  const dispatch = useDispatch();
+
   const cells = props.headings.map((h, idx) =>
     <Table.HeaderCell key={'h-' + idx}>
       <Button
@@ -28,6 +30,7 @@ function Headings(props: { headings: string[] }) {
         size="sm"
         text={h}
         iconEnd="edit"
+        onClick={()=>dispatch(openColumnModal({idx:idx}))}
       />
     </Table.HeaderCell>)
   return <Table.Row>{cells}</Table.Row>
