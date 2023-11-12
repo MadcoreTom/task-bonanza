@@ -4,98 +4,25 @@ import { Provider, useSelector } from 'react-redux'
 import { RootState, store } from "./state/store";
 import { Button, Flex, Text, Table } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
+import { DataTable } from "./components/datatable";
 
 
 
 function App() {
-    // const viewMode = useSelector((state: RootState) => state.main.viewMode);
 
-    return <div className="main">
-        Wello Horld
-        <Flex>
-            <Button
-                accessibilityLabel="Import"
-                size="lg"
-                text="Import"
-            />
-        </Flex>
-        <Table accessibilityLabel="Sticky footer" maxHeight={200}>
-        <Table.Header sticky>
-          <Table.Row>
-            <Table.HeaderCell>
-              <Text weight="bold">Campaign</Text>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Text weight="bold">Impression</Text>
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              <Text weight="bold">Cost</Text>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row>
-            <Table.Cell>
-              <Text>Spring season</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>10,000</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>$500</Text>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Text>Autumn season</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>10,000</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>$500</Text>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Text>Summer season</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>10,000</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>$500</Text>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row>
-            <Table.Cell>
-              <Text>Winter season</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>10,000</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text>$500</Text>
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
-        <Table.Footer sticky>
-          <Table.Row>
-            <Table.Cell>
-              <Text weight="bold">Total</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text weight="bold">40,000</Text>
-            </Table.Cell>
-            <Table.Cell>
-              <Text weight="bold">$2,000</Text>
-            </Table.Cell>
-          </Table.Row>
-        </Table.Footer>
-      </Table>
-    </div>
+  return <div className="main">
+    Wello Horld
+    <Flex>
+      <Button
+        accessibilityLabel="Import"
+        size="lg"
+        text="Import"
+      />
+    </Flex>
+   <DataTable/>
+  </div>
 }
 
 
 createRoot(document.querySelector("#root") as HTMLElement)
-    .render(<Provider store={store}><App /></Provider>,);
+  .render(<Provider store={store}><App /></Provider>,);

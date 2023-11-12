@@ -1,7 +1,9 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 
 export type State = {
-    test: boolean
+    test: boolean,
+    headings: string[],
+    data: string[][]
 }
 
 export type RootState = {
@@ -11,7 +13,26 @@ export type RootState = {
 const mainSlice = createSlice({
     name: "main",
     initialState: {
-        test: false
+        test: false,
+        headings: ["Key", "Summary", "Status", "Assignee"],
+        data: [
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+            ["ABC-123", "Fix the bugs", "Closed", "Jim"],
+            ["XYZ-999", "Change the blue", "In Progress", "Ben"],
+        ]
     },
     reducers: {
 
