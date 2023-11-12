@@ -1,9 +1,10 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 import { closeColumnModalReducer, openColumnModalReducer } from './reducers/columnModal.reducer'
+import { Column } from './column.types'
 
 export type State = {
     test: boolean,
-    headings: string[],
+    headings: Column[],
     data: string[][]
     columnModalIdx: number | null
 }
@@ -16,7 +17,7 @@ const mainSlice = createSlice({
     name: "main",
     initialState: {
         test: false,
-        headings: ["Key", "Summary", "Status", "Assignee"],
+        headings: ["Key", "Summary", "Status", "Assignee"].map(name => { return { name, type: "FREE_TEXT" } }),
         data: [
             ["ABC-123", "Fix the bugs", "Closed", "Jim"],
             ["XYZ-999", "Change the blue", "In Progress", "Ben"],
@@ -38,8 +39,8 @@ const mainSlice = createSlice({
         columnModalIdx: null
     },
     reducers: {
-        openColumnModal:openColumnModalReducer,
-        closeColumnModal:closeColumnModalReducer
+        openColumnModal: openColumnModalReducer,
+        closeColumnModal: closeColumnModalReducer,
     }
 });
 

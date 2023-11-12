@@ -2,6 +2,7 @@ import * as React from "react";
 import { Button, Table, Text } from "gestalt";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, openColumnModal } from "../state/store";
+import { Column } from "../state/column.types";
 
 export function DataTable() {
   const headings = useSelector((state: RootState) => state.main.headings);
@@ -20,7 +21,7 @@ export function DataTable() {
   </Table>
 }
 
-function Headings(props: { headings: string[] }) {
+function Headings(props: { headings: Column[] }) {
   const dispatch = useDispatch();
 
   const cells = props.headings.map((h, idx) =>
@@ -28,7 +29,7 @@ function Headings(props: { headings: string[] }) {
       <Button
         accessibilityLabel="Import"
         size="sm"
-        text={h}
+        text={h.name}
         iconEnd="edit"
         onClick={()=>dispatch(openColumnModal({idx:idx}))}
       />
@@ -36,8 +37,8 @@ function Headings(props: { headings: string[] }) {
   return <Table.Row>{cells}</Table.Row>
 }
 
-function Row(props: { data: string[], headings: string[] }) {
+function Row(props: { data: string[], headings: Column[] }) {
   return <Table.Row>
-    {props.headings.map((h, i) => <Table.Cell key={i}><Text>{props.data[i]}</Text></Table.Cell>)}
+    {props.headings.map((h, i) => <Table.Cell key={i}><Text>{props.data[i] + "which is a " + h.type}</Text></Table.Cell>)}
   </Table.Row>
 }
