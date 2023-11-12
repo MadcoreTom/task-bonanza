@@ -17,7 +17,13 @@ const mainSlice = createSlice({
     name: "main",
     initialState: {
         test: false,
-        headings: ["Key", "Summary", "Status", "Assignee"].map(name => { return { name, type: "FREE_TEXT" } }),
+        // headings: ["Key", "Summary", "Status", "Assignee"].map(name => { return { name, type: "FREE_TEXT" } as Column}),
+        headings: [
+            { name: "Key", type: "KEY" },
+            { name: "Summary", type: "FREE_TEXT" },
+            { name: "Status", type: "KEYWORD" },
+            { name: "Assignee", type: "KEYWORD" }
+        ],
         data: [
             ["ABC-123", "Fix the bugs", "Closed", "Jim"],
             ["XYZ-999", "Change the blue", "In Progress", "Ben"],

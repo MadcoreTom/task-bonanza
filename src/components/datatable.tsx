@@ -39,6 +39,6 @@ function Headings(props: { headings: Column[] }) {
 
 function Row(props: { data: string[], headings: Column[] }) {
   return <Table.Row>
-    {props.headings.map((h, i) => <Table.Cell key={i}><Text>{props.data[i] + "which is a " + h.type}</Text></Table.Cell>)}
+    {props.headings.map((h, i) => <Table.Cell key={i}><Text>{props.data[i]}</Text></Table.Cell>)}
   </Table.Row>
 }

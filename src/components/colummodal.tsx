@@ -14,7 +14,7 @@ import {
 } from 'gestalt';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, closeColumnModal } from "../state/store";
-import { COLUMN_TYPES } from "../state/column.types";
+import { COLUMN_TYPES, Column } from "../state/column.types";
 
 const HEADER_ZINDEX = new FixedZIndex(10);
 const modalZIndex = new CompositeZIndex([HEADER_ZINDEX]);
@@ -28,8 +28,8 @@ export default function ColumnModal() {
         return;
     }
 
-    const column = headings[columnModalIdx];
-    
+    const column = headings[columnModalIdx] as Column;
+
     const [columnMeta, setColumnMeta] = React.useState(column);
 
     return (
@@ -37,12 +37,12 @@ export default function ColumnModal() {
             <Modal
                 accessibilityModalLabel="Create new board"
                 align="start"
-                heading="Column Metadata"
+                heading={column.name + " Metadata"}
                 onDismiss={() => { }}
                 footer={
                     <Flex alignItems="center" justifyContent="end">
                         <ButtonGroup>
-                            <Button text="Close" onClick={() => dispatch(closeColumnModal())} />
+                            <Button text="Close" onClick={() => dispatch(closeColumnModal(null))} />
                             <Button color="red" text="Save & Close" />
                         </ButtonGroup>
                     </Flex>
@@ -50,8 +50,8 @@ export default function ColumnModal() {
                 size="sm"
             >
                 <Box marginBottom={6} minHeight={500}>
-                    <Text>{column.name} of type {columnMeta.type}</Text>
-                    <ColumnTypeDropdown type={column.type} onClose={t=>setColumnMeta({...columnMeta, type: t})}/>
+                    <Text inline={true}>{column.name} of type {columnMeta.type}</Text>
+                    <ColumnTypeDropdown type={column.type} onClose={t => setColumnMeta({ ...columnMeta, type: t })} />
                 </Box>
             </Modal>
         </Layer>
@@ -66,7 +66,8 @@ if its all numbers or null, then try a number range. you get cool stuff like col
 
 const PAGE_HEADER_ZINDEX = new FixedZIndex(11);
 
-export function ColumnTypeDropdown(props: { type: string, onClose:(type:string)=>void }) {
+// TODO consider a combobox
+export function ColumnTypeDropdown(props: { type: string, onClose: (type: string) => void }) {
     const [open, setOpen] = React.useState(false);
     const x: DropdownOption = {
         label: props.type,
@@ -91,19 +92,17 @@ export function ColumnTypeDropdown(props: { type: string, onClose:(type:string)=
 
     return (
         <React.Fragment>
-            <Box>
-                <Button
-                    accessibilityControls="column-type-dropdown"
-                    accessibilityExpanded={open}
-                    accessibilityHaspopup
-                    iconEnd="arrow-down"
-                    onClick={() => setOpen((prevVal) => !prevVal)}
-                    ref={anchorRef}
-                    selected={open}
-                    size="md"
-                    text={selected.label}
-                />
-            </Box>
+            <Button
+                accessibilityControls="column-type-dropdown"
+                accessibilityExpanded={open}
+                accessibilityHaspopup
+                iconEnd="arrow-down"
+                onClick={() => setOpen((prevVal) => !prevVal)}
+                ref={anchorRef}
+                selected={open}
+                size="md"
+                text={selected.label}
+            />
             {open && (
                 <Dropdown
                     anchor={anchorRef.current}

@@ -1,7 +1,6 @@
-import { SliceCaseReducers } from "@reduxjs/toolkit";
 import { State } from "../store";
 
-export const openColumnModalReducer :SliceCaseReducers<State> = (state: State, action: { payload: { idx: number } }): State => {
+export const openColumnModalReducer = (state: State, action: { payload: { idx: number } }): State => {
     return {
         ...state,
         columnModalIdx: action.payload.idx
