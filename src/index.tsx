@@ -6,6 +6,7 @@ import { Button, Flex, Text, Table, Box, Tabs } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
 import { DataTable } from "./components/datatable";
 import ColumnModal from "./components/colummodal";
+import { Graph } from "./components/graph";
 
 
 
@@ -34,7 +35,7 @@ function App() {
     </Flex>
     <div style={{height: "2px", backgroundColor:"var(--g-colorGray100)"}}></div>
     {activeMode == 1 && <DataTable />}
-    {activeMode == 0 && <Text>Graph</Text>}
+    {activeMode == 0 && <Graph />}
     {
       columnModalIdx == null ? null : <ColumnModal />
     }
