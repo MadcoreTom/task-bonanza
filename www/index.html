@@ -13,6 +13,14 @@
                 height: 600px;
                 background-image: radial-gradient(red 1.6px, #ffffff 1.6px);
                 background-size: 32px 32px;
+
+                -webkit-user-select: none;
+                user-select: none;
+                cursor: grab;
+            }
+            #root > * > *:last-child {
+                flex-grow: 1;
+                overflow-y: auto;
             }
         </style>
         </head>
