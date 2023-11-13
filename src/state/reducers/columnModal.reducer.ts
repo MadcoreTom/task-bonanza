@@ -1,4 +1,4 @@
-import { State } from "../store";
+import { State } from "../state"
 
 export const openColumnModalReducer = (state: State, action: { payload: { idx: number } }): State => {
     return {

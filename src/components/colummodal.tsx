@@ -4,8 +4,6 @@ import {
     Button,
     ButtonGroup,
     CompositeZIndex,
-    Dropdown,
-    DropdownOption,
     FixedZIndex,
     Flex,
     Layer,
@@ -44,7 +42,7 @@ export default function ColumnModal() {
                 footer={
                     <Flex alignItems="center" justifyContent="end">
                         <ButtonGroup>
-                            <Button text="Close" onClick={() => dispatch(closeColumnModal(null))} />
+                            <Button text="Close" onClick={() => dispatch(closeColumnModal())} />
                             <Button color="red" text="Save & Close" />
                         </ButtonGroup>
                     </Flex>
@@ -53,7 +51,7 @@ export default function ColumnModal() {
             >
                 <Box marginBottom={6} minHeight={500}>
                     <Text inline={true}>{column.name} of type {columnMeta.type}</Text>
-                    <MyDropdown value={column.type} options={COLUMN_TYPE_OPTIONS} onClose={t => setColumnMeta({ ...columnMeta, type: t })} />
+                    <MyDropdown value={column.type} options={COLUMN_TYPE_OPTIONS} onClose={t => setColumnMeta({ ...columnMeta, type: t })} label={v=>v} />
                 </Box>
             </Modal>
         </Layer>

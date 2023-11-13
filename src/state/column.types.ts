@@ -13,7 +13,7 @@ export type ColumnType = {
     max: number
 } | {
     type: "KEYWORD",
-    values: string[]
+    // values: string[]
 }
 
 export type Column = {
