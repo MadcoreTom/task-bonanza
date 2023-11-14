@@ -7,6 +7,8 @@ export const COLUMN_TYPES: { name: string, description: string }[] = [
     { name: "Y", description: "y co-ordinate" }
 ]
 
+export type KeywordMeta = {colour?:string,order?:number,emoji?:string};
+
 export type ColumnType = {
     type: "FREE_TEXT"
 } | {
@@ -15,6 +17,7 @@ export type ColumnType = {
     max: number
 } | {
     type: "KEYWORD",
+    mapping: {[key:string] : KeywordMeta}
     // values: string[]
 } | {
     type: "X" | "Y"

@@ -2,13 +2,15 @@ import * as React from "react";
 import { RootState } from "../state/store";
 import { useSelector } from "react-redux";
 
-function GraphNode(props: { text: string, x: number, y: number }) {
+function GraphNode(props: { text: string, x: number, y: number, colour: string }) {
+    console.log(props)
     return <g transform={`translate(${props.x},${props.y})`} onMouseDown={evt => console.log(props.text)}>
         <rect
             x={0} y={0}
             width={200} height={100}
             fill="white"
-            stroke="blue"
+            stroke={props.colour}
+            strokeWidth={2}
         >
         </rect>
 
@@ -23,10 +25,12 @@ export function GraphNodes() {
     const textIdx = headings.map((h, i) => h.name == view.textColumn ? i : null).filter(x => x != null)[0] || 0;
     const xIdx = headings.map((h, i) => h.type == "X" ? i : null).filter(x => x != null)[0] || 0;
     const yIdx = headings.map((h, i) => h.type == "Y" ? i : null).filter(x => x != null)[0] || 0;
+    const colourIdx = headings.map((h, i) => h.name == view.colourColumn ? i : null).filter(x => x != null)[0] || 0;
+    const colourMapping = headings.filter(h=> h.name == view.colourColumn && h.type == "KEYWORD" ).map(h=>h.mapping)[0];
 
     return <g>
         {
-            data.map(row => <GraphNode text={row[textIdx]} x={parseFloat(row[xIdx])} y={parseFloat(row[yIdx])} />)
+            data.map(row => <GraphNode text={row[textIdx]} x={parseFloat(row[xIdx])} y={parseFloat(row[yIdx])} colour={colourMapping[row[colourIdx]]?.colour}/>)
         }
     </g>
 }

@@ -5,16 +5,17 @@ export type State = {
     data: string[][]
     columnModalIdx: number | null,
     view: {
-        textColumn: string
+        textColumn: string,
+        colourColumn: string
     }
 }
 
 export const INITIAL_STATE: State = {
     headings: [
-        { name: "Key", type: "KEYWORD" },
+        { name: "Key", type: "KEYWORD", mapping: {} },
         { name: "Summary", type: "FREE_TEXT" },
-        { name: "Status", type: "KEYWORD" },
-        { name: "Assignee", type: "KEYWORD" },
+        { name: "Status", type: "KEYWORD", mapping: {Closed:{colour:"#888888", emoji:"🏁"},"In Progress":{colour:"blue",emoji:"🏃‍♂️"}}},
+        { name: "Assignee", type: "KEYWORD", mapping: {Sue:{colour:"pink"}} },
         { name: "X", type: "X" },
         { name: "Y", type: "Y" },
     ],
@@ -27,6 +28,7 @@ export const INITIAL_STATE: State = {
     ],
     columnModalIdx: null,
     view: {
-        textColumn: "Assignee"
+        textColumn: "Assignee",
+        colourColumn: "Status"
     }
 }

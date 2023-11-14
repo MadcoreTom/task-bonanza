@@ -20,7 +20,7 @@ export function Graph(props: { nodes: any }) {
     return <React.Fragment>
         <div style={{ height: "100px", marginBottom: "-100px", zIndex: 9 }}>
             <Flex alignContent="center" direction="row" alignItems="center" justifyContent="center" gap={1} >
-                <MyDropdown value={"cat"} options={[{ value: "none", label: "None" }, { value: "cat", label: "Cat" }, { value: "dog", label: "Dog", subtext: "Better than cats" }]} onClose={() => { }} label={v => `Colour${v == "none" ? "" : ": " + v}`} />
+                <MyDropdown value={view.colourColumn} options={headings.filter(h=>h.type == "KEYWORD").map(h=>{return{value:h.name, label:h.name, subtext:h.type}})} onClose={v => {dispatch(setView({colourColumn:v})) }} label={v => `Colour${v == "none" ? "" : ": " + v}`} />
                 <MyDropdown value={"cat"} options={[{ value: "none", label: "None" }, { value: "cat", label: "Cat" }, { value: "dog", label: "Dog", subtext: "Better than cats" }]} onClose={() => { }} label={v => `Emoji${v == "none" ? "" : ": " + v}`} />
                 <MyDropdown value={"cat"} options={[{ value: "none", label: "None" }, { value: "cat", label: "Cat" }, { value: "dog", label: "Dog", subtext: "Better than cats" }]} onClose={() => { }} label={v => `Swimlane${v == "none" ? "" : ": " + v}`} />
                 <MyDropdown value={"cat"} options={[{ value: "none", label: "None" }, { value: "cat", label: "Cat" }, { value: "dog", label: "Dog", subtext: "Better than cats" }]} onClose={() => { }} label={v => `Row${v == "none" ? "" : ": " + v}`} />

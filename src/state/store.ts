@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
-import { closeColumnModalReducer, openColumnModalReducer } from './reducers/columnModal.reducer'
+import { closeColumnModalReducer, openColumnModalReducer, saveColumnReducer } from './reducers/columnModal.reducer'
 import { INITIAL_STATE, State } from './state';
 import { setViewReducer } from './reducers/view.reducer';
 
@@ -14,7 +14,8 @@ const mainSlice = createSlice({
     reducers: {
         openColumnModal: openColumnModalReducer,
         closeColumnModal: closeColumnModalReducer,
-        setView: setViewReducer
+        setView: setViewReducer,
+        saveColumn: saveColumnReducer
     }
 });
 
@@ -27,5 +28,6 @@ export const store = configureStore({
 export const {
     openColumnModal,
     closeColumnModal,
-    setView
+    setView,
+    saveColumn
 } = mainSlice.actions
