@@ -6,7 +6,8 @@ export type State = {
     columnModalIdx: number | null,
     view: {
         textColumn: string,
-        colourColumn: string
+        colourColumn: string,
+        emojiColumn: string
     }
 }
 
@@ -15,7 +16,7 @@ export const INITIAL_STATE: State = {
         { name: "Key", type: "KEYWORD", mapping: {} },
         { name: "Summary", type: "FREE_TEXT" },
         { name: "Status", type: "KEYWORD", mapping: {Closed:{colour:"#888888", emoji:"🏁"},"In Progress":{colour:"blue",emoji:"🏃‍♂️"}}},
-        { name: "Assignee", type: "KEYWORD", mapping: {Sue:{colour:"pink"}} },
+        { name: "Assignee", type: "KEYWORD", mapping: {Sue:{colour:"pink", emoji: "💃"},Tom:{emoji:"♥",colour:"blue"}} },
         { name: "X", type: "X" },
         { name: "Y", type: "Y" },
     ],
@@ -28,7 +29,8 @@ export const INITIAL_STATE: State = {
     ],
     columnModalIdx: null,
     view: {
-        textColumn: "Assignee",
-        colourColumn: "Status"
+        textColumn: "Summary",
+        colourColumn: "Status",
+        emojiColumn: "Assignee"
     }
 }

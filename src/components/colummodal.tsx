@@ -127,9 +127,9 @@ function KeywordConfig(props:{updateMapping:(key:string,partial:Partial<KeywordM
                 id={`mapping-emoji-${i}`}
                 label="Emoji"
                 onChange={evt => props.updateMapping(k,{emoji:evt.value})}
-                placeholder="🙂"
+                placeholder=""
                 type="text"
-                value={mapping[k].emoji}
+                value={mapping[k].emoji || ""}
             /></Text></Table.Cell>
         </Table.Row>
 
