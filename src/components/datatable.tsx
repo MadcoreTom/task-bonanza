@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Button, Table, Text } from "gestalt";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, openColumnModal } from "../state/store";
+import { RootState, openColumnModal, openNodeModal } from "../state/store";
 import { Column } from "../state/column.types";
 
 export function DataTable() {
@@ -15,7 +15,7 @@ export function DataTable() {
     </Table.Header>
     <Table.Body>
       {
-        filteredData.map((d, idx) => <Row data={d} headings={headings} key={idx} />)
+        filteredData.map((d, idx) => <Row data={d} headings={headings} key={idx} idx={idx}/>)
       }
     </Table.Body>
   </Table>
@@ -37,8 +37,10 @@ function Headings(props: { headings: Column[] }) {
   return <Table.Row>{cells}</Table.Row>
 }
 
-function Row(props: { data: string[], headings: Column[] }) {
+function Row(props: { data: string[], headings: Column[], idx: number }) {
+  const dispatch = useDispatch();
   return <Table.Row>
     {props.headings.map((h, i) => <Table.Cell key={i}><Text>{props.data[i]}</Text></Table.Cell>)}
+    <Table.Cell><Button text="Edit" onClick={() => dispatch(openNodeModal(props.idx))} /></Table.Cell>
   </Table.Row>
 }

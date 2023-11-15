@@ -10,6 +10,7 @@ export type State = {
     headings: Column[],
     data: string[][]
     columnModalIdx: number | null,
+    nodeModalIdx: number | null,
     view: ViewState
 }
 
@@ -31,6 +32,7 @@ export const INITIAL_STATE: State = {
         ["GHI-004", "Update documentation", "Open", "Tom","2", "10", "-50"],
     ],
     columnModalIdx: null,
+    nodeModalIdx: null,
     view: {
         textColumn: "Summary",
         colourColumn: "Estimate",

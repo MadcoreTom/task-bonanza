@@ -8,11 +8,13 @@ import { DataTable } from "./components/datatable";
 import ColumnModal from "./components/colummodal";
 import { Graph } from "./components/graph";
 import { GraphNodes } from "./components/graph.node";
+import { NodeModal } from "./components/node.modal";
 
 
 
 function App() {
   const columnModalIdx = useSelector((state: RootState) => state.main.columnModalIdx);
+  const nodeModalIdx = useSelector((state: RootState) => state.main.nodeModalIdx);
   const [activeMode, setActiveMode] = React.useState(0);
 
   return <Flex direction="column" height="100vh" justifyContent="start">
@@ -39,6 +41,9 @@ function App() {
     {activeMode == 0 && <Graph nodes={<GraphNodes />}/>}
     {
       columnModalIdx == null ? null : <ColumnModal />
+    }
+    {
+      nodeModalIdx != null && <NodeModal idx={nodeModalIdx}/>
     }
   </Flex>
 }
