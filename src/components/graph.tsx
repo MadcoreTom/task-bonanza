@@ -1,8 +1,11 @@
 import * as React from "react";
-import { Flex } from 'gestalt'
+import { Flex , DropdownOption} from 'gestalt'
 import { MyDropdown } from "./dropdown";
 import { RootState, setView } from "../state/store";
 import { useSelector, useDispatch } from 'react-redux'
+import { ViewState } from "../state/state";
+import { Column } from "../state/column.types";
+import { Dispatch } from "@reduxjs/toolkit";
 
 export function Graph(props: { nodes: any }) {
     let [offset, setOffset] = React.useState([0, 0]);
@@ -20,11 +23,7 @@ export function Graph(props: { nodes: any }) {
     return <React.Fragment>
         <div style={{ height: "100px", marginBottom: "-100px", zIndex: 9 }}>
             <Flex alignContent="center" direction="row" alignItems="center" justifyContent="center" gap={1} >
-                <MyDropdown value={view.colourColumn} options={headings.filter(h=>h.type == "KEYWORD").map(h=>{return{value:h.name, label:h.name, subtext:h.type}})} onClose={v => {dispatch(setView({colourColumn:v})) }} label={v => `Colour${v == "none" ? "" : ": " + v}`} />
-                <MyDropdown value={view.emojiColumn} options={headings.filter(h=>h.type == "KEYWORD").map(h=>{return{value:h.name, label:h.name, subtext:h.type}})} onClose={v => {dispatch(setView({emojiColumn:v})) }} label={v => `Emoji${v == "none" ? "" : ": " + v}`} />
-                <MyDropdown value={"cat"} options={[{ value: "none", label: "None" }, { value: "cat", label: "Cat" }, { value: "dog", label: "Dog", subtext: "Better than cats" }]} onClose={() => { }} label={v => `Swimlane${v == "none" ? "" : ": " + v}`} />
-                <MyDropdown value={"cat"} options={[{ value: "none", label: "None" }, { value: "cat", label: "Cat" }, { value: "dog", label: "Dog", subtext: "Better than cats" }]} onClose={() => { }} label={v => `Row${v == "none" ? "" : ": " + v}`} />
-                <MyDropdown value={view.textColumn} options={headings.filter(h=>h.type == "FREE_TEXT" || h.type == "KEYWORD").map(h=>{return{value:h.name, label:h.name, subtext:h.type}})} onClose={v => {dispatch(setView({textColumn:v})) }} label={v => `Text${v == "none" ? "" : ": " + v}`} />
+                {DROPDOWNS.map((d,i)=>d.render(view,headings, dispatch))}
             </Flex>
         </div>
         <svg height="600"
@@ -38,3 +37,65 @@ export function Graph(props: { nodes: any }) {
         </svg>
     </React.Fragment>
 }
+
+
+abstract class ViewDropdown {
+    constructor(private readonly key: keyof ViewState, private readonly prefix: string) {
+
+    }
+
+    render(view: ViewState, headings: Column[], dispatch: Dispatch) {
+        return <MyDropdown
+            value={this.getValue(view)}
+            options={this.getOptions(headings)}
+            label={this.getLabel()}
+            onClose={v => this.onClose(v, dispatch)}
+        />
+    }
+
+    getValue(view: ViewState): string {
+        return view[this.key];
+    }
+    getLabel(): (selected: string)=>string {
+        return  (selected: string)=>this.prefix + ": " + selected;
+    }
+    abstract getOptions(headings: Column[]): DropdownOption[];
+    onClose(selected: string, dispatch: Dispatch) {
+        dispatch(setView({ [this.key]: selected }));
+    }
+}
+
+class EmojiViewDropdown extends ViewDropdown {
+    constructor() {
+        super("emojiColumn", "Emoji")
+    }
+
+    getOptions(headings: Column[]) {
+        return headings.filter(h => h.type == "KEYWORD")
+            .map(h => { return { value: h.name, label: h.name, subtext: h.type } })
+    }
+}
+
+class ColourViewDropdown extends ViewDropdown {
+    constructor() {
+        super("colourColumn", "Colour")
+    }
+
+    getOptions(headings: Column[]) {
+        return headings.filter(h => h.type == "KEYWORD" || h.type == "NUMBER")
+            .map(h => { return { value: h.name, label: h.name, subtext: h.type } })
+    }
+}
+class TextViewDropdown extends ViewDropdown {
+    constructor() {
+        super("textColumn", "Text")
+    }
+
+    getOptions(headings: Column[]) {
+        return headings.filter(h => h.type != "X" && h.type != "Y")
+            .map(h => { return { value: h.name, label: h.name, subtext: h.type } })
+    }
+}
+
+
+const DROPDOWNS: ViewDropdown[] = [new TextViewDropdown(), new ColourViewDropdown(), new EmojiViewDropdown()];

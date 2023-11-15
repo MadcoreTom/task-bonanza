@@ -17,7 +17,7 @@ function App() {
 
   return <Flex direction="column" height="100vh" justifyContent="start">
     <Flex alignContent="center" justifyContent="between" alignItems="baseline">
-      <Text size="400" weight="bold">Task Bonanza
+      <Text size="400" weight="bold"><span className="title">Task Bonanza</span>
       </Text>
 
       <Tabs

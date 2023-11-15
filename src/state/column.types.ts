@@ -14,7 +14,9 @@ export type ColumnType = {
 } | {
     type: "NUMBER",
     min: number,
-    max: number
+    max: number,
+    minRGB: [number,number,number],
+    maxRGB: [number,number,number]
 } | {
     type: "KEYWORD",
     mapping: {[key:string] : KeywordMeta}

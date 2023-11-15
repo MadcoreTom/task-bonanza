@@ -31,10 +31,26 @@ export function GraphNodes() {
     const xIdx = headings.map((h, i) => h.type == "X" ? i : null).filter(x => x != null)[0] || 0;
     const yIdx = headings.map((h, i) => h.type == "Y" ? i : null).filter(x => x != null)[0] || 0;
     const colourIdx = headings.map((h, i) => h.name == view.colourColumn ? i : null).filter(x => x != null)[0] || 0;
-    const colourMapping = headings.filter(h=> h.name == view.colourColumn && h.type == "KEYWORD" ).map(h=>h.mapping)[0];
     const emojiIdx = headings.map((h, i) => h.name == view.emojiColumn ? i : null).filter(x => x != null)[0] || 0;
     const emojiMapping = headings[emojiIdx].type == "KEYWORD" ? headings[emojiIdx].mapping : {};
-    console.log("EMOJIMAPPING", emojiMapping)
+    
+
+    const colourHeading = headings[colourIdx];
+    let colourMappingFunction:(val:string)=>string = a=>colourHeading.mapping[a]?.colour;
+    if(colourHeading.type == "NUMBER"){
+        colourMappingFunction = v=>{
+            const n = parseFloat(v);
+            const a = (n-colourHeading.min)/(colourHeading.max-colourHeading.min); // 0 to 1
+            const b = 1-a; // 1 to 0
+            const red = colourHeading.minRGB[0] * b + colourHeading.maxRGB[0] * a;
+            const green = colourHeading.minRGB[1] * b + colourHeading.maxRGB[1] * a;
+            const blue = colourHeading.minRGB[2] * b + colourHeading.maxRGB[2] * a;
+            return `rgb(${red},${green},${blue})`
+        }
+        console.log("colours")
+    } else {
+        console.log("CH", colourHeading)
+    }
 
     return <g>
         {
@@ -43,7 +59,7 @@ export function GraphNodes() {
                 text={row[textIdx]}
                  x={parseFloat(row[xIdx])} 
                  y={parseFloat(row[yIdx])} 
-                 colour={colourMapping[row[colourIdx]]?.colour}
+                 colour={colourMappingFunction(row[colourIdx])}
                  emoji={emojiMapping[row[emojiIdx]]?.emoji}
                  />
             )

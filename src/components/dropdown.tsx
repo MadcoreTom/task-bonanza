@@ -12,7 +12,7 @@ const PAGE_HEADER_ZINDEX = new FixedZIndex(11);
 
 export function MyDropdown(props: { value: string, options: DropdownOption[], onClose: (type: string) => void, label:(selected:string)=>string }) {
     const [open, setOpen] = React.useState(false);
-    const x = props.options.filter(o => o.value == props.value)[0];
+    const x = props.options.filter(o => o.value == props.value)[0] || "";
     const [selected, setSelected] = React.useState(x);
     const anchorRef = React.useRef(null);
 
