@@ -12,7 +12,7 @@ export type State = {
     columnModalIdx: number | null,
     nodeModalIdx: number | null,
     view: ViewState,
-    selected: null | {x:number,y:number}
+    selected: null | {x:number,y:number, idx:number}
 }
 
 export const INITIAL_STATE: State = {

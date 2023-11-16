@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const TILE_WIDTH = 150;
 
-function GraphNode(props: { text: string, x: number, y: number, colour: string, emoji?:string }) {
+function GraphNode(props: { text: string, x: number, y: number, colour: string, emoji?:string, idx:number }) {
     const dispatch = useDispatch();
     console.log(props)
     return <g transform={`translate(${props.x},${props.y})`} onMouseDown={evt => console.log(props.text)}>
@@ -16,7 +16,7 @@ function GraphNode(props: { text: string, x: number, y: number, colour: string, 
             strokeWidth={2}
             rx={10}
             className="hoverable"
-            onMouseDown={evt=>{dispatch(selectNode({x:props.x,y:props.y}));evt.stopPropagation();}}
+            onMouseDown={evt=>{dispatch(selectNode({x:props.x,y:props.y, idx:props.idx}));evt.stopPropagation();}}
         >
         </rect>
 
@@ -35,7 +35,8 @@ export function GraphNodes() {
     const colourIdx = headings.map((h, i) => h.name == view.colourColumn ? i : null).filter(x => x != null)[0] || 0;
     const emojiIdx = headings.map((h, i) => h.name == view.emojiColumn ? i : null).filter(x => x != null)[0] || 0;
     const emojiMapping = headings[emojiIdx].type == "KEYWORD" ? headings[emojiIdx].mapping : {};
-    
+   
+    console.log("💲 nodes redraw");
 
     const colourHeading = headings[colourIdx];
     let colourMappingFunction:(val:string)=>string = a=>colourHeading.mapping[a]?.colour;
@@ -49,20 +50,19 @@ export function GraphNodes() {
             const blue = colourHeading.minRGB[2] * b + colourHeading.maxRGB[2] * a;
             return `rgb(${red},${green},${blue})`
         }
-        console.log("colours")
-    } else {
-        console.log("CH", colourHeading)
     }
 
     return <g>
         {
-            data.map(row => 
+            data.map((row,i) => 
                 <GraphNode 
                 text={row[textIdx]}
                  x={parseFloat(row[xIdx])} 
                  y={parseFloat(row[yIdx])} 
                  colour={colourMappingFunction(row[colourIdx])}
                  emoji={emojiMapping[row[emojiIdx]]?.emoji}
+                 idx={i}
+                 key={i}
                  />
             )
         }
