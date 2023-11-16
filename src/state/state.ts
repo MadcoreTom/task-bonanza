@@ -11,7 +11,8 @@ export type State = {
     data: string[][]
     columnModalIdx: number | null,
     nodeModalIdx: number | null,
-    view: ViewState
+    view: ViewState,
+    selected: null | {x:number,y:number}
 }
 
 export const INITIAL_STATE: State = {
@@ -37,5 +38,6 @@ export const INITIAL_STATE: State = {
         textColumn: "Summary",
         colourColumn: "Estimate",
         emojiColumn: "Assignee"
-    }
+    },
+    selected: null
 }

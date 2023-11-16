@@ -1,10 +1,11 @@
 import * as React from "react";
-import { RootState } from "../state/store";
-import { useSelector } from "react-redux";
+import { RootState, selectNode } from "../state/store";
+import { useDispatch, useSelector } from "react-redux";
 
 const TILE_WIDTH = 150;
 
 function GraphNode(props: { text: string, x: number, y: number, colour: string, emoji?:string }) {
+    const dispatch = useDispatch();
     console.log(props)
     return <g transform={`translate(${props.x},${props.y})`} onMouseDown={evt => console.log(props.text)}>
         <rect
@@ -15,6 +16,7 @@ function GraphNode(props: { text: string, x: number, y: number, colour: string, 
             strokeWidth={2}
             rx={10}
             className="hoverable"
+            onMouseDown={evt=>{dispatch(selectNode({x:props.x,y:props.y}));evt.stopPropagation();}}
         >
         </rect>
 

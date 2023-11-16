@@ -1,41 +1,72 @@
 import * as React from "react";
-import { Flex , DropdownOption} from 'gestalt'
+import { Flex, DropdownOption } from 'gestalt'
 import { MyDropdown } from "./dropdown";
-import { RootState, setView } from "../state/store";
+import { RootState, dragNode, releaseNode, setView } from "../state/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { ViewState } from "../state/state";
 import { Column } from "../state/column.types";
 import { Dispatch } from "@reduxjs/toolkit";
+import { GraphGhost } from "./graph.ghost";
 
 export function Graph(props: { nodes: any }) {
-    let [offset, setOffset] = React.useState([0, 0]);
 
     const headings = useSelector((state: RootState) => state.main.headings);
     const view = useSelector((state: RootState) => state.main.view);
     const dispatch = useDispatch();
 
-    function onDrag(evt: React.MouseEvent) {
-        if (evt.buttons > 0) {
-            setOffset([offset[0] + evt.movementX, offset[1] + evt.movementY])
-        }
-    }
+
+    console.log("💲 Graph redraw")
 
     return <React.Fragment>
         <div style={{ height: "100px", marginBottom: "-100px", zIndex: 9 }}>
             <Flex alignContent="center" direction="row" alignItems="center" justifyContent="center" gap={1} >
-                {DROPDOWNS.map((d,i)=>d.render(view,headings, dispatch))}
+                {DROPDOWNS.map((d, i) => d.render(view, headings, dispatch))}
             </Flex>
         </div>
-        <svg height="600"
-            id="graph"
-            onMouseMoveCapture={onDrag}
-            style={{ backgroundPosition: `${offset[0]}px ${offset[1]}px` }}
-            onContextMenu={(e) => e.preventDefault()}>
-            <g transform={`translate(${offset[0]},${offset[1]})`}>
-                {props.nodes}
-            </g>
-        </svg>
+        <PannableSvg>
+            {props.nodes}
+            <GraphGhost />
+        </PannableSvg>
     </React.Fragment>
+}
+
+/**
+ * Creates a CSV and pans the background and the main <g>
+ * without re-rendering the child components
+ */
+function PannableSvg({ children }) {
+    let [offset, setOffset] = React.useState([0, 0]);
+    const selected = useSelector((state: RootState) => state.main.selected);
+    const dispatch = useDispatch();
+
+    function onDrag(evt: React.MouseEvent) {
+        if (evt.buttons > 0) {
+            if (selected) {
+                dispatch(dragNode({ dx: evt.movementX, dy: evt.movementY }));
+            } else {
+                setOffset([offset[0] + evt.movementX, offset[1] + evt.movementY]);
+            }
+        }
+    }
+
+    function onMouseUp() {
+        if (selected) {
+            dispatch(releaseNode());
+        }
+    }
+
+    return <svg height="600"
+        id="graph"
+        onMouseMoveCapture={onDrag}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+        style={{ backgroundPosition: `${offset[0]}px ${offset[1]}px` }}
+        onContextMenu={(e) => e.preventDefault()}>
+        <g transform={`translate(${offset[0]},${offset[1]})`}>
+            {children}
+        </g>
+    </svg>
+
 }
 
 
@@ -56,8 +87,8 @@ abstract class ViewDropdown {
     getValue(view: ViewState): string {
         return view[this.key];
     }
-    getLabel(): (selected: string)=>string {
-        return  (selected: string)=>this.prefix + ": " + selected;
+    getLabel(): (selected: string) => string {
+        return (selected: string) => this.prefix + ": " + selected;
     }
     abstract getOptions(headings: Column[]): DropdownOption[];
     onClose(selected: string, dispatch: Dispatch) {
