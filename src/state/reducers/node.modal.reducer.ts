@@ -14,3 +14,8 @@ export const closeNodeModalReducer = (state: State): State => {
         nodeModalIdx: null
     }
 }
+
+export const saveRowReducer = (state: State, action: { payload: { idx: number, row: string[] } }) => {
+    state.data[action.payload.idx] = action.payload.row;
+
+}

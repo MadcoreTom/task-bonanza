@@ -3,6 +3,7 @@ import { RootState } from "../state/store";
 import { useSelector } from "react-redux";
 
 const TILE_WIDTH = 150;
+const TILE_HEIGHT = 80;
 
 export function GraphGhost() {
     const selected = useSelector((state: RootState) => state.main.selected);
@@ -14,7 +15,7 @@ export function GraphGhost() {
     return <g transform={`translate(${selected.x},${selected.y})`}>
         <rect
             x={0} y={0}
-            width={TILE_WIDTH} height={100}
+            width={TILE_WIDTH} height={TILE_HEIGHT}
             fill="transparent"
             stroke="teal"
             strokeWidth={2}

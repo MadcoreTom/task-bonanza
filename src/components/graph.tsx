@@ -15,7 +15,7 @@ export function Graph(props: { nodes: any }) {
     const dispatch = useDispatch();
 
 
-    console.log("💲 Graph redraw")
+    console.log("💲💲 Graph redraw")
 
     return <React.Fragment>
         <div style={{ height: "100px", marginBottom: "-100px", zIndex: 9 }}>

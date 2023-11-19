@@ -1,31 +1,48 @@
 import * as React from "react";
-import { RootState, selectNode } from "../state/store";
+import { RootState, openNodeModal, selectNode } from "../state/store";
 import { useDispatch, useSelector } from "react-redux";
 
 const TILE_WIDTH = 150;
+const TILE_HEIGHT = 80;
 
-function GraphNode(props: { text: string, x: number, y: number, colour: string, emoji?:string, idx:number }) {
+function GraphNode(props: { text: string, x: number, y: number, colour: string, emoji?:string, emojiValue:string,idx:number, onDoubleClick: ()=>void }) {
     const dispatch = useDispatch();
     console.log(props)
-    return <g transform={`translate(${props.x},${props.y})`} onMouseDown={evt => console.log(props.text)}>
+    return <g transform={`translate(${props.x},${props.y})`}>
         <rect
             x={0} y={0}
-            width={TILE_WIDTH} height={100}
+            width={TILE_WIDTH} height={TILE_HEIGHT}
             fill="white"
             stroke={props.colour}
             strokeWidth={2}
             rx={10}
             className="hoverable"
             onMouseDown={evt=>{dispatch(selectNode({x:props.x,y:props.y, idx:props.idx}));evt.stopPropagation();}}
+            onDoubleClick={props.onDoubleClick}
         >
         </rect>
 
-        <text x={TILE_WIDTH / 2} y={20} fill="black" textAnchor="middle">{props.text}</text>
-        {props.emoji && <text x={10} y={10} >{props.emoji}</text>}
-    </g>
+        <text x={TILE_WIDTH / 2} y={45} fill="black" textAnchor="middle" fontFamily="sans-serif">{props.text}</text>
+        {props.emoji && <Emoji emoji={props.emoji} text={props.emojiValue}/>}
+    </g> 
+}
+
+function Emoji({emoji,text}:{emoji:string, text:string}){
+    // <text x={10} y={10} textAnchor="middle" alignmentBaseline="middle" fontSize="20px" >{props.emoji}<title>{props.emojiValue}</title></text>
+    const w = 30;
+    const size = w*0.6;
+    const r =w/2;
+    return <React.Fragment>
+        <circle cx={r} cy={r} r={r} fill="#eee">
+             <title>{text}</title>
+        </circle>
+        <text x={r} y={r} textAnchor="middle" alignmentBaseline="middle" fontSize={size+"px"}  style={{pointerEvents:"none"}}>{emoji}</text>
+    </React.Fragment>
 }
 
 export function GraphNodes() {
+    const dispatch = useDispatch();
+
     const headings = useSelector((state: RootState) => state.main.headings);
     const data = useSelector((state: RootState) => state.main.data);
     const view = useSelector((state: RootState) => state.main.view);
@@ -61,8 +78,10 @@ export function GraphNodes() {
                  y={parseFloat(row[yIdx])} 
                  colour={colourMappingFunction(row[colourIdx])}
                  emoji={emojiMapping[row[emojiIdx]]?.emoji}
+                 emojiValue={row[emojiIdx]}
                  idx={i}
                  key={i}
+                 onDoubleClick={()=>dispatch(openNodeModal(i))}
                  />
             )
         }
