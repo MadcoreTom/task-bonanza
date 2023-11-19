@@ -9,6 +9,7 @@ import ColumnModal from "./components/colummodal";
 import { Graph } from "./components/graph";
 import { GraphNodes } from "./components/graph.node";
 import { NodeModal } from "./components/node.modal";
+import { writeCsv } from "./csv/write";
 
 
 
@@ -30,11 +31,7 @@ function App() {
           { href: '#', text: 'Table' },
         ]}
       />
-      <Button
-        accessibilityLabel="Import"
-        size="lg"
-        text="Import"
-      />
+      <Export/>
     </Flex>
     <div style={{ height: "2px", backgroundColor: "var(--g-colorGray100)" }}></div>
     {activeMode == 1 && <DataTable />}
@@ -46,6 +43,16 @@ function App() {
       nodeModalIdx != null && <NodeModal idx={nodeModalIdx}/>
     }
   </Flex>
+}
+
+function Export() {
+  const state = useSelector((state: RootState) => state.main);
+  return <Button
+    accessibilityLabel="Export"
+    size="lg"
+    text="Export"
+    onClick={() => writeCsv(state)}
+  />
 }
 
 
