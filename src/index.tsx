@@ -2,14 +2,14 @@ import * as React from "react";
 import { createRoot } from 'react-dom/client';
 import { Provider, useSelector } from 'react-redux'
 import { RootState, store } from "./state/store";
-import { Button, Flex, Text, Table, Box, Tabs } from 'gestalt';
+import { Button, Flex, Text, Table, Box, Tabs, ButtonGroup } from 'gestalt';
 import 'gestalt/dist/gestalt.css';
 import { DataTable } from "./components/datatable";
 import ColumnModal from "./components/colummodal";
 import { Graph } from "./components/graph";
 import { GraphNodes } from "./components/graph.node";
 import { NodeModal } from "./components/node.modal";
-import { writeCsv } from "./csv/write";
+import { writeCsv, writeCsvDataOnly } from "./csv/write";
 
 
 
@@ -47,12 +47,19 @@ function App() {
 
 function Export() {
   const state = useSelector((state: RootState) => state.main);
-  return <Button
-    accessibilityLabel="Export"
-    size="lg"
-    text="Export"
-    onClick={() => writeCsv(state)}
-  />
+  return <ButtonGroup>
+    <Button
+      accessibilityLabel="Export"
+      size="lg"
+      text="Save"
+      onClick={() => writeCsv(state)}
+    /><Button
+      accessibilityLabel="Export"
+      size="lg"
+      text="Export Data"
+      onClick={() => writeCsvDataOnly(state)}
+    />
+  </ButtonGroup>
 }
 
 
