@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState, closeColumnModal,  saveColumn } from "../state/store";
 import { COLUMN_TYPES, Column, ColumnType, KeywordMeta } from "../state/column.types";
 import { MyDropdown } from "./dropdown";
+import { EmojiPicker } from "./emojipicker";
 
 const HEADER_ZINDEX = new FixedZIndex(10);
 const modalZIndex = new CompositeZIndex([HEADER_ZINDEX]);
@@ -123,14 +124,9 @@ function KeywordConfig(props:{updateMapping:(key:string,partial:Partial<KeywordM
                 onChange={evt => props.updateMapping(k,{colour:evt.value})}
                 value={mapping[k].colour}
             /></Text></Table.Cell>
-            <Table.Cell><Text><TextField
-                id={`mapping-emoji-${i}`}
-                label="Emoji"
-                onChange={evt => props.updateMapping(k,{emoji:evt.value})}
-                placeholder=""
-                type="text"
-                value={mapping[k].emoji || ""}
-            /></Text></Table.Cell>
+            <Table.Cell>
+                <EmojiPicker value={mapping[k].emoji || ""} onClick={val=>props.updateMapping(k,{emoji:val})}  />
+                </Table.Cell>
         </Table.Row>
 
     )
