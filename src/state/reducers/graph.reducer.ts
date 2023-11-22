@@ -34,3 +34,8 @@ export const dragNodeReducer = (state: State, action: { payload: { dx: number, d
     }
     return state;
 }
+
+export const addRowReducer = (state:State)=>{
+    const row = state.headings.map(h=>h.type== "NUMBER" || h.type == "X" || h.type == "Y" ? "0" : "");
+    state.data.push(row);
+}

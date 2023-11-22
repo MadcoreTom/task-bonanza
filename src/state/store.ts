@@ -3,7 +3,7 @@ import { closeColumnModalReducer, openColumnModalReducer, saveColumnReducer } fr
 import { INITIAL_STATE, State } from './state';
 import { setViewReducer } from './reducers/view.reducer';
 import { closeNodeModalReducer, openNodeModalReducer, saveRowReducer } from './reducers/node.modal.reducer';
-import { dragNodeReducer, releaseNodeReducer, selectNodeReducer } from './reducers/graph.reducer';
+import { addRowReducer, dragNodeReducer, releaseNodeReducer, selectNodeReducer } from './reducers/graph.reducer';
 
 
 export type RootState = {
@@ -23,7 +23,8 @@ const mainSlice = createSlice({
         selectNode: selectNodeReducer,
         dragNode:dragNodeReducer,
         releaseNode:releaseNodeReducer,
-        saveRow: saveRowReducer
+        saveRow: saveRowReducer,
+        addRow: addRowReducer
     }
 });
 
@@ -43,5 +44,6 @@ export const {
     selectNode,
     dragNode,
     releaseNode,
-    saveRow
+    saveRow,
+    addRow
 } = mainSlice.actions

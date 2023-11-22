@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Flex, DropdownOption } from 'gestalt'
+import { Flex, DropdownOption, Button } from 'gestalt'
 import { MyDropdown } from "./dropdown";
-import { RootState, dragNode, releaseNode, setView } from "../state/store";
+import { RootState, addRow, dragNode, releaseNode, setView } from "../state/store";
 import { useSelector, useDispatch } from 'react-redux'
 import { ViewState } from "../state/state";
 import { Column } from "../state/column.types";
@@ -18,9 +18,10 @@ export function Graph(props: { nodes: any }) {
     console.log("💲💲 Graph redraw")
 
     return <React.Fragment>
-        <div style={{ height: "100px", marginBottom: "-100px", zIndex: 9 }}>
-            <Flex alignContent="center" direction="row" alignItems="center" justifyContent="center" gap={1} >
+        <div className="graphViewControls">
+            <Flex alignContent="center" direction="row" alignItems="center" justifyContent="center" gap={1}>
                 {DROPDOWNS.map((d, i) => d.render(view, headings, dispatch))}
+                <Button text="Add" iconEnd="add" onClick={()=>dispatch(addRow())} size="md" color="blue"/>
             </Flex>
         </div>
         <PannableSvg>

@@ -1,13 +1,14 @@
 import * as React from "react";
 import { Button, Table, Text } from "gestalt";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, openColumnModal, openNodeModal } from "../state/store";
+import { RootState, addRow, openColumnModal, openNodeModal } from "../state/store";
 import { Column } from "../state/column.types";
 
 export function DataTable() {
   const headings = useSelector((state: RootState) => state.main.headings);
   const data = useSelector((state: RootState) => state.main.data);
   const filteredData = data.slice(0, 10);
+  const dispatch = useDispatch();
 
   return <Table accessibilityLabel="Sticky footer">
     <Table.Header sticky>
@@ -17,6 +18,11 @@ export function DataTable() {
       {
         filteredData.map((d, idx) => <Row data={d} headings={headings} key={idx} idx={idx}/>)
       }
+      <Table.Row>
+        <Table.Cell colSpan={headings.length+1}>
+          <Button fullWidth text="Add Row" iconEnd="add" color="blue" onClick={()=>dispatch(addRow())}/>
+        </Table.Cell>
+      </Table.Row>
     </Table.Body>
   </Table>
 }
