@@ -10,6 +10,7 @@ import { Graph } from "./components/graph";
 import { GraphNodes } from "./components/graph.node";
 import { NodeModal } from "./components/node.modal";
 import { writeCsv, writeCsvDataOnly } from "./csv/write";
+import { ImportButton } from "./components/import";
 
 
 
@@ -59,6 +60,7 @@ function Export() {
       text="Export Data"
       onClick={() => writeCsvDataOnly(state)}
     />
+    <ImportButton/>
   </ButtonGroup>
 }
 

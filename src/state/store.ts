@@ -4,7 +4,7 @@ import { INITIAL_STATE, State } from './state';
 import { setViewReducer } from './reducers/view.reducer';
 import { closeNodeModalReducer, openNodeModalReducer, saveRowReducer } from './reducers/node.modal.reducer';
 import { addRowReducer, dragNodeReducer, releaseNodeReducer, selectNodeReducer } from './reducers/graph.reducer';
-
+import { importReducer } from './reducers/import.reducer';
 
 export type RootState = {
     main: State
@@ -24,7 +24,8 @@ const mainSlice = createSlice({
         dragNode:dragNodeReducer,
         releaseNode:releaseNodeReducer,
         saveRow: saveRowReducer,
-        addRow: addRowReducer
+        addRow: addRowReducer,
+        importAction: importReducer
     }
 });
 
@@ -45,5 +46,6 @@ export const {
     dragNode,
     releaseNode,
     saveRow,
-    addRow
+    addRow,
+    importAction
 } = mainSlice.actions
