@@ -1,4 +1,4 @@
-import { Flex } from "gestalt";
+import { Flex, Box, Button } from "gestalt";
 import * as React from "react";
 import { useDispatch } from "react-redux";
 import { importAction } from "../state/store";
@@ -17,7 +17,10 @@ export function ImportButton() {
     }
 
     return <Flex>
+        <div className="file-input-container">
         <input className="file-input" type="file" name="resume" onChange={importFunc} />
+        <Button text="Import" size="lg"/>
+        </div>
        </Flex>
 }
 
