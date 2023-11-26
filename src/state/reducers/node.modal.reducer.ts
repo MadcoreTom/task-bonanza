@@ -1,3 +1,4 @@
+import { measureText } from "../../text-measure-util"
 import { State } from "../state"
 
 export const openNodeModalReducer = (state: State, action: { payload: number }): State => {
@@ -16,6 +17,13 @@ export const closeNodeModalReducer = (state: State): State => {
 }
 
 export const saveRowReducer = (state: State, action: { payload: { idx: number, row: string[] } }) => {
-    state.data[action.payload.idx] = action.payload.row;
-
+    const widthIdx = state.headings.map((h, i) => h.type == "W" ? i : null).filter(a => a != null)[0] as number;
+    const textIndex = state.headings.map((h, i) => h.name == state.view.textColumn ? i : null).filter(a => a != null)[0] as number;
+    const row = [...action.payload.row];
+    const m =  measureText(row[textIndex],"14pt serif");
+    console.log(m)
+    const w =m.width+ "";
+    console.log("TEXT",row[textIndex],w)
+    row[widthIdx] = "" + w;
+    state.data[action.payload.idx] = row;
 }

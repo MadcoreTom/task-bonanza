@@ -53,7 +53,7 @@ export function NodeModal(props: { idx: number }) {
                 <Box marginBottom={1} minHeight={500} overflow="scrollY" padding={4}>
                     <Flex gap={4} direction="column">
                     {
-                        headings.map((h,i)=><Field heading={h} value={tempRow[i]} onChange={val=>{tempRow[i] = val;setTempRow([...tempRow]);}} key={i}/>)
+                        headings.map((h,i)=><Field heading={h} value={tempRow[i]} onChange={val=>{const r = [...tempRow];r[i] = val;setTempRow(r);}} key={i}/>)
                     }
                     </Flex>
                 </Box>
