@@ -3,7 +3,8 @@ import { Column } from "./column.types"
 export type ViewState = {
     textColumn: string,
     colourColumn: string,
-    emojiColumn: string
+    emojiColumn: string,
+    swimlaneColumnn: string | null
 }
 
 export type State = {
@@ -19,7 +20,7 @@ export const INITIAL_STATE: State = {
     headings: [
         { name: "Key", type: "KEYWORD", mapping: {} },
         { name: "Summary", type: "FREE_TEXT" },
-        { name: "Status", type: "KEYWORD", mapping: {Closed:{colour:"#888888", emoji:"🏁"},"In Progress":{colour:"blue",emoji:"🏃‍♂️"}}},
+        { name: "Status", type: "KEYWORD", mapping: {Closed:{colour:"#888888", emoji:"🏁", order:2},"In Progress":{colour:"blue",emoji:"🏃‍♂️",order:1}}},
         { name: "Assignee", type: "KEYWORD", mapping: {Sue:{colour:"pink", emoji: "💃"},Tom:{emoji:"♥",colour:"blue"}} },
         { name: "Estimate", type: "NUMBER", min:0 , max:10, minRGB: [0,200,50],maxRGB:[255,50,0]},
         { name: "X", type: "X" },

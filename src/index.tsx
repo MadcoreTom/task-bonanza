@@ -19,7 +19,7 @@ function App() {
   const nodeModalIdx = useSelector((state: RootState) => state.main.nodeModalIdx);
   const [activeMode, setActiveMode] = React.useState(0);
 
-  return <Flex direction="column" height="100vh" justifyContent="start">
+  return <Flex direction="column" height="100vh" justifyContent="start" overflow="hidden">
     <Flex alignContent="center" justifyContent="between" alignItems="baseline">
       <Text size="400" weight="bold"><span className="title">Task Bonanza</span>
       </Text>

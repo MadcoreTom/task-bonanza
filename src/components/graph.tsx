@@ -96,6 +96,18 @@ abstract class ViewDropdown {
         dispatch(setView({ [this.key]: selected }));
     }
 }
+class SwimlaneViewDropdown extends ViewDropdown {
+    constructor() {
+        super("swimlaneColumnn", "Swwimlane")
+    }
+
+    getOptions(headings: Column[]) {
+        const h:DropdownOption[] = headings.filter(h => h.type == "KEYWORD")
+            .map(h => { return { value: h.name, label: h.name, subtext: h.type } });
+            h.unshift({value:"", label:"None", subtext:"No Swimlanes"})
+            return h;
+    }
+}
 
 class EmojiViewDropdown extends ViewDropdown {
     constructor() {
@@ -130,4 +142,4 @@ class TextViewDropdown extends ViewDropdown {
 }
 
 
-const DROPDOWNS: ViewDropdown[] = [new TextViewDropdown(), new ColourViewDropdown(), new EmojiViewDropdown()];
+const DROPDOWNS: ViewDropdown[] = [new TextViewDropdown(), new ColourViewDropdown(), new EmojiViewDropdown(), new SwimlaneViewDropdown()];
