@@ -1,71 +1,29 @@
 import * as React from "react";
 import { createRoot } from 'react-dom/client';
-import { Provider, useSelector } from 'react-redux'
-import { RootState, store } from "./state/store";
-import { Button, Flex, Text, Table, Box, Tabs, ButtonGroup } from 'gestalt';
-import 'gestalt/dist/gestalt.css';
-import { DataTable } from "./components/datatable";
-import ColumnModal from "./components/colummodal";
-import { Graph } from "./components/graph";
-import { GraphNodes } from "./components/graph.node";
-import { NodeModal } from "./components/node.modal";
-import { writeCsv, writeCsvDataOnly } from "./csv/write";
-import { ImportButton } from "./components/import";
-
-
+import { NextUIProvider, Button } from "@nextui-org/react";
+import { AppTabs } from "./components/tabs";
+import { ViewSidebar } from "./components/view.sidebar";
 
 function App() {
-  const columnModalIdx = useSelector((state: RootState) => state.main.columnModalIdx);
-  const nodeModalIdx = useSelector((state: RootState) => state.main.nodeModalIdx);
-  const [activeMode, setActiveMode] = React.useState(0);
+  const [tabIdx, setTabIdx] = React.useState("data");
 
-  return <Flex direction="column" height="100vh" justifyContent="start" overflow="hidden">
-    <Flex alignContent="center" justifyContent="between" alignItems="baseline">
-      <Text size="400" weight="bold"><span className="title">Task Bonanza</span>
-      </Text>
+  return <div className="flex w-full flex-row" id="main">
+    <div className="flex-1 bg-stripe-gradient">
+      <h1>Task Bonanza</h1>
+      <AppTabs onChange={setTabIdx}/>
+    </div>
 
-      <Tabs
-        activeTabIndex={activeMode}
-        onChange={({ activeTabIndex }) => setActiveMode(activeTabIndex)}
-        tabs={[
-          { href: '#', text: 'Graph' },
-          { href: '#', text: 'Table' },
-        ]}
-      />
-      <Export/>
-    </Flex>
-    <div style={{ height: "2px", backgroundColor: "var(--g-colorGray100)" }}></div>
-    {activeMode == 1 && <DataTable />}
-    {activeMode == 0 && <Graph nodes={<GraphNodes />}/>}
-    {
-      columnModalIdx == null ? null : <ColumnModal />
-    }
-    {
-      nodeModalIdx != null && <NodeModal idx={nodeModalIdx}/>
-    }
-  </Flex>
-}
+    <div className="flex-initial w-80 flex gap-3 flex-col p-2" id="sidepanel">
+  <ViewSidebar/>
+      {tabIdx}
+    </div>
+  </div>
 
-function Export() {
-  const state = useSelector((state: RootState) => state.main);
-  return <ButtonGroup>
-    <Button
-      accessibilityLabel="Export"
-      size="lg"
-      text="Save"
-      onClick={() => writeCsv(state)}
-    /><Button
-      accessibilityLabel="Export"
-      size="lg"
-      text="Export Data"
-      onClick={() => writeCsvDataOnly(state)}
-    />
-    <ImportButton/>
-  </ButtonGroup>
 }
 
 
 createRoot(document.querySelector("#root") as HTMLElement)
-  .render(<Provider store={store}><App /></Provider>,);
+  .render(
+    <NextUIProvider><App /></NextUIProvider>);
 
 
