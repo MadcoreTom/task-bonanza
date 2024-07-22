@@ -14,7 +14,8 @@
     "@nextui-org/react": "^2.4.6",
     "framer-motion": "^11.3.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-spreadsheet": "^0.9.5"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

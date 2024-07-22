@@ -5,6 +5,7 @@ import { AppTabs } from "./components/tabs";
 import { ViewSidebar } from "./components/view.sidebar";
 import { SheetView } from "./components/sheet.view";
 import { STATE } from "./state";
+import Spreadsheet from "react-spreadsheet";
 
 
 
@@ -21,11 +22,18 @@ function App() {
         content = undefined;
   }
 
+  const data = [
+    [{ value: "Vanilla" }, { value: "Chocolate" }],
+    [{ value: "Strawberry" }, { value: "Cookies" }],
+  ];
+
   return <div className="flex w-full flex-row" id="main">
     <div className="flex-1">
       <h1>Task Bonanza</h1>
       <AppTabs onChange={setTabIdx}/>
       {content}
+
+ <Spreadsheet data={data} />;
     </div>
 
     <div className="flex-initial w-80 flex gap-3 flex-col p-2 shadow-md shadow-danger" id="sidepanel">
