@@ -8,3 +8,15 @@ export enum Axis {
     ARROW,
     LINE
 }
+
+export type ColumnSelection = {
+    type: "column",
+    name: string
+}
+
+export type ViewSelection = {
+    type: "view",
+    name: string
+}
+
+export type Selection = ColumnSelection | ViewSelection;
