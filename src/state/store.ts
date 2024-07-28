@@ -1,12 +1,13 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit"
-import { Selection } from "../model/view.model"
+import { ColumnDef, Selection } from "../model/view.model"
 import { Record } from "../model/data"
 
 export type State = {
     records: Record[],
     selected: Selection | null,
     changeQueue: {row:number,column:number, value:string}[],
-    tab: number
+    tab: number,
+    columns: ColumnDef[]
 }
 
 export type RootState = {
@@ -30,7 +31,13 @@ const mainSlice = createSlice({
             { id: "b", columns: ["x", "y", "z", ""] }
         ],
         changeQueue: [],
-        tab: 0
+        tab: 0,
+        columns: [
+            {name:"Ticket"},
+            {name:"Story Points"},
+            {name:"Assignee"},
+            {name:"status"}
+        ]
     },
     reducers: {
         setTab:(state:State, action:{payload:number})=>{

@@ -7,6 +7,7 @@ import { Button } from "@nextui-org/react";
 
 export function SheetView() {
     const data = useSelector((state: RootState) => state.main.records);
+    const columns = useSelector((state: RootState) => state.main.columns);
     const rows = data.map(d => d.columns.map(c => { return {value:c}}));
     const matrix: Matrix<CellBase> = rows;
     const dispatch = useDispatch();
@@ -15,12 +16,13 @@ export function SheetView() {
 
     function sel(s: SheetSelection) {
         if (s instanceof EntireColumnsSelection) {
-            dispatch(setSelection({ type: "column", name: s.start + "XYZ" }));
+            dispatch(setSelection({ type: "column", idx: s.start}));
         }
     }
 
     return <React.Fragment>
-        <Spreadsheet data={matrix} onSelect={sel}
+        <Spreadsheet data={matrix} columnLabels={columns.map(c=>c.name)} 
+        onSelect={sel}
          onCellCommit={(prev, cell, coords) => {
             if (coords && cell !== undefined) {
                 dispatch(setCell({ value: cell == null ? "" : cell.value,  row: coords.row, column: coords.column }))

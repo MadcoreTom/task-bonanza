@@ -11,7 +11,7 @@ export enum Axis {
 
 export type ColumnSelection = {
     type: "column",
-    name: string
+    idx: number
 }
 
 export type ViewSelection = {
@@ -20,3 +20,7 @@ export type ViewSelection = {
 }
 
 export type Selection = ColumnSelection | ViewSelection;
+
+export type ColumnDef = {
+    name: string
+}

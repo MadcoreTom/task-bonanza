@@ -36,13 +36,13 @@ function App() {
           dispatch(setTab(v));
           dispatch(setSelection({ type: "view", name: "view" + v }));
         }} />
+      {tab}
       </div>
       {content}
 
     </div>
 
     <div className="flex-initial w-80 flex gap-3 flex-col p-2 shadow-md shadow-danger" id="sidepanel">
-      {tab}
       <Side />
     </div>
   </div>
@@ -60,7 +60,7 @@ function Side() {
     case "view":
       return <ViewSidebar />
     case "column":
-      return <ColumnSidebar column={selected.name} />
+      return <ColumnSidebar />
     default:
       return <span>err</span>
   }
