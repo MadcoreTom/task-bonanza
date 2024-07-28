@@ -7,36 +7,42 @@ import { SheetView } from "./components/sheet.view";
 import { STATE } from "./state";
 import { Selection } from "./model/view.model";
 import { ColumnSidebar } from "./components/column.sidebar";
-import { RootState, setSelection, STORE } from "./state/store";
+import { RootState, setSelection, setTab, STORE } from "./state/store";
 import { Provider, useDispatch, useSelector } from 'react-redux'
 
 
 function App() {
-  const [tabIdx, setTabIdx] = React.useState("data");
+  const tab = useSelector((state:RootState)=>state.main.tab);
   const dispatch = useDispatch();
+  console.log("ROOT RERENDER", tab)
 
-  let content: any = undefined;
+  let content: any;
 
-  switch (tabIdx) {
-    case "data":
-      content = <SheetView data={STATE.records} />
-      break;
-    default:
-      content = undefined;
+  // TODO no more switch
+  if(tab == 0){
+    content = <SheetView />
+
+  } else {
+    content = undefined;
+
   }
 
   return <div className="flex w-full flex-row" id="main">
     <div className="flex-1">
-      <div className="flex gap-3 p-2 items-baseline" style={{alignItems:"baseline"}}>
+      <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "baseline" }}>
         <h1>Task&nbsp;Bonanza</h1>
-        <AppTabs onChange={v => { setTabIdx(v), dispatch(setSelection({ type: "view", name: "view" + v })) }} />
+        <AppTabs onChange={v => {
+          console.log("TAB", v)
+          dispatch(setTab(v));
+          dispatch(setSelection({ type: "view", name: "view" + v }));
+        }} />
       </div>
       {content}
 
     </div>
 
     <div className="flex-initial w-80 flex gap-3 flex-col p-2 shadow-md shadow-danger" id="sidepanel">
-      {tabIdx}
+      {tab}
       <Side />
     </div>
   </div>

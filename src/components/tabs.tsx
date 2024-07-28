@@ -1,27 +1,28 @@
 import * as React from "react";
 import { Tabs, Card, Tab } from "@nextui-org/react";
 
-export function AppTabs(props: { onChange: (value: string) => void }) {
+export function AppTabs(props: { onChange: (value: number) => void }) {
   let tabs = [
     {
-      id: "data",
+      idx: 0,
       label: "Data",
+      
     },
     {
-      id: "v1",
+      idx:1,
       label: "View 1",
     },
     {
-      id: "v2",
+      idx: 2,
       label: "View 2",
     }
   ];
 
   return (
     <div className="flex w-full flex-col">
-      <Tabs aria-label="Dynamic tabs" items={tabs} onSelectionChange={e => props.onChange(e as string)}>
+      <Tabs aria-label="Dynamic tabs" items={tabs} onSelectionChange={e => props.onChange(e as number)}>
         {(item) => (
-          <Tab key={item.id} title={item.label}>
+          <Tab key={item.idx} title={item.label} value={item.idx}>
             {/* <Card>
              <CardBody>
                   The same thing for all of them
