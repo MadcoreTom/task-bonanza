@@ -61,6 +61,10 @@ const mainSlice = createSlice({
                 state.changeQueue.push({row,column,value})
             }
         },
+        updateColumn:(state:State, action:{payload:{idx:number, def:ColumnDef}})=>{
+            const {idx,def} = action.payload;
+            state.columns[idx] = def;
+        }
     }
 });
 
@@ -70,4 +74,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, clearSelection, commitRecords, setCell, setTab } = mainSlice.actions;
+export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn } = mainSlice.actions;
