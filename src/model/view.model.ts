@@ -16,11 +16,18 @@ export type ColumnSelection = {
 
 export type ViewSelection = {
     type: "view",
-    name: string
+    idx: number
 }
 
 export type Selection = ColumnSelection | ViewSelection;
 
 export type ColumnDef = {
     name: string
+}
+
+export type ViewDef = {
+    name: string,
+    title: null | number,
+    colour: null | number,
+    emoji: null | number
 }

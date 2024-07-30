@@ -4,8 +4,6 @@ import { NextUIProvider } from "@nextui-org/react";
 import { AppTabs } from "./components/tabs";
 import { ViewSidebar } from "./components/view.sidebar";
 import { SheetView } from "./components/sheet.view";
-import { STATE } from "./state";
-import { Selection } from "./model/view.model";
 import { ColumnSidebar } from "./components/column.sidebar";
 import { RootState, setSelection, setTab, STORE } from "./state/store";
 import { Provider, useDispatch, useSelector } from 'react-redux'
@@ -19,7 +17,7 @@ function App() {
   let content: any;
 
   // TODO no more switch
-  if(tab == 0){
+  if(tab == -1){
     content = <SheetView />
 
   } else {
@@ -34,7 +32,7 @@ function App() {
         <AppTabs onChange={v => {
           console.log("TAB", v)
           dispatch(setTab(v));
-          dispatch(setSelection({ type: "view", name: "view" + v }));
+          dispatch(setSelection({ type: "view", idx: v }));
         }} />
       {tab}
       </div>

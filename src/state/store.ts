@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit"
-import { ColumnDef, Selection } from "../model/view.model"
+import { ColumnDef, Selection, ViewDef } from "../model/view.model"
 import { Record } from "../model/data"
 
 export type State = {
@@ -7,7 +7,8 @@ export type State = {
     selected: Selection | null,
     changeQueue: {row:number,column:number, value:string}[],
     tab: number,
-    columns: ColumnDef[]
+    columns: ColumnDef[],
+    views: ViewDef[]
 }
 
 export type RootState = {
@@ -37,6 +38,20 @@ const mainSlice = createSlice({
             {name:"Story Points"},
             {name:"Assignee"},
             {name:"status"}
+        ],
+        views: [
+            {
+                name: "Kanban",
+                title: 0,
+                colour: 3,
+                emoji: null
+            },
+            {
+                name: "Assignees",
+                title: 1,
+                colour: 2,
+                emoji: 2
+            }
         ]
     },
     reducers: {

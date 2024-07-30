@@ -1,22 +1,22 @@
 import * as React from "react";
 import { Tabs, Card, Tab } from "@nextui-org/react";
+import { RootState } from "../state/store";
+import { useSelector } from "react-redux";
 
 export function AppTabs(props: { onChange: (value: number) => void }) {
-  let tabs = [
-    {
-      idx: 0,
-      label: "Data",
-      
-    },
-    {
-      idx:1,
-      label: "View 1",
-    },
-    {
-      idx: 2,
-      label: "View 2",
+
+  const tabs = useSelector((state:RootState)=>state.main.views).map((v,i)=>{
+    return {
+      idx: i,
+      label: v.name
     }
-  ];
+  });
+
+  tabs.unshift({
+    idx:-1,
+    label: "Data"
+  })
+
 
   return (
     <div className="flex w-full flex-col">
