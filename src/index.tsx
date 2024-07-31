@@ -22,7 +22,7 @@ function App() {
     content = <SheetView />
 
   } else {
-    content = <Graph />;
+    content = <Graph viewIdx={tab} />;
 
   }
 

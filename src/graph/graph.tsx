@@ -1,20 +1,25 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../state/store";
+import { GraphNodes, NodeViewTransformer } from "./graph.nodes";
 
-export function Graph() {
+export function Graph(props: { viewIdx: number }) {
 
-    const recordCount = useSelector((state: RootState) => state.main.records.length);
-    // const view = useSelector((state: RootState) => state.main.view);
+    const view = useSelector((state: RootState) => state.main.views[props.viewIdx]);
     // const dispatch = useDispatch();
-
 
     console.log("💲💲 Graph redraw")
 
-    return     <PannableSvg>
-            {/* <GraphGhost /> */}
-            <circle />
-        </PannableSvg> 
+    const transformer: NodeViewTransformer = {
+        getColour: (record) => view.colour != null ? stringToColor(record.columns[view.colour]) : "red",
+        getTitle: (record) => view.title != null ? record.columns[view.title] : "null"
+    }
+
+    return <PannableSvg>
+        <GraphNodes transformer={transformer} />
+        {/* <GraphGhost /> */}
+        <circle />
+    </PannableSvg>
 }
 
 
@@ -24,10 +29,7 @@ export function Graph() {
  */
 function PannableSvg({ children }) {
     let [offset, setOffset] = React.useState([0, 0]);
-    const selected = false;//useSelector((state: RootState) => state.main.selected);
-    const dispatch = useDispatch();
-
-    console.log("Panning")
+    const selected = false;// if a node is selected
 
     function onDrag(evt: React.MouseEvent) {
         if (evt.buttons > 0) {
@@ -57,4 +59,23 @@ function PannableSvg({ children }) {
         </g>
     </svg>
 
+}
+
+// TODO AI generated, don't keep it in
+function stringToColor(str) {
+    // Calculate a hash value for the input string
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Convert the hash to RGB values
+    const r = (hash & 0xFF0000) >> 16;
+    const g = (hash & 0x00FF00) >> 8;
+    const b = hash & 0x0000FF;
+
+    // Create the HTML color string
+    const colorString = `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+
+    return colorString;
 }

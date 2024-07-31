@@ -1,20 +1,29 @@
 import * as React from "react";
 import { Tabs, Card, Tab, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Select, SelectItem } from "@nextui-org/react";
-import { useSelector } from "react-redux";
-import { RootState } from "../state/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, updateView } from "../state/store";
 import { ViewDef } from "../model/view.model";
 
 export function ViewSidebar() {
     const columns = useSelector((state: RootState) => state.main.columns);
     const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "view" ? state.main.selected.idx : 0);
     const view = useSelector((state: RootState) => state.main.views[selected]);
+    const dispatch = useDispatch();
 
-
+/*
     const [tmpView, setTmpView] = React.useState(null as ViewDef | null);
     console.log("T", JSON.stringify(tmpView))
+    */
     React.useEffect(() => {
         setTmpView(view);
     }, [view]);
+    
+
+   const tmpView = view;
+   const setTmpView = v=>{
+    console.log("VV",v)
+    dispatch(updateView({idx:selected,def:v}));
+}
 
 
     if (view == undefined || tmpView == null) {
@@ -56,7 +65,7 @@ function ViewDropdown(props: { title: string, options: { label: string, key: num
     selectionMode="single"
     className="max-w-xs"
     selectedKeys={[props.view[props.property] == null ? -1 : props.view[props.property] + ""]}
-    onChange={e => props.updateView({ ...props.view, colour: parseInt(e.target.value) })}
+    onChange={e => props.updateView({ ...props.view, [props.property]: parseInt(e.target.value) })}
 >
     {props.options.map((item) => (
         <SelectItem key={item.key}>

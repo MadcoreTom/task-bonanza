@@ -28,8 +28,9 @@ const mainSlice = createSlice({
     initialState: {
         selected: null,
         records: [
-            { id: "a", columns: ["a", "b", "123", "c"] },
-            { id: "b", columns: ["x", "y", "z", ""] }
+            { id: "a", columns: ["BUG-001", "12", "Chim Richalds", "New"] },
+            { id: "b", columns: ["BUG-002", "4", "Bobson Dugnutt", "In Progress"] },
+            { id: "b", columns: ["FEAT-001", "13", "Bobson Dugnutt", "New"] }
         ],
         changeQueue: [],
         tab: 0,
@@ -79,6 +80,11 @@ const mainSlice = createSlice({
         updateColumn:(state:State, action:{payload:{idx:number, def:ColumnDef}})=>{
             const {idx,def} = action.payload;
             state.columns[idx] = def;
+        },
+        updateView:(state:State, action:{payload:{idx:number, def:ViewDef}})=>{
+            const {idx,def} = action.payload;
+            console.log("AA", action.payload)
+            state.views[idx] = def;
         }
     }
 });
@@ -89,4 +95,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn } = mainSlice.actions;
+export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView } = mainSlice.actions;
