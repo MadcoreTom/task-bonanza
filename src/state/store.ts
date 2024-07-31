@@ -38,7 +38,7 @@ const mainSlice = createSlice({
             {name:"Ticket"},
             {name:"Story Points"},
             {name:"Assignee"},
-            {name:"status"}
+            {name:"Status"}
         ],
         views: [
             {

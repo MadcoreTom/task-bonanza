@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Tabs, Card, Tab, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Select, SelectItem } from "@nextui-org/react";
+import { Tabs, Card, Tab, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Select, SelectItem, Input } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, updateView } from "../state/store";
 import { ViewDef } from "../model/view.model";
+import { ICONS } from "./icons";
 
 export function ViewSidebar() {
     const columns = useSelector((state: RootState) => state.main.columns);
@@ -10,20 +11,20 @@ export function ViewSidebar() {
     const view = useSelector((state: RootState) => state.main.views[selected]);
     const dispatch = useDispatch();
 
-/*
-    const [tmpView, setTmpView] = React.useState(null as ViewDef | null);
-    console.log("T", JSON.stringify(tmpView))
-    */
+    /*
+        const [tmpView, setTmpView] = React.useState(null as ViewDef | null);
+        console.log("T", JSON.stringify(tmpView))
+        */
     React.useEffect(() => {
         setTmpView(view);
     }, [view]);
-    
 
-   const tmpView = view;
-   const setTmpView = v=>{
-    console.log("VV",v)
-    dispatch(updateView({idx:selected,def:v}));
-}
+
+    const tmpView = view;
+    const setTmpView = v => {
+        console.log("VV", v)
+        dispatch(updateView({ idx: selected, def: v }));
+    }
 
 
     if (view == undefined || tmpView == null) {
@@ -47,30 +48,33 @@ export function ViewSidebar() {
     return <React.Fragment>
         <h1>View {tmpView.name}</h1>
 
+        <Input
+            label="View Name"
+            value={view.name}
+            // onChange={e => setTmpColumn({ ...column, name: e.target.value })}
+            // onBlur={e => dispatch(updateColumn({ idx: selected, def: tmpColumn }))}
+        />
 
-        <ViewDropdown title="Colour" options={items} view={tmpView} updateView={setTmpView} property="colour" />
-        <ViewDropdown title="Emoji" options={items} view={tmpView} updateView={setTmpView} property="emoji" />        
-        <ViewDropdown title="Title" options={items} view={tmpView} updateView={setTmpView} property="title" />
-
-        <Button color="secondary">
-            Hello Button
-        </Button>
+        <ViewDropdown title="Title" options={items} view={tmpView} updateView={setTmpView} property="title" icon={ICONS.title} />
+        <ViewDropdown title="Colour" options={items} view={tmpView} updateView={setTmpView} property="colour" icon={ICONS.colour} />
+        <ViewDropdown title="Emoji" options={items} view={tmpView} updateView={setTmpView} property="emoji" icon={ICONS.emoji} />
     </React.Fragment>
 }
 
-function ViewDropdown(props: { title: string, options: { label: string, key: number }[], view: ViewDef, updateView: (view: ViewDef) => void, property: keyof ViewDef }) {
+function ViewDropdown(props: { title: string, options: { label: string, key: number }[], view: ViewDef, updateView: (view: ViewDef) => void, property: keyof ViewDef, icon: any }) {
     return <Select
-    label={props.title}
-    placeholder="None"
-    selectionMode="single"
-    className="max-w-xs"
-    selectedKeys={[props.view[props.property] == null ? -1 : props.view[props.property] + ""]}
-    onChange={e => props.updateView({ ...props.view, [props.property]: parseInt(e.target.value) })}
->
-    {props.options.map((item) => (
-        <SelectItem key={item.key}>
-            {item.label}
-        </SelectItem>
-    ))}
-</Select>
+        label={props.title}
+        placeholder="None"
+        selectionMode="single"
+        className="max-w-xs"
+        startContent={props.icon}
+        selectedKeys={[props.view[props.property] == null ? -1 : props.view[props.property] + ""]}
+        onChange={e => props.updateView({ ...props.view, [props.property]: parseInt(e.target.value) })}
+    >
+        {props.options.map((item) => (
+            <SelectItem key={item.key}>
+                {item.label}
+            </SelectItem>
+        ))}
+    </Select>
 }

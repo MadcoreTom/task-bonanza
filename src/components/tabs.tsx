@@ -2,19 +2,26 @@ import * as React from "react";
 import { Tabs, Card, Tab } from "@nextui-org/react";
 import { RootState } from "../state/store";
 import { useSelector } from "react-redux";
+import { ICONS } from "./icons";
 
 export function AppTabs(props: { onChange: (value: number) => void }) {
 
-  const tabs = useSelector((state:RootState)=>state.main.views).map((v,i)=>{
+  const tabs = useSelector((state: RootState) => state.main.views).map((v, i) => {
     return {
       idx: i,
-      label: v.name
+      label: <div className="flex items-center space-x-2">
+        {ICONS.graph}
+        <span>{v.name}</span>
+      </div>,
     }
   });
 
   tabs.unshift({
-    idx:-1,
-    label: "Data"
+    idx: -1,
+    label: <div className="flex items-center space-x-2">
+      {ICONS.table}
+      <span>Data</span>
+    </div>,
   })
 
 
@@ -23,11 +30,7 @@ export function AppTabs(props: { onChange: (value: number) => void }) {
       <Tabs aria-label="Mode tabs" items={tabs} color="primary" onSelectionChange={e => props.onChange(e as number)}>
         {(item) => (
           <Tab key={item.idx} title={item.label} value={item.idx}>
-            {/* <Card>
-             <CardBody>
-                  The same thing for all of them
-                </CardBody> 
-            </Card> */}
+            {/* Usually cards would go in here, but I'm not using that */}
           </Tab>
         )}
       </Tabs>
