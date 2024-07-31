@@ -7,6 +7,7 @@ import { SheetView } from "./components/sheet.view";
 import { ColumnSidebar } from "./components/column.sidebar";
 import { RootState, setSelection, setTab, STORE } from "./state/store";
 import { Provider, useDispatch, useSelector } from 'react-redux'
+import { Graph } from "./graph/graph";
 
 
 function App() {
@@ -21,13 +22,13 @@ function App() {
     content = <SheetView />
 
   } else {
-    content = undefined;
+    content = <Graph />;
 
   }
 
   return <div className="flex w-full flex-row" id="main">
-    <div className="flex-1">
-      <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "baseline" }}>
+    <div className="flex-1 flex flex-col">
+      <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "baseline", borderBottom: "2px solid hsl(var(--nextui-secondary))"}}>
         <h1>Task&nbsp;Bonanza</h1>
         <AppTabs onChange={v => {
           console.log("TAB", v)

@@ -20,7 +20,7 @@ export function AppTabs(props: { onChange: (value: number) => void }) {
 
   return (
     <div className="flex w-full flex-col">
-      <Tabs aria-label="Dynamic tabs" items={tabs} onSelectionChange={e => props.onChange(e as number)}>
+      <Tabs aria-label="Mode tabs" items={tabs} color="primary" onSelectionChange={e => props.onChange(e as number)}>
         {(item) => (
           <Tab key={item.idx} title={item.label} value={item.idx}>
             {/* <Card>
