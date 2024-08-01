@@ -37,5 +37,6 @@ export type ViewDef = {
     name: string,
     title: null | number,
     colour: null | number,
-    emoji: null | number
+    emoji: null | number,
+    data: {pos:[number,number]}[]
 }

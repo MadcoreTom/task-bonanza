@@ -25,9 +25,13 @@ export type NodeViewTransformer = {
 
 function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
     const record = useSelector((state: RootState) => state.main.records[props.idx]);
+    const data = useSelector((state: RootState) => state.main.views[state.main.tab].data[props.idx]);
     const dispatch = useDispatch();
 
-    return <g transform={`translate(${props.idx * 200},${(props.idx * 60) % 600})`}>
+    const x = data ? data.pos[0] : props.idx * 200;
+    const y= data ? data.pos[1]: (props.idx * 60) % 600;
+
+    return <g transform={`translate(${x},${y})`}>
         <rect
             x={0} y={0}
             width={200} height={60}
@@ -36,7 +40,7 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
             strokeWidth={2}
             rx={10}
             className="hoverable"
-        onMouseDown={evt => { dispatch(setSelection({/* x: props.x, y: props.y, idx: props.idx*/ type:"node", idx:props.idx, mouseDown:true, pos:[props.idx * 200, (props.idx * 60) % 600] })); evt.stopPropagation(); }}
+        onMouseDown={evt => { dispatch(setSelection({/* x: props.x, y: props.y, idx: props.idx*/ type:"node", idx:props.idx, mouseDown:true, pos:[x, y ]})); evt.stopPropagation(); }}
         // onDoubleClick={props.onDoubleClick}
         >
         </rect>

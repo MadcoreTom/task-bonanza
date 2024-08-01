@@ -45,13 +45,15 @@ const mainSlice = createSlice({
                 name: "Kanban",
                 title: 0,
                 colour: 3,
-                emoji: null
+                emoji: null,
+                data:[]
             },
             {
                 name: "Assignees",
                 title: 1,
                 colour: 2,
-                emoji: 2
+                emoji: 2,
+                data:[]
             }
         ]
     },
@@ -88,7 +90,9 @@ const mainSlice = createSlice({
         },
         releaseNode: (state: State) => {
             if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
-                // TODO commit updated location
+                state.views[state.tab].data[state.selected.idx] = {
+                    pos: [state.selected.pos[0], state.selected.pos[1]]
+                }
                 state.selected = { ...state.selected, mouseDown: false };
             }
         },
