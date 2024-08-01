@@ -2,10 +2,14 @@ name: CI
 
 on:
   # on push or pull request, only "master" branch
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    tags:
+      - '*'
+  
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

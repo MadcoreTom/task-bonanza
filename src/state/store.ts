@@ -5,7 +5,7 @@ import { Record } from "../model/data"
 export type State = {
     records: Record[],
     selected: Selection | null,
-    changeQueue: {row:number,column:number, value:string}[],
+    changeQueue: { row: number, column: number, value: string }[],
     tab: number,
     columns: ColumnDef[],
     views: ViewDef[]
@@ -15,11 +15,11 @@ export type RootState = {
     main: State
 }
 
-function  commitRecordsA(state: State) {
+function commitRecordsA(state: State) {
     let q;
-    while((q = state.changeQueue.pop()) != null){
-        console.log("APPLY", {...q})
-        state.records[q.row].columns[q.column]=q.value;
+    while ((q = state.changeQueue.pop()) != null) {
+        console.log("APPLY", { ...q })
+        state.records[q.row].columns[q.column] = q.value;
     }
 }
 
@@ -35,10 +35,10 @@ const mainSlice = createSlice({
         changeQueue: [],
         tab: 0,
         columns: [
-            {name:"Ticket"},
-            {name:"Story Points"},
-            {name:"Assignee"},
-            {name:"Status"}
+            { name: "Ticket" },
+            { name: "Story Points" },
+            { name: "Assignee" },
+            { name: "Status" }
         ],
         views: [
             {
@@ -56,9 +56,9 @@ const mainSlice = createSlice({
         ]
     },
     reducers: {
-        setTab:(state:State, action:{payload:number})=>{
-            if(state.tab != action.payload){
-                if(state.tab == 0){
+        setTab: (state: State, action: { payload: number }) => {
+            if (state.tab != action.payload) {
+                if (state.tab == 0) {
                     commitRecordsA(state);
                 }
                 state.tab = action.payload;
@@ -70,21 +70,33 @@ const mainSlice = createSlice({
         clearSelection: (state: State) => {
             state.selected = null;
         },
-       commitRecords:commitRecordsA,
+        commitRecords: commitRecordsA,
         setCell: (state: State, action: { payload: { value: string, row: number, column: number } }) => {
             const { value, row, column } = action.payload;
             if (value != undefined) {
-                state.changeQueue.push({row,column,value})
+                state.changeQueue.push({ row, column, value })
             }
         },
-        updateColumn:(state:State, action:{payload:{idx:number, def:ColumnDef}})=>{
-            const {idx,def} = action.payload;
+        updateColumn: (state: State, action: { payload: { idx: number, def: ColumnDef } }) => {
+            const { idx, def } = action.payload;
             state.columns[idx] = def;
         },
-        updateView:(state:State, action:{payload:{idx:number, def:ViewDef}})=>{
-            const {idx,def} = action.payload;
+        updateView: (state: State, action: { payload: { idx: number, def: ViewDef } }) => {
+            const { idx, def } = action.payload;
             console.log("AA", action.payload)
             state.views[idx] = def;
+        },
+        releaseNode: (state: State) => {
+            if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
+                // TODO commit updated location
+                state.selected = { ...state.selected, mouseDown: false };
+            }
+        },
+        dragNode: (state: State, action: { payload: { delta: [number, number] } }) => {
+            if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
+                state.selected.pos[0] += action.payload.delta[0];
+                state.selected.pos[1] += action.payload.delta[1];
+            }
         }
     }
 });
@@ -95,4 +107,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView } = mainSlice.actions;
+export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode } = mainSlice.actions;

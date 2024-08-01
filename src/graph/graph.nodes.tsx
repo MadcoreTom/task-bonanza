@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../state/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, setSelection } from "../state/store";
 import { Record } from "../model/data";
 
 export function GraphNodes(props: { transformer: NodeViewTransformer }) {
@@ -25,6 +25,7 @@ export type NodeViewTransformer = {
 
 function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
     const record = useSelector((state: RootState) => state.main.records[props.idx]);
+    const dispatch = useDispatch();
 
     return <g transform={`translate(${props.idx * 200},${(props.idx * 60) % 600})`}>
         <rect
@@ -35,10 +36,33 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
             strokeWidth={2}
             rx={10}
             className="hoverable"
-        // onMouseDown={evt => { dispatch(selectNode({ x: props.x, y: props.y, idx: props.idx })); evt.stopPropagation(); }}
+        onMouseDown={evt => { dispatch(setSelection({/* x: props.x, y: props.y, idx: props.idx*/ type:"node", idx:props.idx, mouseDown:true, pos:[props.idx * 200, (props.idx * 60) % 600] })); evt.stopPropagation(); }}
         // onDoubleClick={props.onDoubleClick}
         >
         </rect>
         <text x={100} y="15" textAnchor="middle">{props.transformer.getTitle(record)}</text>
+    </g>
+}
+
+export function GhostNode( ) {
+    const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "node" && state.main.selected.mouseDown ? state.main.selected : null);
+
+    if(!selected){
+        return null;
+    }
+
+    return <g transform={`translate(${selected.pos[0]},${selected.pos[1]})`}>
+        <rect
+            x={0} y={0}
+            width={200} height={60}
+            fill="transparent"
+            stroke="red"
+            strokeWidth={2}
+            rx={10}
+            className="hoverable"
+            strokeDasharray="4,2"
+            style={{pointerEvents:"none"}}
+        >
+        </rect>
     </g>
 }

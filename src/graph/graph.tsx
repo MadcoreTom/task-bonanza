@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../state/store";
-import { GraphNodes, NodeViewTransformer } from "./graph.nodes";
+import { dragNode, releaseNode, RootState } from "../state/store";
+import { GhostNode, GraphNodes, NodeViewTransformer } from "./graph.nodes";
 
 export function Graph(props: { viewIdx: number }) {
 
@@ -17,8 +17,7 @@ export function Graph(props: { viewIdx: number }) {
 
     return <PannableSvg>
         <GraphNodes transformer={transformer} />
-        {/* <GraphGhost /> */}
-        <circle />
+        <GhostNode />
     </PannableSvg>
 }
 
@@ -29,29 +28,24 @@ export function Graph(props: { viewIdx: number }) {
  */
 function PannableSvg({ children }) {
     let [offset, setOffset] = React.useState([0, 0]);
-    const selected = false;// if a node is selected
+    const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "node" && state.main.selected.mouseDown);// if a node is selected
+    const dispatch = useDispatch();
 
     function onDrag(evt: React.MouseEvent) {
         if (evt.buttons > 0) {
             if (selected) {
-                // dispatch(dragNode({ dx: evt.movementX, dy: evt.movementY }));
+                dispatch(dragNode({ delta: [evt.movementX,  evt.movementY] }));
             } else {
                 setOffset([offset[0] + evt.movementX, offset[1] + evt.movementY]);
             }
         }
     }
 
-    function onMouseUp() {
-        if (selected) {
-            // dispatch(releaseNode());
-        }
-    }
-
     return <svg height="600"
         id="graph"
         onMouseMoveCapture={onDrag}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
+        onMouseUp={()=>dispatch(releaseNode())}
+        onMouseLeave={()=>dispatch(releaseNode())}
         style={{ backgroundPosition: `${offset[0]}px ${offset[1]}px` }}
         onContextMenu={(e) => e.preventDefault()}>
         <g transform={`translate(${offset[0]},${offset[1]})`}>

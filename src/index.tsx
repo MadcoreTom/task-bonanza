@@ -8,17 +8,18 @@ import { ColumnSidebar } from "./components/column.sidebar";
 import { RootState, setSelection, setTab, STORE } from "./state/store";
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { Graph } from "./graph/graph";
+import { NodeSidebar } from "./components/node.sidebar";
 
 
 function App() {
-  const tab = useSelector((state:RootState)=>state.main.tab);
+  const tab = useSelector((state: RootState) => state.main.tab);
   const dispatch = useDispatch();
   console.log("ROOT RERENDER", tab)
 
   let content: any;
 
   // TODO no more switch
-  if(tab == -1){
+  if (tab == -1) {
     content = <SheetView />
 
   } else {
@@ -28,14 +29,14 @@ function App() {
 
   return <div className="flex w-full flex-row" id="main">
     <div className="flex-1 flex flex-col">
-      <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "center", borderBottom: "2px solid hsl(var(--nextui-secondary))"}}>
+      <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "center", borderBottom: "2px solid hsl(var(--nextui-secondary))" }}>
         <span className="text-xl">Task&nbsp;Bonanza</span>
         <AppTabs onChange={v => {
           console.log("TAB", v)
           dispatch(setTab(v));
           dispatch(setSelection({ type: "view", idx: v }));
         }} />
-      {tab}
+        {tab}
       </div>
       {content}
 
@@ -60,8 +61,10 @@ function Side() {
       return <ViewSidebar />
     case "column":
       return <ColumnSidebar />
+    case "node":
+      return <NodeSidebar />
     default:
-      return <span>err</span>
+      return <span>Unknown selection</span>
   }
 }
 
