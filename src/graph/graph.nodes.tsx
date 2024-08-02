@@ -2,6 +2,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setSelection } from "../state/store";
 import { Record } from "../model/data";
+import { hslToBorder, hslToFill } from "../colour";
 
 export function GraphNodes(props: { transformer: NodeViewTransformer }) {
     const recordCount = useSelector((state: RootState) => state.main.records.length);
@@ -20,7 +21,8 @@ export function GraphNodes(props: { transformer: NodeViewTransformer }) {
 
 export type NodeViewTransformer = {
     getTitle: (record: Record) => string,
-    getColour: (record: Record) => string
+    getText: (record: Record) => string,
+    getColour: (record: Record) => [number,number,number]
 }
 
 function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
@@ -31,12 +33,14 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
     const x = data ? data.pos[0] : props.idx * 200;
     const y= data ? data.pos[1]: (props.idx * 60) % 600;
 
+    const hsl = props.transformer.getColour(record);
+
     return <g transform={`translate(${x},${y})`}>
         <rect
             x={0} y={0}
             width={200} height={60}
-            fill="white"
-            stroke={props.transformer.getColour(record)}
+            fill={hslToFill(hsl)}
+            stroke={hslToBorder(hsl)}
             strokeWidth={2}
             rx={10}
             className="hoverable"
@@ -45,6 +49,7 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
         >
         </rect>
         <text x={100} y="15" textAnchor="middle">{props.transformer.getTitle(record)}</text>
+        <text x={100} y="30" textAnchor="middle">{props.transformer.getText(record)}</text>
     </g>
 }
 

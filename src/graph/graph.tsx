@@ -2,17 +2,18 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dragNode, releaseNode, RootState } from "../state/store";
 import { GhostNode, GraphNodes, NodeViewTransformer } from "./graph.nodes";
+import { textToHsl } from "../colour";
 
 export function Graph(props: { viewIdx: number }) {
 
     const view = useSelector((state: RootState) => state.main.views[props.viewIdx]);
-    // const dispatch = useDispatch();
 
     console.log("💲💲 Graph redraw")
 
     const transformer: NodeViewTransformer = {
-        getColour: (record) => view.colour != null ? stringToColor(record.columns[view.colour]) : "red",
-        getTitle: (record) => view.title != null ? record.columns[view.title] : "null"
+        getColour: (record) => view.colour != null ? textToHsl(record.columns[view.colour]) : [0,50,50],
+        getTitle: (record) => view.title != null ? record.columns[view.title] : "null",
+        getText: (record) => view.text != null ? record.columns[view.text] : "",
     }
 
     return <PannableSvg>
@@ -53,23 +54,4 @@ function PannableSvg({ children }) {
         </g>
     </svg>
 
-}
-
-// TODO AI generated, don't keep it in
-function stringToColor(str) {
-    // Calculate a hash value for the input string
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    // Convert the hash to RGB values
-    const r = (hash & 0xFF0000) >> 16;
-    const g = (hash & 0x00FF00) >> 8;
-    const b = hash & 0x0000FF;
-
-    // Create the HTML color string
-    const colorString = `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
-
-    return colorString;
 }

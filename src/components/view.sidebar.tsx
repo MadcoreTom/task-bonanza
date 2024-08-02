@@ -56,8 +56,11 @@ export function ViewSidebar() {
         />
 
         <ViewDropdown title="Title" options={items} view={tmpView} updateView={setTmpView} property="title" icon={ICONS.title} />
+        <ViewDropdown title="Text" options={items} view={tmpView} updateView={setTmpView} property="text" icon={ICONS.title} />
         <ViewDropdown title="Colour" options={items} view={tmpView} updateView={setTmpView} property="colour" icon={ICONS.colour} />
         <ViewDropdown title="Emoji" options={items} view={tmpView} updateView={setTmpView} property="emoji" icon={ICONS.emoji} />
+        <ViewDropdown title="Swimlane" options={items} view={tmpView} updateView={setTmpView} property="swimlane" icon={ICONS.swimlane} />
+        <ViewDropdown title="Row" options={items} view={tmpView} updateView={setTmpView} property="row" icon={ICONS.rows} />
     </React.Fragment>
 }
 
@@ -70,6 +73,7 @@ function ViewDropdown(props: { title: string, options: { label: string, key: num
         startContent={props.icon}
         selectedKeys={[props.view[props.property] == null ? -1 : props.view[props.property] + ""]}
         onChange={e => props.updateView({ ...props.view, [props.property]: parseInt(e.target.value) })}
+        variant={props.view[props.property] == null || props.view[props.property] ==-1 ? "bordered" : "flat"}
     >
         {props.options.map((item) => (
             <SelectItem key={item.key}>

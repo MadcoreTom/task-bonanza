@@ -5,6 +5,7 @@ import { RootState, updateColumn } from "../state/store";
 import { ColumnDef } from "../model/view.model";
 import { ICONS } from "./icons";
 import { Column } from "../model/data";
+import { hslToBorder, textToHsl } from "../colour";
 
 export function ColumnSidebar() {
     const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "column" ? state.main.selected.idx : 0);
@@ -124,7 +125,7 @@ function KeywordColumn(props: { column: ColumnDef, idx: number }) {
                             <TableCell>{v}</TableCell>
                             <TableCell>
                                 <ButtonGroup variant="bordered">
-                                    <Button isIconOnly aria-label="Colour" size="sm" style={{ backgroundColor: "#ff22bb" }}> {ICONS.colour} </Button>
+                                    <Button isIconOnly aria-label="Colour" size="sm" style={{ backgroundColor: hslToBorder(textToHsl(v)) }}> {ICONS.colour} </Button>
                                     <Button isIconOnly aria-label="Emoji" size="sm"> {ICONS.emoji} </Button>
                                     <Button isIconOnly aria-label="Move Up" size="sm"> {ICONS.numeric} </Button>
                                     <Button isIconOnly aria-label="Move Down" size="sm"> {ICONS.numeric} </Button>

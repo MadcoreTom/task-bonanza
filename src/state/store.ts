@@ -23,7 +23,7 @@ function commitRecordsA(state: State) {
     }
 }
 
-const initialState:State = {
+const initialState: State = {
     selected: null,
     records: [
         { id: "a", columns: ["BUG-001", "12", "Chim Richalds", "New"] },
@@ -33,10 +33,10 @@ const initialState:State = {
     changeQueue: [],
     tab: 0,
     columns: [
-        { name: "Ticket", type: "Keyword", map:{} },
-        { name: "Story Points", type: "Number", minColour:[0,0,255], maxColour:[255,127,0]},
-        { name: "Assignee" , type: "Alphabetical", minColour:[0,255,255], maxColour:[255,127,0] },
-        { name: "Status" , type: "Keyword", map:{} }
+        { name: "Ticket", type: "Keyword", map: {} },
+        { name: "Story Points", type: "Number", minColour: [0, 0, 255], maxColour: [255, 127, 0] },
+        { name: "Assignee", type: "Alphabetical", minColour: [0, 255, 255], maxColour: [255, 127, 0] },
+        { name: "Status", type: "Keyword", map: {} }
     ],
     views: [
         {
@@ -44,14 +44,20 @@ const initialState:State = {
             title: 0,
             colour: 3,
             emoji: null,
-            data:[]
+            row: null,
+            swimlane: null,
+            text: 2,
+            data: []
         },
         {
             name: "Assignees",
             title: 1,
             colour: 2,
             emoji: 2,
-            data:[]
+            row: null,
+            swimlane: null,
+            text: 0,
+            data: []
         }
     ]
 }

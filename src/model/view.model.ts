@@ -49,7 +49,10 @@ export type ColumnDef = {
 export type ViewDef = {
     name: string,
     title: null | number,
+    text: null | number,
     colour: null | number,
     emoji: null | number,
+    row: null | number,
+    swimlane: null | number,
     data: { pos: [number, number] }[]
 }
