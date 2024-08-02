@@ -30,7 +30,7 @@ function App() {
   return <div className="flex w-full flex-row" id="main">
     <div className="flex-1 flex flex-col">
       <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "center", borderBottom: "2px solid hsl(var(--nextui-secondary))" }}>
-        <span className="text-xl">Task&nbsp;Bonanza</span>
+        <span className="text-xl" id="title">Task&nbsp;Bonanza</span>
         <AppTabs onChange={v => {
           console.log("TAB", v)
           dispatch(setTab(v));
