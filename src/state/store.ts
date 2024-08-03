@@ -109,6 +109,26 @@ const mainSlice = createSlice({
                 state.selected.pos[0] += action.payload.delta[0];
                 state.selected.pos[1] += action.payload.delta[1];
             }
+        },
+        addRow: (state: State) =>{
+            const row:Record = {
+                id: "not using this yet",
+                columns: state.columns.map(()=>"")
+            };
+            state.records.push(row);
+            commitRecordsA(state);
+        },
+        addColumn: (state: State) =>{
+            state.columns.push({
+                name: "new Column",
+                type: "Alphabetical",
+                minColour: [0,0,0],
+                maxColour:[255,255,255]
+            });
+            state.records.forEach(r=>{
+                r.columns.push("");
+            });
+            commitRecordsA(state);
         }
     }
 });
@@ -119,4 +139,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode } = mainSlice.actions;
+export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn } = mainSlice.actions;

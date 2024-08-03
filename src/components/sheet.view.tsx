@@ -1,7 +1,7 @@
 import * as React from "react";
 import Spreadsheet, { CellBase, EntireColumnsSelection, Matrix, Selection as SheetSelection } from "react-spreadsheet";
 import { useDispatch, useSelector } from "react-redux";
-import { commitRecords, RootState, setCell, setSelection } from "../state/store";
+import { addColumn, addRow, commitRecords, RootState, setCell, setSelection } from "../state/store";
 import { Button } from "@nextui-org/react";
 
 
@@ -20,15 +20,20 @@ export function SheetView() {
         }
     }
 
-    return <React.Fragment>
-        <Spreadsheet data={matrix} columnLabels={columns.map(c=>c.name)} 
-        onSelect={sel}
-         onCellCommit={(prev, cell, coords) => {
-            if (coords && cell !== undefined) {
+    return <div>
+        <div className="p-2">
+            <div className="shadow-md rounded-md p-2 flex gap-2">
+                <Button onClick={() => dispatch(commitRecords())}>Save Changes</Button>
+                <Button onClick={() => dispatch(addRow())}>Add Row</Button>
+                <Button onClick={() => dispatch(addColumn())}>Add Column</Button>
+            </div></div>
+        <Spreadsheet data={matrix} columnLabels={columns.map(c => c.name)}
+            onSelect={sel}
+            onCellCommit={(prev, cell, coords) => {
+                if (coords && cell !== undefined) {
                 dispatch(setCell({ value: cell == null ? "" : cell.value,  row: coords.row, column: coords.column }))
             }
         }} 
         />
-        <Button onClick={()=>dispatch(commitRecords())}>Save Changes</Button>
-    </React.Fragment>
+    </div>
 }
