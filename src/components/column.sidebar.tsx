@@ -1,11 +1,12 @@
 import * as React from "react";
-import { Tabs, Card, Tab, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Select, SelectItem, Input, Accordion, AccordionItem, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip, ButtonGroup } from "@nextui-org/react";
+import { Tabs, Card, Tab, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Select, SelectItem, Input, Accordion, AccordionItem, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip, ButtonGroup, Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, updateColumn } from "../state/store";
 import { ColumnDef } from "../model/view.model";
 import { ICONS } from "./icons";
 import { Column } from "../model/data";
-import { hslToBorder, textToHsl } from "../colour";
+import { HSL, hslToBorder, textToHsl } from "../colour";
+import { ColourPicker } from "./colour.picker";
 
 export function ColumnSidebar() {
     const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "column" ? state.main.selected.idx : 0);
@@ -83,6 +84,7 @@ function changeType(def: ColumnDef, type: "Number" | "Keyword" | "Alphabetical")
 
 function NumberColumn(props: { column: ColumnDef, idx: number }) {
     const columnData = useSelector((state: RootState) => state.main.records.map(r => r.columns[props.idx]));
+    const dispatch = useDispatch();
 
     const invalidCount = columnData.filter(d => d != null && isNaN(parseFloat(d))).length;
     console.log(columnData);
@@ -95,10 +97,19 @@ function NumberColumn(props: { column: ColumnDef, idx: number }) {
 
     }
 
+    if (props.column.type != "Number") {
+        return null;
+    }
+
+
     return <div>
         {warning}
-        <Button aria-label="min colour" style={{ backgroundColor: "#ff22bb" }}> {ICONS.colour} Minimum Colour</Button>
-        <Button aria-label="max colour" style={{ backgroundColor: "#0022dd" }}> {ICONS.colour} Maximum Colour</Button>
+        <ColourPicker colour={props.column.minColour} onChange={e => dispatch(updateColumn({idx:props.idx,def:{...props.column, minColour: e}}))}>
+            <Button aria-label="min colour" style={{ backgroundColor:  hslToBorder(props.column.minColour) }}> {ICONS.colour} Minimum Colour</Button>
+        </ColourPicker>
+        <ColourPicker colour={props.column.maxColour}  onChange={e => dispatch(updateColumn({idx:props.idx,def:{...props.column, maxColour: e}}))}>
+            <Button aria-label="max colour" style={{ backgroundColor: hslToBorder(props.column.maxColour) }}> {ICONS.colour} Maximum Colour</Button>
+        </ColourPicker>
     </div>
 }
 
@@ -125,7 +136,19 @@ function KeywordColumn(props: { column: ColumnDef, idx: number }) {
                             <TableCell>{v}</TableCell>
                             <TableCell>
                                 <ButtonGroup variant="bordered">
+                                    {/* <Popover>
+                                        <PopoverTrigger>
                                     <Button isIconOnly aria-label="Colour" size="sm" style={{ backgroundColor: hslToBorder(textToHsl(v)) }}> {ICONS.colour} </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <div style={{width:200, display:"flex", flexWrap:"wrap"}}>
+                                            {PALETTE.map(hsl=><div style={{width:30,height:30,borderRadius:30,margin:5,backgroundColor:hslToBorder(hsl)}}></div>)}
+                                            </div>
+                                    </PopoverContent>
+                                    </Popover> */}
+                                    <ColourPicker colour={textToHsl(v)} onChange={e=>console.log("TODO",e)}>
+                                        <Button isIconOnly aria-label="Colour" size="sm" style={{ backgroundColor: hslToBorder(textToHsl(v)) }}> {ICONS.colour} </Button>
+                                    </ColourPicker>
                                     <Button isIconOnly aria-label="Emoji" size="sm"> {ICONS.emoji} </Button>
                                     <Button isIconOnly aria-label="Move Up" size="sm"> {ICONS.numeric} </Button>
                                     <Button isIconOnly aria-label="Move Down" size="sm"> {ICONS.numeric} </Button>
