@@ -38,6 +38,9 @@ export function ColumnSidebar() {
             break;
         case "Alphabetical":
             typeText = "Alphabetical columns are sorted alphabetically, and assigned random colours"
+            break;
+        case "Link":
+            typeText = "Link columns show connections or dependencies between items. You can separate multiple values with a comma"
     }
 
     return <React.Fragment>
@@ -54,7 +57,7 @@ export function ColumnSidebar() {
             placeholder="None"
             selectionMode="single"
             className="max-w-xs"
-            description={typeText }
+            description={typeText}
             selectedKeys={[column.type]}
             onChange={e => dispatch(updateColumn({ idx: selected, def: changeType(column, e.target.value as any) }))}
         >
@@ -109,7 +112,7 @@ function NumberColumn(props: { column: ColumnDef, idx: number }) {
 
     }
 
-    const  def = props.column;
+    const def = props.column;
     if (def.type != "Number") {
         return null;
     }

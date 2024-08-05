@@ -26,9 +26,11 @@ function commitRecordsA(state: State) {
 const initialState: State = {
     selected: null,
     records: [
-        { id: "a", columns: ["BUG-001", "12", "Chim Richalds", "New"] },
-        { id: "b", columns: ["BUG-002", "4", "Bobson Dugnutt", "In Progress"] },
-        { id: "b", columns: ["FEAT-001", "13", "Bobson Dugnutt", "New"] }
+        { id: "a", columns: ["BUG-001", "12", "unassigned", "New", ""] },
+        { id: "b", columns: ["BUG-002", "4", "Bobson Dugnutt", "In Progress", ""] },
+        { id: "b", columns: ["FEAT-001", "13", "Bobson Dugnutt", "Done", "FEAT-002"] },
+        { id: "b", columns: ["FEAT-002", "13", "Bobson Dugnutt", "In Progress", ""] },
+        { id: "b", columns: ["FEAT-003", "1", "Bobson Dugnutt", "Testing", "FEAT-002,BUG-001"] }
     ],
     changeQueue: [],
     tab: 0,
@@ -36,7 +38,8 @@ const initialState: State = {
         { name: "Ticket", type: "Keyword", map: {} },
         { name: "Story Points", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
         { name: "Assignee", type: "Alphabetical" },
-        { name: "Status", type: "Keyword", map: {} }
+        { name: "Status", type: "Keyword", map: {} },
+        { name: "Blocks", type: "Link", references: 0 }
     ],
     views: [
         {
@@ -110,20 +113,20 @@ const mainSlice = createSlice({
                 state.selected.pos[1] += action.payload.delta[1];
             }
         },
-        addRow: (state: State) =>{
-            const row:Record = {
+        addRow: (state: State) => {
+            const row: Record = {
                 id: "not using this yet",
-                columns: state.columns.map(()=>"")
+                columns: state.columns.map(() => "")
             };
             state.records.push(row);
             commitRecordsA(state);
         },
-        addColumn: (state: State) =>{
+        addColumn: (state: State) => {
             state.columns.push({
                 name: "new Column",
                 type: "Alphabetical"
             });
-            state.records.forEach(r=>{
+            state.records.forEach(r => {
                 r.columns.push("");
             });
             commitRecordsA(state);

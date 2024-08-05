@@ -37,6 +37,12 @@ export type KeywordColumnDef = {
     map: { [id: string]: ColumnDefKeywordMapItem }
 };
 
+export type LinkColumnDef = {
+    name: string,
+    type: "Link",
+    references: number
+}
+
 export type ColumnDef = {
     name: string,
 } & (
@@ -47,7 +53,7 @@ export type ColumnDef = {
         } | {
             type: "Alphabetical"
         } 
-    ) | KeywordColumnDef
+    ) | KeywordColumnDef | LinkColumnDef
 
 export type ColumnDefKeywordMapItem = { colour?: HSL };
 
