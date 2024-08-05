@@ -25,6 +25,21 @@ export function ColumnSidebar() {
         return "null"
     }
 
+    let specificComponent: React.ReactElement | undefined = undefined;
+    let typeText = "";
+    switch (column.type) {
+        case "Number":
+            specificComponent = <NumberColumn column={column} idx={selected} />;
+            typeText = "Number columns are sortable, and the colour is between the min and max colour. Non numbers are treated as the same value"
+            break;
+        case "Keyword":
+            specificComponent = <KeywordColumn column={column} idx={selected} />;
+            typeText = "Keyword columns let you assign specific colours, emoji and ordering. Good for when there's a few unique values like statuses"
+            break;
+        case "Alphabetical":
+            typeText = "Alphabetical columns are sorted alphabetically, and assigned random colours"
+    }
+
     return <React.Fragment>
         <h1>Column {column.name}</h1>
         <Input
@@ -39,7 +54,7 @@ export function ColumnSidebar() {
             placeholder="None"
             selectionMode="single"
             className="max-w-xs"
-            description="This affects how data from this column is sorted and displayed"
+            description={typeText }
             selectedKeys={[column.type]}
             onChange={e => dispatch(updateColumn({ idx: selected, def: changeType(column, e.target.value as any) }))}
         >
@@ -48,9 +63,7 @@ export function ColumnSidebar() {
             <SelectItem key="Alphabetical" startContent={ICONS.alphabetical}>Alphabetical</SelectItem>
         </Select>
 
-        {column.type == "Number" ? <NumberColumn column={column} idx={selected} /> : null}
-        {column.type == "Keyword" ? <KeywordColumn column={column} idx={selected} /> : null}
-
+        {specificComponent}
 
     </React.Fragment>
 }
@@ -70,9 +83,7 @@ function changeType(def: ColumnDef, type: "Number" | "Keyword" | "Alphabetical")
         case "Alphabetical":
             return {
                 ...def,
-                type: "Alphabetical",
-                minColour: "minColour" in def ? def.minColour : [0, 0, 0],
-                maxColour: "maxColour" in def ? def.maxColour : [0, 0, 0]
+                type: "Alphabetical"
             }
         case "Keyword":
             return {
@@ -98,18 +109,19 @@ function NumberColumn(props: { column: ColumnDef, idx: number }) {
 
     }
 
-    if (props.column.type != "Number") {
+    const  def = props.column;
+    if (def.type != "Number") {
         return null;
     }
 
 
     return <div>
         {warning}
-        <ColourPicker colour={props.column.minColour} onChange={e => dispatch(updateColumn({idx:props.idx,def:{...props.column, minColour: e}}))}>
-            <Button aria-label="min colour" style={{ backgroundColor:  hslToBorder(props.column.minColour) }}> {ICONS.colour} Minimum Colour</Button>
+        <ColourPicker colour={def.minColour} onChange={e => dispatch(updateColumn({ idx: props.idx, def: { ...props.column, minColour: e } }))}>
+            <Button aria-label="min colour" style={{ backgroundColor: hslToBorder(def.minColour) }}> {ICONS.colour} Minimum Colour</Button>
         </ColourPicker>
-        <ColourPicker colour={props.column.maxColour}  onChange={e => dispatch(updateColumn({idx:props.idx,def:{...props.column, maxColour: e}}))}>
-            <Button aria-label="max colour" style={{ backgroundColor: hslToBorder(props.column.maxColour) }}> {ICONS.colour} Maximum Colour</Button>
+        <ColourPicker colour={def.maxColour} onChange={e => dispatch(updateColumn({ idx: props.idx, def: { ...props.column, maxColour: e } }))}>
+            <Button aria-label="max colour" style={{ backgroundColor: hslToBorder(def.maxColour) }}> {ICONS.colour} Maximum Colour</Button>
         </ColourPicker>
     </div>
 }

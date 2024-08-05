@@ -74,8 +74,8 @@ function KeyWordRow(props: { idx: number, value: string, column: KeywordColumnDe
             <Button isIconOnly aria-label="Colour" size="sm" style={{ backgroundColor: hslToBorder(colour) }}> {ICONS.colour} </Button>
         </ColourPicker>
         <Button isIconOnly aria-label="Emoji" size="sm"> {ICONS.emoji} </Button>
-        <Button isIconOnly aria-label="Move Up" size="sm"> {ICONS.numeric} </Button>
-        <Button isIconOnly aria-label="Move Down" size="sm"> {ICONS.numeric} </Button>
+        <Button isIconOnly aria-label="Move Up" size="sm"> {ICONS.sortUp} </Button>
+        <Button isIconOnly aria-label="Move Down" size="sm"> {ICONS.sortDown} </Button>
     </ButtonGroup>
 
 }

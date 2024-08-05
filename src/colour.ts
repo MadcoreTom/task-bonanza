@@ -32,11 +32,14 @@ export function hslToBorder(hsl: HSL): string {
     return `hsl(${hsl[0]}deg,${hsl[1]}%,${hsl[2]}%)`;
 }
 export function hslToFill(hsl: HSL): string {
-    return `hsl(${hsl[0]}deg,${hsl[1]}%,${hsl[2] + 45}%)`;
+    let lightness = hsl[2];
+    const r = 100 - lightness;
+    lightness = 100 - r/5;
+    return `hsl(${hsl[0]}deg,${hsl[1]}%,${lightness}%)`;
 }
 
 
 
 export const PALETTE: HSL[] = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2].map((a, i) => {
-    return [(i / 5 * 360 + 50)%360, 80, 40 + a * 20];
+    return [(i / 5 /3* 360 + 50)%360, 80, 60 + Math.cos(i/15*Math.PI*4)*10];
 })
