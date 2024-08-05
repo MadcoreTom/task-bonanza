@@ -7,6 +7,7 @@ import { ICONS } from "./icons";
 import { Column } from "../model/data";
 import { HSL, hslToBorder, textToHsl } from "../colour";
 import { ColourPicker } from "./colour.picker";
+import { KeywordColumn } from "./column.keyword.sidebar";
 
 export function ColumnSidebar() {
     const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "column" ? state.main.selected.idx : 0);
@@ -110,54 +111,5 @@ function NumberColumn(props: { column: ColumnDef, idx: number }) {
         <ColourPicker colour={props.column.maxColour}  onChange={e => dispatch(updateColumn({idx:props.idx,def:{...props.column, maxColour: e}}))}>
             <Button aria-label="max colour" style={{ backgroundColor: hslToBorder(props.column.maxColour) }}> {ICONS.colour} Maximum Colour</Button>
         </ColourPicker>
-    </div>
-}
-
-function KeywordColumn(props: { column: ColumnDef, idx: number }) {
-    const columnData = useSelector((state: RootState) => state.main.records.map(r => r.columns[props.idx]));
-
-    const uniqueVals = columnData.filter(d => d != null && d.trim().length > 0)
-        .sort()
-        .reduce(
-            (acc, cur) => { if (acc[acc.length - 1] != cur) { acc.push(cur); }; return acc; },
-            [] as string[]
-        );
-
-    return <div>
-        <Table aria-label="Column keywords table">
-            <TableHeader>
-                <TableColumn>Keyword</TableColumn>
-                <TableColumn>Settings</TableColumn>
-            </TableHeader>
-            <TableBody>
-                {
-                    uniqueVals.map(v => {
-                        return <TableRow key={v}>
-                            <TableCell>{v}</TableCell>
-                            <TableCell>
-                                <ButtonGroup variant="bordered">
-                                    {/* <Popover>
-                                        <PopoverTrigger>
-                                    <Button isIconOnly aria-label="Colour" size="sm" style={{ backgroundColor: hslToBorder(textToHsl(v)) }}> {ICONS.colour} </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <div style={{width:200, display:"flex", flexWrap:"wrap"}}>
-                                            {PALETTE.map(hsl=><div style={{width:30,height:30,borderRadius:30,margin:5,backgroundColor:hslToBorder(hsl)}}></div>)}
-                                            </div>
-                                    </PopoverContent>
-                                    </Popover> */}
-                                    <ColourPicker colour={textToHsl(v)} onChange={e=>console.log("TODO",e)}>
-                                        <Button isIconOnly aria-label="Colour" size="sm" style={{ backgroundColor: hslToBorder(textToHsl(v)) }}> {ICONS.colour} </Button>
-                                    </ColourPicker>
-                                    <Button isIconOnly aria-label="Emoji" size="sm"> {ICONS.emoji} </Button>
-                                    <Button isIconOnly aria-label="Move Up" size="sm"> {ICONS.numeric} </Button>
-                                    <Button isIconOnly aria-label="Move Down" size="sm"> {ICONS.numeric} </Button>
-                                </ButtonGroup>
-                            </TableCell>
-                        </TableRow>
-                    })
-                }
-            </TableBody>
-        </Table>
     </div>
 }

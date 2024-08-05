@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import { ReactNode } from "react";
-import { HSL, hslToBorder } from "../colour";
+import { HSL, hslToBorder, PALETTE } from "../colour";
 
 
 export function ColourPicker(props: { children: ReactNode, colour: HSL, onChange: (hsl: HSL) => void }) {
@@ -23,9 +23,3 @@ function ColourOption(props: { hsl: HSL, selected: HSL,onChange: (hsl: HSL) => v
     const selected = props.hsl.filter((x,i)=>props.selected[i]==x).length == 3;
     return <div style={{ width: 30, height: 30, borderRadius: 30, margin: 5, backgroundColor: hslToBorder(props.hsl), borderWidth:2, borderColor:selected?"black":"transparent", cursor:"pointer" }} onClick={()=>props.onChange(props.hsl)}></div>
 }
-
-
-
-const PALETTE: HSL[] = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2].map((a, i) => {
-    return [(i / 5 * 360 + 50)%360, 80, 40 + a * 20];
-})

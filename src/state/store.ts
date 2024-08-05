@@ -35,7 +35,7 @@ const initialState: State = {
     columns: [
         { name: "Ticket", type: "Keyword", map: {} },
         { name: "Story Points", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
-        { name: "Assignee", type: "Alphabetical", minColour: [0, 50, 40], maxColour: [255, 80, 90] },
+        { name: "Assignee", type: "Alphabetical" },
         { name: "Status", type: "Keyword", map: {} }
     ],
     views: [
@@ -121,9 +121,7 @@ const mainSlice = createSlice({
         addColumn: (state: State) =>{
             state.columns.push({
                 name: "new Column",
-                type: "Alphabetical",
-                minColour: [0,0,0],
-                maxColour:[255,255,255]
+                type: "Alphabetical"
             });
             state.records.forEach(r=>{
                 r.columns.push("");

@@ -1,3 +1,5 @@
+import { HSL } from "../colour"
+
 export enum Axis {
     COLOUR,
     TITLE,
@@ -29,22 +31,25 @@ export type NodeSelection = {
 
 export type Selection = ColumnSelection | ViewSelection | NodeSelection;
 
+export type KeywordColumnDef = {
+    name:string,
+    type: "Keyword",
+    map: { [id: string]: ColumnDefKeywordMapItem }
+};
+
 export type ColumnDef = {
     name: string,
 } & (
         {
             type: "Number",
-            minColour: [number, number, number],
-            maxColour: [number, number, number]
+            minColour: HSL,
+            maxColour: HSL
         } | {
-            type: "Alphabetical",
-            minColour: [number, number, number],
-            maxColour: [number, number, number]
-        } | {
-            type: "Keyword",
-            map: { [id: string]: { colour?: string } }
-        }
-    )
+            type: "Alphabetical"
+        } 
+    ) | KeywordColumnDef
+
+export type ColumnDefKeywordMapItem = { colour?: HSL };
 
 export type ViewDef = {
     name: string,

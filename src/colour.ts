@@ -10,8 +10,22 @@ export function textToHsl(text: string): HSL {
     }
 
     // Create the HTML color string
-    return [hash, 80, 50];
+    return PALETTE[Math.floor(Math.abs(hash))%PALETTE.length];
 
+}
+
+export function interpolateHsl(value:string, min:HSL, max:HSL):HSL{
+    const num = parseFloat(value);
+    // TODO we need to know the range fo the field, we're hard-codeding it for now
+    const mv = 0;
+    const range = 21;
+    const u = Math.max(0,Math.min(1,(num -mv)/range));
+    const v = 1-u;
+    return [
+        min[0] * u + max[0]*v,
+        min[1] * u + max[1]*v,
+        min[2] * u + max[2]*v
+    ]
 }
 
 export function hslToBorder(hsl: HSL): string {
@@ -20,3 +34,9 @@ export function hslToBorder(hsl: HSL): string {
 export function hslToFill(hsl: HSL): string {
     return `hsl(${hsl[0]}deg,${hsl[1]}%,${hsl[2] + 45}%)`;
 }
+
+
+
+export const PALETTE: HSL[] = [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2].map((a, i) => {
+    return [(i / 5 * 360 + 50)%360, 80, 40 + a * 20];
+})
