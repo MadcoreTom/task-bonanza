@@ -65,5 +65,6 @@ export type ViewDef = {
     emoji: null | number,
     row: null | number,
     swimlane: null | number,
+    arrows: null | number,
     data: { pos: [number, number] }[]
 }

@@ -7,7 +7,7 @@ import { ColumnDef } from "../model/view.model";
 import { Record } from "../model/data";
 
 export function Graph(props: { viewIdx: number }) {
-
+    // TODO the view data casuues this to re-render on every drag
     const view = useSelector((state: RootState) => state.main.views[props.viewIdx]);
     const columns = useSelector((state: RootState) => state.main.columns);
 
@@ -40,6 +40,9 @@ export function Graph(props: { viewIdx: number }) {
     return <PannableSvg>
         <GraphNodes transformer={transformer} />
         <GhostNode />
+        <marker id="arrowhead0" viewBox="0 0 60 60" refX="44" refY="34" markerUnits="strokeWidth" markerWidth="8" markerHeight="10" orient="auto">
+            <path d="M 0 0 L 60 30 L 0 60 z" fill="#800000" /> </marker>
+        <Arrows />
     </PannableSvg>
 }
 
@@ -75,4 +78,37 @@ function PannableSvg({ children }) {
         </g>
     </svg>
 
+}
+
+
+function Arrows() {
+    const view = useSelector((state: RootState) => state.main.views[state.main.tab]);
+    const arrowColumn = view.arrows as number; // TODO could be null
+    const column = useSelector((state: RootState) => arrowColumn != null ? state.main.columns[arrowColumn] : null);
+    const records = useSelector((state: RootState) => (column && column.type == "Link" && arrowColumn != null) ? state.main.records.map((r,i) => { return { startIdx:i, targets: r.columns[arrowColumn], key: r.columns[column.references] } }) : []);
+
+
+    function getPos(idx: number, axis: 0 | 1): number {
+        return view.data[idx] ? view.data[idx].pos[axis] : 0;
+    }
+
+    const records2 = records.map(r => {
+        return {
+            ...r, targetIdx: r.targets.split(",").map(t => {
+                return records.map((z, j) => { return { idx: j, rec: z } }).filter(z => z.rec.key == t).map(z => z.idx)[0];
+            }).filter(t=>t !== undefined)
+        };
+    });
+
+    const lines = [] as any[];
+    records2.forEach((r, i) => {
+         r.targetIdx.forEach(t => {
+            lines.push(<line stroke="black"
+                x1={getPos(r.startIdx, 0) + 200} y1={getPos(r.startIdx, 1)+30}
+                x2={getPos(t, 0)} y2={getPos(t, 1)+30}
+                marker-end="url(#arrowhead0)" />)
+        })
+    });
+
+    return <React.Fragment>{lines}</React.Fragment>;
 }

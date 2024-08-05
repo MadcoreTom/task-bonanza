@@ -50,6 +50,7 @@ const initialState: State = {
             row: null,
             swimlane: null,
             text: 2,
+            arrows: 4,
             data: []
         },
         {
@@ -60,6 +61,7 @@ const initialState: State = {
             row: null,
             swimlane: null,
             text: 0,
+            arrows:null,
             data: []
         }
     ]

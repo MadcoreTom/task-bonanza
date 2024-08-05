@@ -59,6 +59,7 @@ export function ViewSidebar() {
         <ViewDropdown title="Text" options={items} view={tmpView} updateView={setTmpView} property="text" icon={ICONS.title} />
         <ViewDropdown title="Colour" options={items} view={tmpView} updateView={setTmpView} property="colour" icon={ICONS.colour} />
         <ViewDropdown title="Emoji" options={items} view={tmpView} updateView={setTmpView} property="emoji" icon={ICONS.emoji} />
+        <ViewDropdown title="Arrows" options={items} view={tmpView} updateView={setTmpView} property="arrows" icon={ICONS.arrowsSplit} />
         <ViewDropdown title="Swimlane" options={items} view={tmpView} updateView={setTmpView} property="swimlane" icon={ICONS.swimlane} />
         <ViewDropdown title="Row" options={items} view={tmpView} updateView={setTmpView} property="row" icon={ICONS.rows} />
     </React.Fragment>
