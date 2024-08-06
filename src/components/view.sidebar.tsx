@@ -32,13 +32,18 @@ export function ViewSidebar() {
     }
 
     const items = columns.map((c, i) => {
-        return { label: c.name, key: i }
+        return { label: c.name, key: i, type: c.type } as { label: string, key: number, type: string | null }
     });
 
     items.unshift({
         label: "none",
-        key: -1
+        key: -1,
+        type: null
     });
+
+    function filteredItems(types: string[]) {
+        return items.filter(i => i.type == null || types.indexOf(i.type) >= 0);
+    }
 
 
     console.log("items", JSON.stringify(items))
@@ -51,21 +56,21 @@ export function ViewSidebar() {
         <Input
             label="View Name"
             value={view.name}
-            // onChange={e => setTmpColumn({ ...column, name: e.target.value })}
-            // onBlur={e => dispatch(updateColumn({ idx: selected, def: tmpColumn }))}
+        // onChange={e => setTmpColumn({ ...column, name: e.target.value })}
+        // onBlur={e => dispatch(updateColumn({ idx: selected, def: tmpColumn }))}
         />
 
         <ViewDropdown title="Title" options={items} view={tmpView} updateView={setTmpView} property="title" icon={ICONS.title} />
         <ViewDropdown title="Text" options={items} view={tmpView} updateView={setTmpView} property="text" icon={ICONS.title} />
         <ViewDropdown title="Colour" options={items} view={tmpView} updateView={setTmpView} property="colour" icon={ICONS.colour} />
-        <ViewDropdown title="Emoji" options={items} view={tmpView} updateView={setTmpView} property="emoji" icon={ICONS.emoji} />
-        <ViewDropdown title="Arrows" options={items} view={tmpView} updateView={setTmpView} property="arrows" icon={ICONS.arrowsSplit} />
-        <ViewDropdown title="Swimlane" options={items} view={tmpView} updateView={setTmpView} property="swimlane" icon={ICONS.swimlane} />
-        <ViewDropdown title="Row" options={items} view={tmpView} updateView={setTmpView} property="row" icon={ICONS.rows} />
+        <ViewDropdown title="Emoji" options={filteredItems(["Keyword"])} view={tmpView} updateView={setTmpView} property="emoji" icon={ICONS.emoji} />
+        <ViewDropdown title="Arrows" options={filteredItems(["Link"])} view={tmpView} updateView={setTmpView} property="arrows" icon={ICONS.arrowsSplit} />
+        <ViewDropdown title="Swimlane" options={filteredItems(["Keyword"])} view={tmpView} updateView={setTmpView} property="swimlane" icon={ICONS.swimlane} />
+        <ViewDropdown title="Row" options={filteredItems(["Keyword"])} view={tmpView} updateView={setTmpView} property="row" icon={ICONS.rows} />
     </React.Fragment>
 }
 
-function ViewDropdown(props: { title: string, options: { label: string, key: number }[], view: ViewDef, updateView: (view: ViewDef) => void, property: keyof ViewDef, icon: any }) {
+function ViewDropdown(props: { title: string, options: { label: string, key: number, type: string | null }[], view: ViewDef, updateView: (view: ViewDef) => void, property: keyof ViewDef, icon: any }) {
     return <Select
         label={props.title}
         placeholder="None"
@@ -74,7 +79,7 @@ function ViewDropdown(props: { title: string, options: { label: string, key: num
         startContent={props.icon}
         selectedKeys={[props.view[props.property] == null ? -1 : props.view[props.property] + ""]}
         onChange={e => props.updateView({ ...props.view, [props.property]: parseInt(e.target.value) })}
-        variant={props.view[props.property] == null || props.view[props.property] ==-1 ? "bordered" : "flat"}
+        variant={props.view[props.property] == null || props.view[props.property] == -1 ? "bordered" : "flat"}
     >
         {props.options.map((item) => (
             <SelectItem key={item.key}>

@@ -1,6 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit"
 import { ColumnDef, Selection, ViewDef } from "../model/view.model"
 import { Record } from "../model/data"
+import { PALETTE } from "../colour"
 
 export type State = {
     records: Record[],
@@ -30,15 +31,15 @@ const initialState: State = {
         { id: "b", columns: ["BUG-002", "4", "Bobson Dugnutt", "In Progress", ""] },
         { id: "b", columns: ["FEAT-001", "13", "Bobson Dugnutt", "Done", "FEAT-002"] },
         { id: "b", columns: ["FEAT-002", "13", "Bobson Dugnutt", "In Progress", ""] },
-        { id: "b", columns: ["FEAT-003", "1", "Bobson Dugnutt", "Testing", "FEAT-002,BUG-001"] }
+        { id: "b", columns: ["FEAT-003", "1", "Chim Richalds", "Testing", "FEAT-002,BUG-001"] }
     ],
     changeQueue: [],
     tab: 0,
     columns: [
-        { name: "Ticket", type: "Keyword", map: {} },
+        { name: "Ticket", type: "Alphabetical"},
         { name: "Story Points", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
-        { name: "Assignee", type: "Alphabetical" },
-        { name: "Status", type: "Keyword", map: {} },
+        { name: "Assignee", type: "Keyword" , map: {"unassigned":{colour: PALETTE[0]}, "Bobson Dugnutt":{colour: PALETTE[12]}, "Chim Richalds":{colour: PALETTE[6]}} },
+        { name: "Status", type: "Keyword", map: { "New": {colour: PALETTE[0]},"Done": {colour: PALETTE[2]},"In Progress": {colour: PALETTE[4]},"Testing": {colour: PALETTE[8]}} },
         { name: "Blocks", type: "Link", references: 0 }
     ],
     views: [
@@ -48,19 +49,19 @@ const initialState: State = {
             colour: 3,
             emoji: null,
             row: null,
-            swimlane: null,
+            swimlane: 3,
             text: 2,
             arrows: 4,
             data: []
         },
         {
             name: "Assignees",
-            title: 1,
+            title: 0,
             colour: 2,
             emoji: 2,
             row: null,
             swimlane: null,
-            text: 0,
+            text: 2,
             arrows:null,
             data: []
         }

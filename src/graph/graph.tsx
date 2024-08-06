@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { dragNode, releaseNode, RootState } from "../state/store";
 import { GhostNode, GraphNodes, NodeViewTransformer } from "./graph.nodes";
 import { HSL, interpolateHsl, textToHsl } from "../colour";
-import { ColumnDef } from "../model/view.model";
+import { ColumnDef, ViewDef } from "../model/view.model";
 import { Record } from "../model/data";
+import { Swimlanes } from "./graph.swimlane";
 
 export function Graph(props: { viewIdx: number }) {
     // TODO the view data casuues this to re-render on every drag
@@ -38,10 +39,11 @@ export function Graph(props: { viewIdx: number }) {
     }
 
     return <PannableSvg>
+        { view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]}/>}
         <GraphNodes transformer={transformer} />
         <GhostNode />
         <marker id="arrowhead0" viewBox="0 0 60 60" refX="44" refY="34" markerUnits="strokeWidth" markerWidth="8" markerHeight="10" orient="auto">
-            <path d="M 0 0 L 60 30 L 0 60 z" fill="#800000" /> </marker>
+            <path d="M 0 0 L 60 30 L 0 60 z" fill="black" /> </marker>
         <Arrows />
     </PannableSvg>
 }
@@ -80,6 +82,16 @@ function PannableSvg({ children }) {
 
 }
 
+function Arrow(props: { start: [number, number], end: [number, number] }) {
+    const width = 200;
+    const yOffset = 30;
+    const curved = 50;
+    return <path
+        d={`M ${props.start[0] + width} ${props.start[1] + yOffset} C ${props.start[0] + width + curved} ${props.start[1] + yOffset}, ${props.end[0] - curved} ${props.end[1] + yOffset} ${props.end[0]} ${props.end[1] + yOffset}`}
+        stroke="black" fill="transparent" strokeWidth="2" marker-end="url(#arrowhead0)"
+    />
+}
+
 
 function Arrows() {
     const view = useSelector((state: RootState) => state.main.views[state.main.tab]);
@@ -88,8 +100,8 @@ function Arrows() {
     const records = useSelector((state: RootState) => (column && column.type == "Link" && arrowColumn != null) ? state.main.records.map((r,i) => { return { startIdx:i, targets: r.columns[arrowColumn], key: r.columns[column.references] } }) : []);
 
 
-    function getPos(idx: number, axis: 0 | 1): number {
-        return view.data[idx] ? view.data[idx].pos[axis] : 0;
+    function getPos(idx: number): [number,number] {
+        return view.data[idx] ? view.data[idx].pos : [0,0];
     }
 
     const records2 = records.map(r => {
@@ -101,12 +113,10 @@ function Arrows() {
     });
 
     const lines = [] as any[];
+    let lineId =0;
     records2.forEach((r, i) => {
          r.targetIdx.forEach(t => {
-            lines.push(<line stroke="black"
-                x1={getPos(r.startIdx, 0) + 200} y1={getPos(r.startIdx, 1)+30}
-                x2={getPos(t, 0)} y2={getPos(t, 1)+30}
-                marker-end="url(#arrowhead0)" />)
+            lines.push( <Arrow start={getPos(r.startIdx)} end={getPos(t)} key={lineId++} />)
         })
     });
 
