@@ -43,7 +43,7 @@ jobs:
       # Copy to magical _site directory, then i guess this becomes the artifact
       - run: cp -R ./www ./_site
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v4
   deploy:
     environment:
       name: github-pages
