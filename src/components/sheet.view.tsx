@@ -12,7 +12,7 @@ export function SheetView() {
     const matrix: Matrix<CellBase> = rows;
     const dispatch = useDispatch();
 
-    console.log("RERENDER SheetView")
+    console.log("💲 RERENDER SheetView")
 
     function sel(s: SheetSelection) {
         if (s instanceof EntireColumnsSelection) {

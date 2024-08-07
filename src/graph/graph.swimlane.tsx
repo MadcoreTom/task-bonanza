@@ -8,8 +8,8 @@ export function Swimlanes(props: { column: ColumnDef }) {
 
         return <g>
             {sortedSwimlanes.map((k, i) =>
-                <g transform={`translate(${i * 250},0)`}>
-                    <rect fill="#aaaaaa" stroke="transparent" width="220" height="1000" r="10" key={i} opacity={0.25}>
+                <g transform={`translate(${i * 250},0)`} key={i}>
+                    <rect fill="#aaaaaa" stroke="transparent" width="220" height="1000" r="10" opacity={0.25}>
                     </rect>
                     <text y="15" x="125" textAnchor="middle">{k}</text>
                 </g>

@@ -80,7 +80,7 @@ const mainSlice = createSlice({
                 state.tab = action.payload;
             }
         },
-        setSelection: (state: State, action: { payload: Selection }) => {
+        setSelection: (state: State, action: { payload: Selection | null }) => {
             state.selected = action.payload
         },
         clearSelection: (state: State) => {
@@ -99,7 +99,6 @@ const mainSlice = createSlice({
         },
         updateView: (state: State, action: { payload: { idx: number, def: ViewDef } }) => {
             const { idx, def } = action.payload;
-            console.log("AA", action.payload)
             state.views[idx] = def;
         },
         releaseNode: (state: State) => {

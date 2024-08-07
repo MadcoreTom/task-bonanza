@@ -6,7 +6,7 @@ import { hslToBorder, hslToFill } from "../colour";
 
 export function GraphNodes(props: { transformer: NodeViewTransformer }) {
     const recordCount = useSelector((state: RootState) => state.main.records.length);
-    console.log("$ re-render nodes");
+    console.log("💲 re-render nodes");
 
     const nodes: any[] = [];
 

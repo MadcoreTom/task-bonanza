@@ -32,9 +32,12 @@ function App() {
       <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "center", borderBottom: "2px solid hsl(var(--nextui-secondary))" }}>
         <span className="text-xl" id="title">Task&nbsp;Bonanza</span>
         <AppTabs onChange={v => {
-          console.log("TAB", v)
           dispatch(setTab(v));
-          dispatch(setSelection({ type: "view", idx: v }));
+          if (v >= 0) {
+            dispatch(setSelection({ type: "view", idx: v }));
+          } else {
+            dispatch(setSelection(null));
+          }
         }} />
         {tab}
       </div>

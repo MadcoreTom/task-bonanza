@@ -14,7 +14,6 @@ export function ColumnSidebar() {
     const dispatch = useDispatch();
 
     const column = useSelector((state: RootState) => state.main.columns[selected]);
-    console.log(column, column, selected);
 
     const [tmpColumn, setTmpColumn] = React.useState(null as ColumnDef | null);
     React.useEffect(() => {

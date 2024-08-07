@@ -11,10 +11,6 @@ export function ViewSidebar() {
     const view = useSelector((state: RootState) => state.main.views[selected]);
     const dispatch = useDispatch();
 
-    /*
-        const [tmpView, setTmpView] = React.useState(null as ViewDef | null);
-        console.log("T", JSON.stringify(tmpView))
-        */
     React.useEffect(() => {
         setTmpView(view);
     }, [view]);
@@ -22,7 +18,6 @@ export function ViewSidebar() {
 
     const tmpView = view;
     const setTmpView = v => {
-        console.log("VV", v)
         dispatch(updateView({ idx: selected, def: v }));
     }
 
@@ -45,19 +40,14 @@ export function ViewSidebar() {
         return items.filter(i => i.type == null || types.indexOf(i.type) >= 0);
     }
 
-
-    console.log("items", JSON.stringify(items))
-
-
-
     return <React.Fragment>
         <h1>View {tmpView.name}</h1>
 
         <Input
             label="View Name"
             value={view.name}
-        // onChange={e => setTmpColumn({ ...column, name: e.target.value })}
-        // onBlur={e => dispatch(updateColumn({ idx: selected, def: tmpColumn }))}
+            // TODO actually change the view name
+            readOnly={true}
         />
 
         <ViewDropdown title="Title" options={items} view={tmpView} updateView={setTmpView} property="title" icon={ICONS.title} />
@@ -77,7 +67,7 @@ function ViewDropdown(props: { title: string, options: { label: string, key: num
         selectionMode="single"
         className="max-w-xs"
         startContent={props.icon}
-        selectedKeys={[props.view[props.property] == null ? -1 : props.view[props.property] + ""]}
+        selectedKeys={[props.view[props.property] == null ? -1+"" : props.view[props.property] + ""]}
         onChange={e => props.updateView({ ...props.view, [props.property]: parseInt(e.target.value) })}
         variant={props.view[props.property] == null || props.view[props.property] == -1 ? "bordered" : "flat"}
     >

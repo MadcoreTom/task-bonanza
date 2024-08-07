@@ -20,6 +20,7 @@ export function NodeSidebar() {
                 variant="bordered"
                 value={record.columns[i]}
                 defaultValue="-"
+                key={i}
               />})
         }
     </React.Fragment>

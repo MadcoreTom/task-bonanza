@@ -88,7 +88,7 @@ function Arrow(props: { start: [number, number], end: [number, number] }) {
     const curved = 50;
     return <path
         d={`M ${props.start[0] + width} ${props.start[1] + yOffset} C ${props.start[0] + width + curved} ${props.start[1] + yOffset}, ${props.end[0] - curved} ${props.end[1] + yOffset} ${props.end[0]} ${props.end[1] + yOffset}`}
-        stroke="black" fill="transparent" strokeWidth="2" marker-end="url(#arrowhead0)"
+        stroke="black" fill="transparent" strokeWidth="2" markerEnd="url(#arrowhead0)"
     />
 }
 
