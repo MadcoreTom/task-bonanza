@@ -49,7 +49,7 @@ jobs:
         with:
           name: github-pages
           path: ./www
-          retention-dats: 1
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
