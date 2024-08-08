@@ -34,7 +34,7 @@ jobs:
 
       # npm build
       - name: NPM Build
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20.x
           cache: 'npm'
@@ -47,8 +47,9 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
+          name: github-pages
           path: ./www
+          retention-dats: 1
 
   deploy:
     runs-on: ubuntu-latest
