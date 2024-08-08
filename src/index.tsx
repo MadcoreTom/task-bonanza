@@ -39,7 +39,6 @@ function App() {
             dispatch(setSelection(null));
           }
         }} />
-        {tab}
       </div>
       {content}
 

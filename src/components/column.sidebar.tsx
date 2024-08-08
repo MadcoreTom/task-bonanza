@@ -61,6 +61,7 @@ export function ColumnSidebar() {
             onChange={e => dispatch(updateColumn({ idx: selected, def: changeType(column, e.target.value as any) }))}
         >
             <SelectItem key="Number" startContent={ICONS.emoji}>Number</SelectItem>
+            <SelectItem key="Link" startContent={ICONS.arrowsSplit}>Link</SelectItem>
             <SelectItem key="Keyword" startContent={ICONS.keywords}>Keyword</SelectItem>
             <SelectItem key="Alphabetical" startContent={ICONS.alphabetical}>Alphabetical</SelectItem>
         </Select>

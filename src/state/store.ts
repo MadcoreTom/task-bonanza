@@ -9,7 +9,8 @@ export type State = {
     changeQueue: { row: number, column: number, value: string }[],
     tab: number,
     columns: ColumnDef[],
-    views: ViewDef[]
+    views: ViewDef[],
+    stagedData:string[][] | null
 }
 
 export type RootState = {
@@ -65,7 +66,8 @@ const initialState: State = {
             arrows:null,
             data: []
         }
-    ]
+    ],
+    stagedData: null
 }
 
 const mainSlice = createSlice({
@@ -132,6 +134,25 @@ const mainSlice = createSlice({
                 r.columns.push("");
             });
             commitRecordsA(state);
+        },
+        stageData: (state:State, action:{payload:string[][]})=>{
+            state.stagedData = action.payload;
+        },
+        importStagedData: (state: State) => {
+            console.log("Importing")
+            if (state.stagedData) {
+                const headers = state.stagedData.shift() as string[];
+                state.columns = headers.map(h => {
+                    return {
+                        name: h,
+                        type: "Alphabetical"
+                    }
+                });
+                state.records = state.stagedData.map(row => {
+                    return { id: "1", columns: row }
+                })
+            }
+            state.stagedData = null;
         }
     }
 });
@@ -142,4 +163,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn } = mainSlice.actions;
+export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData } = mainSlice.actions;
