@@ -1,52 +1,30 @@
 import * as React from "react";
 import { createRoot } from 'react-dom/client';
 import { NextUIProvider } from "@nextui-org/react";
-import { AppTabs } from "./components/tabs";
 import { ViewSidebar } from "./components/view.sidebar";
 import { SheetView } from "./components/sheet.view";
 import { ColumnSidebar } from "./components/column.sidebar";
-import { RootState, setSelection, setTab, STORE } from "./state/store";
+import { RootState, STORE } from "./state/store";
 import { Provider, useDispatch, useSelector } from 'react-redux'
 import { Graph } from "./graph/graph";
 import { NodeSidebar } from "./components/node.sidebar";
+import { Ribbon } from "./components/ribbon/ribbon";
 
 
 function App() {
   const tab = useSelector((state: RootState) => state.main.tab);
-  const dispatch = useDispatch();
-  console.log("ROOT RERENDER", tab)
+  console.log("💲 ROOT RERENDER", tab)
 
-  let content: any;
+  let content = tab == -1 ? <SheetView /> : <Graph viewIdx={tab} />;
 
-  // TODO no more switch
-  if (tab == -1) {
-    content = <SheetView />
-
-  } else {
-    content = <Graph viewIdx={tab} />;
-
-  }
 
   return <div className="flex w-full flex-row" id="main">
     <div className="flex-1 flex flex-col">
-      <div className="flex gap-3 p-2 items-baseline" style={{ alignItems: "center", borderBottom: "2px solid hsl(var(--nextui-secondary))" }}>
-        <span className="text-xl" id="title">Task&nbsp;Bonanza</span>
-        <AppTabs onChange={v => {
-          dispatch(setTab(v));
-          if (v >= 0) {
-            dispatch(setSelection({ type: "view", idx: v }));
-          } else {
-            dispatch(setSelection(null));
-          }
-        }} />
-      </div>
+      <Ribbon />
       {content}
 
     </div>
-
-    <div className="flex-initial w-80 flex gap-3 flex-col p-2 shadow-md shadow-danger" id="sidepanel">
-      <Side />
-    </div>
+    <Side />
   </div>
 
 }
@@ -60,13 +38,13 @@ function Side() {
 
   switch (selected.type) {
     case "view":
-      return <ViewSidebar />
+      return <div className="flex-initial w-80 flex gap-3 flex-col p-2 shadow-md" id="sidepanel"><ViewSidebar /></div>
     case "column":
-      return <ColumnSidebar />
+      return <div className="flex-initial w-80 flex gap-3 flex-col p-2 shadow-md" id="sidepanel"><ColumnSidebar /></div>
     case "node":
-      return <NodeSidebar />
+      return <div className="flex-initial w-80 flex gap-3 flex-col p-2 shadow-md" id="sidepanel"><NodeSidebar /></div>
     default:
-      return <span>Unknown selection</span>
+      return null
   }
 }
 

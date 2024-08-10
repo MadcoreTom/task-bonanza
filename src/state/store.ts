@@ -10,7 +10,7 @@ export type State = {
     tab: number,
     columns: ColumnDef[],
     views: ViewDef[],
-    stagedData:string[][] | null
+    stagedData: string[][] | null
 }
 
 export type RootState = {
@@ -37,10 +37,10 @@ const initialState: State = {
     changeQueue: [],
     tab: 0,
     columns: [
-        { name: "Ticket", type: "Alphabetical"},
+        { name: "Ticket", type: "Alphabetical" },
         { name: "Story Points", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
-        { name: "Assignee", type: "Keyword" , map: {"unassigned":{colour: PALETTE[0]}, "Bobson Dugnutt":{colour: PALETTE[12]}, "Chim Richalds":{colour: PALETTE[6]}} },
-        { name: "Status", type: "Keyword", map: { "New": {colour: PALETTE[0]},"Done": {colour: PALETTE[2]},"In Progress": {colour: PALETTE[4]},"Testing": {colour: PALETTE[8]}} },
+        { name: "Assignee", type: "Keyword", map: { "unassigned": { colour: PALETTE[0] }, "Bobson Dugnutt": { colour: PALETTE[12] }, "Chim Richalds": { colour: PALETTE[6] } } },
+        { name: "Status", type: "Keyword", map: { "New": { colour: PALETTE[0] }, "Done": { colour: PALETTE[2] }, "In Progress": { colour: PALETTE[4] }, "Testing": { colour: PALETTE[8] } } },
         { name: "Blocks", type: "Link", references: 0 }
     ],
     views: [
@@ -63,7 +63,7 @@ const initialState: State = {
             row: null,
             swimlane: null,
             text: 2,
-            arrows:null,
+            arrows: null,
             data: []
         }
     ],
@@ -76,10 +76,15 @@ const mainSlice = createSlice({
     reducers: {
         setTab: (state: State, action: { payload: number }) => {
             if (state.tab != action.payload) {
-                if (state.tab == 0) {
+                if (state.tab == -1) {
                     commitRecordsA(state);
                 }
                 state.tab = action.payload;
+            }
+            if(state.tab >=0){
+                state.selected = { type: "view", idx: state.tab };
+            } else {
+                state.selected = null;
             }
         },
         setSelection: (state: State, action: { payload: Selection | null }) => {
@@ -135,7 +140,7 @@ const mainSlice = createSlice({
             });
             commitRecordsA(state);
         },
-        stageData: (state:State, action:{payload:string[][]})=>{
+        stageData: (state: State, action: { payload: string[][] }) => {
             state.stagedData = action.payload;
         },
         importStagedData: (state: State) => {
