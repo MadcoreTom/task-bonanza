@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { dragNode, releaseNode, RootState } from "../state/store";
+import { dragNode, releaseNode, RootState, setSelection } from "../state/store";
 import { GhostNode, GraphNodes, NodeViewTransformer } from "./graph.nodes";
 import { HSL, interpolateHsl, textToHsl } from "../colour";
 import { ColumnDef, ViewDef } from "../model/view.model";
@@ -39,12 +39,13 @@ export function Graph(props: { viewIdx: number }) {
     }
 
     return <PannableSvg>
-        { view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]}/>}
+        {view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]} />}
         <GraphNodes transformer={transformer} />
         <GhostNode />
         <marker id="arrowhead0" viewBox="0 0 60 60" refX="44" refY="34" markerUnits="strokeWidth" markerWidth="8" markerHeight="10" orient="auto">
             <path d="M 0 0 L 60 30 L 0 60 z" fill="black" /> </marker>
         <Arrows />
+        <PendingArrows />
     </PannableSvg>
 }
 
@@ -55,14 +56,17 @@ export function Graph(props: { viewIdx: number }) {
  */
 function PannableSvg({ children }) {
     let [offset, setOffset] = React.useState([0, 0]);
-    const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "node" && state.main.selected.mouseDown);// if a node is selected
+    const nodeSelected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "node" && state.main.selected.mouseDown);// if a node is selected
+    const linkSelected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "link" && state.main.selected.pos ? state.main.selected : null);
     const dispatch = useDispatch();
 
     function onDrag(evt: React.MouseEvent) {
         if (evt.buttons > 0) {
-            if (selected) {
+            if (nodeSelected) {
                 dispatch(dragNode({ delta: [evt.movementX, evt.movementY] }));
-            } else {
+            } else if(linkSelected && linkSelected.mouse){
+                dispatch(setSelection({...linkSelected, mouse: [linkSelected.mouse[0] + evt.movementX, linkSelected.mouse[1] + evt.movementY]}))
+            }else {
                 setOffset([offset[0] + evt.movementX, offset[1] + evt.movementY]);
             }
         }
@@ -97,28 +101,38 @@ function Arrows() {
     const view = useSelector((state: RootState) => state.main.views[state.main.tab]);
     const arrowColumn = view.arrows as number; // TODO could be null
     const column = useSelector((state: RootState) => arrowColumn != null ? state.main.columns[arrowColumn] : null);
-    const records = useSelector((state: RootState) => (column && column.type == "Link" && arrowColumn != null) ? state.main.records.map((r,i) => { return { startIdx:i, targets: r.columns[arrowColumn], key: r.columns[column.references] } }) : []);
+    const records = useSelector((state: RootState) => (column && column.type == "Link" && arrowColumn != null) ? state.main.records.map((r, i) => { return { startIdx: i, targets: r.columns[arrowColumn], key: r.columns[column.references] } }) : []);
 
 
-    function getPos(idx: number): [number,number] {
-        return view.data[idx] ? view.data[idx].pos : [0,0];
+    function getPos(idx: number): [number, number] {
+        return view.data[idx] ? view.data[idx].pos : [0, 0];
     }
 
     const records2 = records.map(r => {
         return {
             ...r, targetIdx: r.targets.split(",").map(t => {
                 return records.map((z, j) => { return { idx: j, rec: z } }).filter(z => z.rec.key == t).map(z => z.idx)[0];
-            }).filter(t=>t !== undefined)
+            }).filter(t => t !== undefined)
         };
     });
 
     const lines = [] as any[];
-    let lineId =0;
+    let lineId = 0;
     records2.forEach((r, i) => {
-         r.targetIdx.forEach(t => {
-            lines.push( <Arrow start={getPos(r.startIdx)} end={getPos(t)} key={lineId++} />)
+        r.targetIdx.forEach(t => {
+            lines.push(<Arrow start={getPos(r.startIdx)} end={getPos(t)} key={lineId++} />)
         })
     });
 
     return <React.Fragment>{lines}</React.Fragment>;
+}
+
+function PendingArrows() {
+    const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "link" && state.main.selected.pos? state.main.selected : null);
+    if (selected && selected.endIdx == undefined  && selected.mouse) {
+        // start to mouse
+        return <Arrow start={selected.pos as [number,number]} end={selected.mouse} />
+    }
+
+    return null;
 }

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, setSelection } from "../state/store";
+import { clickNode, mouseUpNode, RootState, setSelection } from "../state/store";
 import { Record } from "../model/data";
 import { hslToBorder, hslToFill } from "../colour";
 
@@ -44,8 +44,8 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
             strokeWidth={2}
             rx={10}
             className="hoverable"
-        onMouseDown={evt => { dispatch(setSelection({/* x: props.x, y: props.y, idx: props.idx*/ type:"node", idx:props.idx, mouseDown:true, pos:[x, y ]})); evt.stopPropagation(); }}
-        // onDoubleClick={props.onDoubleClick}
+            onMouseDown={evt => { dispatch(clickNode({ idx: props.idx, pos: [x, y] })); evt.stopPropagation(); }}
+            onMouseUp={evt => { dispatch(mouseUpNode({ idx: props.idx, pos: [x, y] })); evt.stopPropagation(); }}
         >
         </rect>
         <text x={100} y="15" textAnchor="middle">{props.transformer.getTitle(record)}</text>

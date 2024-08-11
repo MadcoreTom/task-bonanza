@@ -27,9 +27,17 @@ export type NodeSelection = {
 } & (
         { mouseDown: false } |
         { mouseDown: true, pos: [number, number] }
-    )
+    );
 
-export type Selection = ColumnSelection | ViewSelection | NodeSelection;
+export type LinkSelection = {
+    type: "link",
+    startIdx?:number,
+    endIdx?:number,
+    pos?:[number,number],
+    mouse?:[number,number]
+};
+
+export type Selection = ColumnSelection | ViewSelection | NodeSelection | LinkSelection;
 
 export type KeywordColumnDef = {
     name:string,

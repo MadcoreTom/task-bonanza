@@ -11,7 +11,6 @@ export function NodeSidebar() {
 
     return <React.Fragment>
         <h1>Node {selected.idx}</h1>
-        <Switch title="MouseDown" isSelected={selected.mouseDown} />
         {
             columns.map((c,i)=>{
                 return  <Input

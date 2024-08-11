@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit"
-import { ColumnDef, Selection, ViewDef } from "../model/view.model"
+import { ColumnDef, LinkSelection, Selection, ViewDef } from "../model/view.model"
 import { Record } from "../model/data"
 import { PALETTE } from "../colour"
 
@@ -81,14 +81,18 @@ const mainSlice = createSlice({
                 }
                 state.tab = action.payload;
             }
-            if(state.tab >=0){
+            if (state.tab >= 0) {
                 state.selected = { type: "view", idx: state.tab };
             } else {
                 state.selected = null;
             }
         },
-        setSelection: (state: State, action: { payload: Selection | null }) => {
-            state.selected = action.payload
+        setSelection: (state: State, action: { payload: Selection | "currentView" | null }) => {
+            if (action.payload === "currentView") {
+                state.selected = { type: "view", idx: state.tab };
+            } else {
+                state.selected = action.payload;
+            }
         },
         clearSelection: (state: State) => {
             state.selected = null;
@@ -158,6 +162,42 @@ const mainSlice = createSlice({
                 })
             }
             state.stagedData = null;
+        },
+        clickNode: (state: State, action: { payload: { idx: number, pos: [number, number] } }) => {
+            const sel = state.selected;
+            if (sel && sel.type == "link" && sel.endIdx == undefined) {
+                if (sel.startIdx == undefined) {
+                    console.log("LINKING1");
+                    (state.selected as LinkSelection).startIdx = action.payload.idx;
+                    (state.selected as LinkSelection).pos = action.payload.pos;
+                    (state.selected as LinkSelection).mouse = [...action.payload.pos];
+                } 
+            } else {
+                state.selected = { type: "node", idx: action.payload.idx, mouseDown: true, pos: action.payload.pos }
+            }
+        },
+        mouseUpNode: (state: State, action: { payload: { idx: number, pos: [number, number] } }) => {
+            const sel = state.selected;
+            if (sel && sel.type == "link" && sel.startIdx != undefined && sel.endIdx == undefined) {
+                sel.endIdx = action.payload.idx;
+                console.log("LINKING3");
+                const arrows = state.views[state.tab]?.arrows;
+                if (arrows != null) {
+                    const cur = state.records[sel.startIdx].columns[arrows];
+                    if (cur && cur.length > 0) {
+                        state.records[sel.startIdx].columns[arrows] = cur + "," + state.records[sel.endIdx].columns[0];
+                    } else {
+                        state.records[sel.startIdx].columns[arrows] = state.records[sel.endIdx].columns[0];
+                    }
+                }
+            }
+            // TODO same as releaseNode
+            if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
+                state.views[state.tab].data[state.selected.idx] = {
+                    pos: [state.selected.pos[0], state.selected.pos[1]]
+                }
+                state.selected = { ...state.selected, mouseDown: false };
+            }
         }
     }
 });
@@ -168,4 +208,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData } = mainSlice.actions;
+export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, clickNode,mouseUpNode } = mainSlice.actions;
