@@ -26,11 +26,16 @@ function commitRecordsA(state: State) {
     }
 }
 
+function calcSwimlanes(state:State){
+    const def = state.views[state.tab];
+    def.swimlanes = getUniqueValues(state.records.map(r => r.columns[def.swimlane as number]));
+}
+
 const initialState: State = {
     selected: null,
     records: [
         { columns: ["V-1", "Recenter View", "Ability to re-centre when you get lost", "View", "2", "Tom", "New", ""] },
-        { columns: ["N-1", "Fit Text", "Fit text to node", "Node", "4", "Tom", "New", ""] },
+        { columns: ["N-1", "Fit Text", "Fit text to node, or wrap the text if that's better", "Node", "4", "Tom", "Done", ""] },
         { columns: ["N-2", "Auto Arrows", "Automatically organise nodes when arrows change", "Node", "4", "Tom", "New", ""] },
         { columns: ["N-3", "Tidy Arrows", "The arrow experience could be better", "Node", "2", "Tom", "New", ""] },
         { columns: ["N-4", "Arrows to null", "Arrows to nodes with empty IDs appear", "Node", "2", "Tom", "New", ""] },
@@ -62,7 +67,8 @@ const initialState: State = {
             swimlane: 6,
             text: 2,
             arrows: 7,
-            data: []
+            data: [],
+            dirty:true
         },
         {
             name: "Flow",
@@ -73,7 +79,8 @@ const initialState: State = {
             row: null,
             swimlane: null,
             arrows: null,
-            data: []
+            data: [],
+            dirty:true
         }
     ],
     stagedData: null
@@ -92,6 +99,11 @@ const mainSlice = createSlice({
             }
             if (state.tab >= 0) {
                 state.selected = { type: "view", idx: state.tab };
+                if(state.views[state.tab].dirty){
+                    // TODO sort by  arrows
+                    calcSwimlanes(state);
+                    state.views[state.tab].dirty = false;
+                }
             } else {
                 state.selected = null;
             }
@@ -124,11 +136,12 @@ const mainSlice = createSlice({
             // If there are swimlanes, populate them
             if (def.swimlane != null) {
                 if (def.swimlanes == undefined || def.swimlane != oldSwimlane) {
-                    def.swimlanes = getUniqueValues(state.records.map(r => r.columns[def.swimlane as number]));
+                    calcSwimlanes(state);
                 }
             } else if (def.swimlanes != undefined) {
                 def.swimlanes == undefined;
             }
+            console.log("v", def)
         },
         releaseNode: (state: State) => {
             if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
@@ -140,7 +153,7 @@ const mainSlice = createSlice({
         },
         dragNode: (state: State, action: { payload: { delta: [number, number] } }) => {
             if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
-                if (state.views[state.tab].swimlanes == undefined) {
+                if (state.views[state.tab].swimlane == null) {
                     state.selected.pos[0] += action.payload.delta[0];
                 }
                 state.selected.pos[1] += action.payload.delta[1];

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { clickNode, mouseUpNode, RootState, setSelection } from "../state/store";
 import { Record } from "../model/data";
 import { hslToBorder, hslToFill } from "../colour";
+import { calculateWrap, measureText } from "../text-measure-util";
 
 export function GraphNodes(props: { transformer: NodeViewTransformer }) {
     const recordCount = useSelector((state: RootState) => state.main.records.length);
@@ -31,12 +32,16 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
     const data = useSelector((state: RootState) => state.main.views[state.main.tab].data[props.idx]);
     const dispatch = useDispatch();
 
-const xx = props.transformer.getX(record);
-
-    const x = xx == null ? (data ? data.pos[0] : props.idx * 200) : xx;
+    const fixedX = props.transformer.getX(record);
+    const x = fixedX == null ? (data ? data.pos[0] : props.idx * 200) : fixedX;
     const y= data ? data.pos[1]: (props.idx * 60) % 600;
 
     const hsl = props.transformer.getColour(record);
+
+    const text = props.transformer.getText(record);
+    const textLines = calculateWrap(text,195,"12pt unset inherit");
+    
+    const fs = 12;
 
     return <g transform={`translate(${x},${y})`}>
         <rect
@@ -52,7 +57,7 @@ const xx = props.transformer.getX(record);
         >
         </rect>
         <text x={100} y="15" textAnchor="middle">{props.transformer.getTitle(record)}</text>
-        <text x={100} y="30" textAnchor="middle">{props.transformer.getText(record)}</text>
+        {textLines.map((t,i)=><text x={100} y={30 + fs * i} textAnchor="middle" fontSize={fs} key={i}>{t}</text>)}
     </g>
 }
 

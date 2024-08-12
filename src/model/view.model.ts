@@ -75,5 +75,6 @@ export type ViewDef = {
     swimlane: null | number,
     arrows: null | number,
     data: { pos: [number, number] }[],
-    swimlanes?: string[] 
+    swimlanes?: string[],
+    dirty: boolean 
 }

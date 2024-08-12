@@ -36,9 +36,8 @@ export function Graph(props: { viewIdx: number }) {
         getColour: transformColour,
         getTitle: (record) => view.title != null ? record.columns[view.title] : "null",
         getText: (record) => view.text != null ? record.columns[view.text] : "",
-        getX: (
-            view.swimlane == null ? () => null : (record) => view.swimlanes?.map((s, i) => [s, i * 250 + 10]).filter(s => s[0] == record.columns[view.swimlane as number]).map(s=>s[1])[0] as number
-        )
+        getX: view.swimlane == null ? (() => null) : ((record) => view.swimlanes?.map((s, i) => [s, i * 250 + 10]).filter(s => s[0] == record.columns[view.swimlane as number]).map(s => s[1])[0] as number)
+        
     }
 
     return <PannableSvg>
