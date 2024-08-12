@@ -30,6 +30,19 @@ function calcSwimlanes(state:State){
     const def = state.views[state.tab];
     def.swimlanes = getUniqueValues(state.records.map(r => r.columns[def.swimlane as number]));
 }
+function initLocations(state: State) {
+    const view = state.views[state.tab];
+    view.data = []
+    if (view.swimlane == null) {
+        state.records.forEach((r, i) => {
+            view.data[i] = { pos: [(i * 250) % 1000, (Math.floor(i / 4) * 70)] }
+        });
+    } else {
+        state.records.forEach((r, i) => {
+            view.data[i] = { pos: [0, (i * 70 + 30)] }
+        });
+    }
+}
 
 const initialState: State = {
     selected: null,
@@ -65,8 +78,9 @@ const initialState: State = {
             emoji: null,
             row: null,
             swimlane: 6,
+            swimlanes: ["New", "In Progress", "Done"],
             text: 2,
-            arrows: 7,
+            arrows: null,
             data: [],
             dirty:true
         },
@@ -78,7 +92,7 @@ const initialState: State = {
             emoji: 3,
             row: null,
             swimlane: null,
-            arrows: null,
+            arrows: 7,
             data: [],
             dirty:true
         }
@@ -99,9 +113,12 @@ const mainSlice = createSlice({
             }
             if (state.tab >= 0) {
                 state.selected = { type: "view", idx: state.tab };
-                if(state.views[state.tab].dirty){
+                if (state.views[state.tab].dirty) {
                     // TODO sort by  arrows
-                    calcSwimlanes(state);
+                    initLocations(state);
+                    if (state.views[state.tab].swimlanes == undefined) {
+                        calcSwimlanes(state);
+                    }
                     state.views[state.tab].dirty = false;
                 }
             } else {
