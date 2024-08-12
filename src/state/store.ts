@@ -2,6 +2,7 @@ import { configureStore, createSlice } from "@reduxjs/toolkit"
 import { ColumnDef, LinkSelection, Selection, ViewDef } from "../model/view.model"
 import { Record } from "../model/data"
 import { PALETTE } from "../colour"
+import { getUniqueValues } from "../components/column.keyword.sidebar"
 
 export type State = {
     records: Record[],
@@ -33,7 +34,7 @@ const initialState: State = {
         { columns: ["N-2", "Auto Arrows", "Automatically organise nodes when arrows change", "Node", "4", "Tom", "New", ""] },
         { columns: ["N-3", "Tidy Arrows", "The arrow experience could be better", "Node", "2", "Tom", "New", ""] },
         { columns: ["N-4", "Arrows to null", "Arrows to nodes with empty IDs appear", "Node", "2", "Tom", "New", ""] },
-        { columns: ["V-2", "Sortable Swimlanes", "Make swimlanes sortable and filterable", "View", "3", "Tom", "New", ""] },
+        { columns: ["V-2", "Sortable Swimlanes", "Make swimlanes sortable and filterable", "View", "3", "Tom", "In Progress", ""] },
         { columns: ["F-1", "Export CSV", "Export data as CSV", "File", "4", "Tom", "New", "F-2"] },
         { columns: ["F-2", "Save", "Save data and views", "File", "8", "Tom", "New", ""] },
         { columns: ["C-1", "Ribbon Styling", "Tidy up the ribbon & tabs", "Controls", "3", "Tom", "New", ""] },
@@ -118,7 +119,16 @@ const mainSlice = createSlice({
         },
         updateView: (state: State, action: { payload: { idx: number, def: ViewDef } }) => {
             const { idx, def } = action.payload;
+            const oldSwimlane = state.views[idx].swimlane;
             state.views[idx] = def;
+            // If there are swimlanes, populate them
+            if (def.swimlane != null) {
+                if (def.swimlanes == undefined || def.swimlane != oldSwimlane) {
+                    def.swimlanes = getUniqueValues(state.records.map(r => r.columns[def.swimlane as number]));
+                }
+            } else if (def.swimlanes != undefined) {
+                def.swimlanes == undefined;
+            }
         },
         releaseNode: (state: State) => {
             if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
@@ -130,7 +140,9 @@ const mainSlice = createSlice({
         },
         dragNode: (state: State, action: { payload: { delta: [number, number] } }) => {
             if (state.selected && state.selected.type == "node" && state.selected.mouseDown) {
-                state.selected.pos[0] += action.payload.delta[0];
+                if (state.views[state.tab].swimlanes == undefined) {
+                    state.selected.pos[0] += action.payload.delta[0];
+                }
                 state.selected.pos[1] += action.payload.delta[1];
             }
         },

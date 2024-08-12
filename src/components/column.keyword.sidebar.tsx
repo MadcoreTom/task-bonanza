@@ -8,6 +8,14 @@ import { Column } from "../model/data";
 import { HSL, hslToBorder, textToHsl } from "../colour";
 import { ColourPicker } from "./colour.picker";
 
+export function getUniqueValues(data:string[]):string[]{
+    return data.filter(d => d != null && d.trim().length > 0)
+        .sort()
+        .reduce(
+            (acc, cur) => { if (acc[acc.length - 1] != cur) { acc.push(cur); }; return acc; },
+            [] as string[]
+        );
+}
 
 export function KeywordColumn(props: { column: KeywordColumnDef, idx: number }) {
     const columnData = useSelector((state: RootState) => state.main.records.map(r => r.columns[props.idx]));
@@ -19,12 +27,7 @@ export function KeywordColumn(props: { column: KeywordColumnDef, idx: number }) 
         return null;
     }
 
-    const uniqueVals = columnData.filter(d => d != null && d.trim().length > 0)
-        .sort()
-        .reduce(
-            (acc, cur) => { if (acc[acc.length - 1] != cur) { acc.push(cur); }; return acc; },
-            [] as string[]
-        );
+    const uniqueVals = getUniqueValues(columnData);
 
     function updateMap(v: string, data: ColumnDefKeywordMapItem): KeywordColumnDef {
         const map2 = { ...col.map };

@@ -74,5 +74,6 @@ export type ViewDef = {
     row: null | number,
     swimlane: null | number,
     arrows: null | number,
-    data: { pos: [number, number] }[]
+    data: { pos: [number, number] }[],
+    swimlanes?: string[] 
 }

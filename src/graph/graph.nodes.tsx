@@ -22,7 +22,8 @@ export function GraphNodes(props: { transformer: NodeViewTransformer }) {
 export type NodeViewTransformer = {
     getTitle: (record: Record) => string,
     getText: (record: Record) => string,
-    getColour: (record: Record) => [number,number,number]
+    getColour: (record: Record) => [number,number,number],
+    getX: (record:Record) => null | number
 }
 
 function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
@@ -30,7 +31,9 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
     const data = useSelector((state: RootState) => state.main.views[state.main.tab].data[props.idx]);
     const dispatch = useDispatch();
 
-    const x = data ? data.pos[0] : props.idx * 200;
+const xx = props.transformer.getX(record);
+
+    const x = xx == null ? (data ? data.pos[0] : props.idx * 200) : xx;
     const y= data ? data.pos[1]: (props.idx * 60) % 600;
 
     const hsl = props.transformer.getColour(record);

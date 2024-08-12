@@ -56,6 +56,9 @@ export function ViewSidebar() {
         <ViewDropdown title="Emoji" options={filteredItems(["Keyword"])} view={tmpView} updateView={setTmpView} property="emoji" icon={ICONS.emoji} />
         <ViewDropdown title="Arrows" options={filteredItems(["Link"])} view={tmpView} updateView={setTmpView} property="arrows" icon={ICONS.arrowsSplit} />
         <ViewDropdown title="Swimlane" options={filteredItems(["Keyword"])} view={tmpView} updateView={setTmpView} property="swimlane" icon={ICONS.swimlane} />
+        {
+            view.swimlanes ? view.swimlanes.map(s=><div key={s}>{s}</div>) : null
+        }
         <ViewDropdown title="Row" options={filteredItems(["Keyword"])} view={tmpView} updateView={setTmpView} property="row" icon={ICONS.rows} />
     </React.Fragment>
 }

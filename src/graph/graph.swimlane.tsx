@@ -1,10 +1,9 @@
 import * as React from "react";
-import { ColumnDef } from "../model/view.model";
+import { ColumnDef, ViewDef } from "../model/view.model";
 
-export function Swimlanes(props: { column: ColumnDef }) {
-    if (props.column.type == "Keyword") {
-        const sortedSwimlanes = Object.entries(props.column.map) //.sort((a,b)=>a.)
-            .map(([k, v]) => k);
+export function Swimlanes(props: { column: ColumnDef, view: ViewDef }) {
+    if (props.column && props.column.type == "Keyword") {
+        const sortedSwimlanes = props.view.swimlanes || [];
 
         return <g>
             {sortedSwimlanes.map((k, i) =>
@@ -17,5 +16,6 @@ export function Swimlanes(props: { column: ColumnDef }) {
             }
         </g>
     }
+    console.log("???", props.column, props.view, props.view.swimlane)
     return null;
 }

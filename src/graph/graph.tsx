@@ -36,10 +36,13 @@ export function Graph(props: { viewIdx: number }) {
         getColour: transformColour,
         getTitle: (record) => view.title != null ? record.columns[view.title] : "null",
         getText: (record) => view.text != null ? record.columns[view.text] : "",
+        getX: (
+            view.swimlane == null ? () => null : (record) => view.swimlanes?.map((s, i) => [s, i * 250 + 10]).filter(s => s[0] == record.columns[view.swimlane as number]).map(s=>s[1])[0] as number
+        )
     }
 
     return <PannableSvg>
-        {view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]} />}
+        {view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]} view={view} />}
         <GraphNodes transformer={transformer} />
         <GhostNode />
         <marker id="arrowhead0" viewBox="0 0 60 60" refX="44" refY="34" markerUnits="strokeWidth" markerWidth="8" markerHeight="10" orient="auto">
