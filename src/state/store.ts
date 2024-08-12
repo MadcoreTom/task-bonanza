@@ -28,41 +28,49 @@ function commitRecordsA(state: State) {
 const initialState: State = {
     selected: null,
     records: [
-        { id: "a", columns: ["BUG-001", "12", "unassigned", "New", ""] },
-        { id: "b", columns: ["BUG-002", "4", "Bobson Dugnutt", "In Progress", ""] },
-        { id: "b", columns: ["FEAT-001", "13", "Bobson Dugnutt", "Done", "FEAT-002"] },
-        { id: "b", columns: ["FEAT-002", "13", "Bobson Dugnutt", "In Progress", ""] },
-        { id: "b", columns: ["FEAT-003", "1", "Chim Richalds", "Testing", "FEAT-002,BUG-001"] }
+        { columns: ["V-1", "Recenter View", "Ability to re-centre when you get lost", "View", "2", "Tom", "New", ""] },
+        { columns: ["N-1", "Fit Text", "Fit text to node", "Node", "4", "Tom", "New", ""] },
+        { columns: ["N-2", "Auto Arrows", "Automatically organise nodes when arrows change", "Node", "4", "Tom", "New", ""] },
+        { columns: ["N-3", "Tidy Arrows", "The arrow experience could be better", "Node", "2", "Tom", "New", ""] },
+        { columns: ["N-4", "Arrows to null", "Arrows to nodes with empty IDs appear", "Node", "2", "Tom", "New", ""] },
+        { columns: ["V-2", "Sortable Swimlanes", "Make swimlanes sortable and filterable", "View", "3", "Tom", "New", ""] },
+        { columns: ["F-1", "Export CSV", "Export data as CSV", "File", "4", "Tom", "New", "F-2"] },
+        { columns: ["F-2", "Save", "Save data and views", "File", "8", "Tom", "New", ""] },
+        { columns: ["C-1", "Ribbon Styling", "Tidy up the ribbon & tabs", "Controls", "3", "Tom", "New", ""] },
+        { columns: ["X-1", "Dataset", "Make the test dataset issue tracking for this project", "Other", "1", "Tom", "Done", ""] },
     ],
     changeQueue: [],
     tab: 0,
     columns: [
-        { name: "Ticket", type: "Alphabetical" },
-        { name: "Story Points", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
-        { name: "Assignee", type: "Keyword", map: { "unassigned": { colour: PALETTE[0] }, "Bobson Dugnutt": { colour: PALETTE[12] }, "Chim Richalds": { colour: PALETTE[6] } } },
+        { name: "ID", type: "Alphabetical" },
+        { name: "Summary", type: "Alphabetical" },
+        { name: "Description", type: "Alphabetical" },
+        { name: "Category", type: "Keyword", map: { "View": { colour: PALETTE[0] },"Node": { colour: PALETTE[1] },"File": { colour: PALETTE[4] },"Controls": { colour: PALETTE[9] } } },
+        { name: "Effort", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
+        { name: "Assignee", type: "Keyword", map: { "unassigned": { colour: PALETTE[0] }, "Tom": { colour: PALETTE[12] }, "Chim Richalds": { colour: PALETTE[6] } } },
         { name: "Status", type: "Keyword", map: { "New": { colour: PALETTE[0] }, "Done": { colour: PALETTE[2] }, "In Progress": { colour: PALETTE[4] }, "Testing": { colour: PALETTE[8] } } },
         { name: "Blocks", type: "Link", references: 0 }
     ],
     views: [
         {
             name: "Kanban",
-            title: 0,
-            colour: 3,
+            title: 1,
+            colour: 4,
             emoji: null,
             row: null,
-            swimlane: 3,
+            swimlane: 6,
             text: 2,
-            arrows: 4,
+            arrows: 7,
             data: []
         },
         {
-            name: "Assignees",
+            name: "Flow",
             title: 0,
-            colour: 2,
-            emoji: 2,
+            text: 1,
+            colour: 4,
+            emoji: 3,
             row: null,
             swimlane: null,
-            text: 2,
             arrows: null,
             data: []
         }
@@ -128,7 +136,6 @@ const mainSlice = createSlice({
         },
         addRow: (state: State) => {
             const row: Record = {
-                id: "not using this yet",
                 columns: state.columns.map(() => "")
             };
             state.records.push(row);

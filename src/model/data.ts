@@ -1,5 +1,4 @@
 export type Record = {
-    id: string,
     columns: string[]
 }
 
