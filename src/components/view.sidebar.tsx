@@ -17,7 +17,7 @@ export function ViewSidebar() {
 
 
     const tmpView = view;
-    const setTmpView = v => {
+    const setTmpView = (v:ViewDef) => {
         dispatch(updateView({ idx: selected, def: v }));
     }
 
@@ -46,8 +46,7 @@ export function ViewSidebar() {
         <Input
             label="View Name"
             value={view.name}
-            // TODO actually change the view name
-            readOnly={true}
+            onChange={e=>setTmpView({...tmpView, name:e.target.value})}
         />
 
         <ViewDropdown title="Title" options={items} view={tmpView} updateView={setTmpView} property="title" icon={ICONS.title} />

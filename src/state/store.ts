@@ -12,7 +12,7 @@ export type State = {
     columns: ColumnDef[],
     views: ViewDef[],
     stagedData: string[][] | null,
-    offset: [number,number]
+    offset: [number, number]
 }
 
 export type RootState = {
@@ -27,7 +27,7 @@ function commitRecordsA(state: State) {
     }
 }
 
-function calcSwimlanes(state:State){
+function calcSwimlanes(state: State) {
     const def = state.views[state.tab];
     def.swimlanes = getUniqueValues(state.records.map(r => r.columns[def.swimlane as number]));
 }
@@ -55,6 +55,7 @@ const initialState: State = {
         { columns: ["N-3", "Tidy Arrows", "The arrow experience could be better", "Node", "2", "Tom", "New", ""] },
         { columns: ["N-4", "Arrows to null", "Arrows to nodes with empty IDs appear", "Node", "2", "Tom", "New", ""] },
         { columns: ["V-2", "Sortable Swimlanes", "Make swimlanes sortable and filterable", "View", "3", "Tom", "In Progress", ""] },
+        { columns: ["V-2", "Add/Remove View", "Add or remove views with the + button", "View", "1", "Tom", "Done", ""] },
         { columns: ["F-1", "Export CSV", "Export data as CSV", "File", "4", "Tom", "New", "F-2"] },
         { columns: ["F-2", "Save", "Save data and views", "File", "8", "Tom", "New", ""] },
         { columns: ["C-1", "Ribbon Styling", "Tidy up the ribbon & tabs", "Controls", "3", "Tom", "New", ""] },
@@ -66,7 +67,7 @@ const initialState: State = {
         { name: "ID", type: "Alphabetical" },
         { name: "Summary", type: "Alphabetical" },
         { name: "Description", type: "Alphabetical" },
-        { name: "Category", type: "Keyword", map: { "View": { colour: PALETTE[0] },"Node": { colour: PALETTE[1] },"File": { colour: PALETTE[4] },"Controls": { colour: PALETTE[9] } } },
+        { name: "Category", type: "Keyword", map: { "View": { colour: PALETTE[0] }, "Node": { colour: PALETTE[1] }, "File": { colour: PALETTE[4] }, "Controls": { colour: PALETTE[9] } } },
         { name: "Effort", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
         { name: "Assignee", type: "Keyword", map: { "unassigned": { colour: PALETTE[0] }, "Tom": { colour: PALETTE[12] }, "Chim Richalds": { colour: PALETTE[6] } } },
         { name: "Status", type: "Keyword", map: { "New": { colour: PALETTE[0] }, "Done": { colour: PALETTE[2] }, "In Progress": { colour: PALETTE[4] }, "Testing": { colour: PALETTE[8] } } },
@@ -84,7 +85,7 @@ const initialState: State = {
             text: 2,
             arrows: null,
             data: [],
-            dirty:true
+            dirty: true
         },
         {
             name: "Flow",
@@ -96,11 +97,11 @@ const initialState: State = {
             swimlane: null,
             arrows: 7,
             data: [],
-            dirty:true
+            dirty: true
         }
     ],
     stagedData: null,
-    offset: [0,0]
+    offset: [0, 0]
 }
 
 const mainSlice = createSlice({
@@ -223,7 +224,7 @@ const mainSlice = createSlice({
                     (state.selected as LinkSelection).startIdx = action.payload.idx;
                     (state.selected as LinkSelection).pos = action.payload.pos;
                     (state.selected as LinkSelection).mouse = [...action.payload.pos];
-                } 
+                }
             } else {
                 state.selected = { type: "node", idx: action.payload.idx, mouseDown: true, pos: action.payload.pos }
             }
@@ -251,19 +252,19 @@ const mainSlice = createSlice({
                 state.selected = { ...state.selected, mouseDown: false };
             }
         },
-        reCentre:(state:State)=>{
+        reCentre: (state: State) => {
             const view = state.views[state.tab];
             let minX = view.data[0].pos[0];
             let minY = view.data[0].pos[1];
             let maxX = minX;
             let maxY = minY;
-            view.data.forEach(d=>{
-                minX = Math.min(minX,d.pos[0]);
-                maxX = Math.max(maxX,d.pos[0]);
-                minY = Math.min(minY,d.pos[1]);
-                maxY = Math.max(maxY,d.pos[1]);
+            view.data.forEach(d => {
+                minX = Math.min(minX, d.pos[0]);
+                maxX = Math.max(maxX, d.pos[0]);
+                minY = Math.min(minY, d.pos[1]);
+                maxY = Math.max(maxY, d.pos[1]);
             });
-            const centre:[number,number] = [
+            const centre: [number, number] = [
                 -(minX + (maxX - minX) / 2),
                 -(minY + (maxY - minY) / 2)
             ]
@@ -275,8 +276,36 @@ const mainSlice = createSlice({
             }
             state.offset = centre; // TODO make it centre
         },
-        setOffset: (state: State, action:{payload:[number,number]})=>{
+        setOffset: (state: State, action: { payload: [number, number] }) => {
             state.offset = action.payload;
+        },
+        addView: (state: State) => {
+            state.views.push({
+                name: "New View",
+                title: 0,
+                text: 1,
+                arrows: null,
+                colour: null,
+                dirty: true,
+                emoji: null,
+                row: null,
+                swimlane: null,
+                data: []
+            });
+            state.tab = state.views.length-1;
+            state.selected = {
+                type: "view",
+                idx: state.tab
+            }
+        },
+        removeSelectedView:(state:State)=>{
+            state.views.splice(state.tab, 1);
+            state.tab = state.tab -1;
+            if(state.tab > -1){
+                state.selected = {type:"view", idx:state.tab}
+            } else {
+                state.selected = null;
+            }
         }
     }
 });
@@ -287,4 +316,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, clickNode,mouseUpNode } = mainSlice.actions;
+export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView } = mainSlice.actions;

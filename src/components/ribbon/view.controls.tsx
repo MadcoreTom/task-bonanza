@@ -2,7 +2,7 @@ import { Button, Divider } from "@nextui-org/react";
 import * as React from "react";
 import { ImportModal } from "../import.modal";
 import { useDispatch, useSelector } from "react-redux";
-import { addColumn, addRow, reCentre, RootState, setSelection } from "../../state/store";
+import { addColumn, addRow, reCentre, removeSelectedView, RootState, setSelection } from "../../state/store";
 import { ICONS } from "../icons";
 
 export function ViewControls() {
@@ -17,7 +17,7 @@ export function ViewControls() {
         <Button variant="bordered" color="primary" startContent={ICONS.crosshair} onClick={()=>dispatch(reCentre())}>Re-centre</Button>
         <Divider orientation="vertical" />
         <Button variant={selected != null && selected.type == "view" ? "solid" : "bordered"} color="primary" onClick={() => { dispatch(setSelection("currentView")) }}>View Settings</Button>
-        <Button variant="bordered" color="danger" onClick={() => { }}>Delete View</Button>
+        <Button variant="bordered" color="danger" onClick={()=>dispatch(removeSelectedView())}>Delete View</Button>
         <ImportModal open={importOpen} onChange={setImportOpen} />
     </React.Fragment>
 }
