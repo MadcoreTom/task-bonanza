@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { dragNode, releaseNode, RootState, setSelection } from "../state/store";
+import { dragNode, releaseNode, RootState, setOffset, setSelection } from "../state/store";
 import { GhostNode, GraphNodes, NodeViewTransformer } from "./graph.nodes";
 import { HSL, interpolateHsl, textToHsl } from "../colour";
 import { ColumnDef, ViewDef } from "../model/view.model";
@@ -57,7 +57,7 @@ export function Graph(props: { viewIdx: number }) {
  * without re-rendering the child components
  */
 function PannableSvg({ children }) {
-    let [offset, setOffset] = React.useState([0, 0]);
+    const offset = useSelector((state: RootState) => state.main.offset);
     const nodeSelected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "node" && state.main.selected.mouseDown);// if a node is selected
     const linkSelected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "link" && state.main.selected.pos ? state.main.selected : null);
     const dispatch = useDispatch();
@@ -69,7 +69,7 @@ function PannableSvg({ children }) {
             } else if(linkSelected && linkSelected.mouse){
                 dispatch(setSelection({...linkSelected, mouse: [linkSelected.mouse[0] + evt.movementX, linkSelected.mouse[1] + evt.movementY]}))
             }else {
-                setOffset([offset[0] + evt.movementX, offset[1] + evt.movementY]);
+                dispatch(setOffset([offset[0] + evt.movementX, offset[1] + evt.movementY]));
             }
         }
     }

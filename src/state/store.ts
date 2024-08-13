@@ -11,7 +11,8 @@ export type State = {
     tab: number,
     columns: ColumnDef[],
     views: ViewDef[],
-    stagedData: string[][] | null
+    stagedData: string[][] | null,
+    offset: [number,number]
 }
 
 export type RootState = {
@@ -39,7 +40,8 @@ function initLocations(state: State) {
         });
     } else {
         state.records.forEach((r, i) => {
-            view.data[i] = { pos: [0, (i * 70 + 30)] }
+            const x = view.swimlane != null && view.swimlanes ? view.swimlanes.indexOf(r.columns[view.swimlane]) * 250 : 0;
+            view.data[i] = { pos: [x, (i * 70 + 30)] }
         });
     }
 }
@@ -47,7 +49,7 @@ function initLocations(state: State) {
 const initialState: State = {
     selected: null,
     records: [
-        { columns: ["V-1", "Recenter View", "Ability to re-centre when you get lost", "View", "2", "Tom", "New", ""] },
+        { columns: ["V-1", "Recenter View", "Ability to re-centre when you get lost", "View", "2", "Tom", "Done", ""] },
         { columns: ["N-1", "Fit Text", "Fit text to node, or wrap the text if that's better", "Node", "4", "Tom", "Done", ""] },
         { columns: ["N-2", "Auto Arrows", "Automatically organise nodes when arrows change", "Node", "4", "Tom", "New", ""] },
         { columns: ["N-3", "Tidy Arrows", "The arrow experience could be better", "Node", "2", "Tom", "New", ""] },
@@ -97,7 +99,8 @@ const initialState: State = {
             dirty:true
         }
     ],
-    stagedData: null
+    stagedData: null,
+    offset: [0,0]
 }
 
 const mainSlice = createSlice({
@@ -247,6 +250,33 @@ const mainSlice = createSlice({
                 }
                 state.selected = { ...state.selected, mouseDown: false };
             }
+        },
+        reCentre:(state:State)=>{
+            const view = state.views[state.tab];
+            let minX = view.data[0].pos[0];
+            let minY = view.data[0].pos[1];
+            let maxX = minX;
+            let maxY = minY;
+            view.data.forEach(d=>{
+                minX = Math.min(minX,d.pos[0]);
+                maxX = Math.max(maxX,d.pos[0]);
+                minY = Math.min(minY,d.pos[1]);
+                maxY = Math.max(maxY,d.pos[1]);
+            });
+            const centre:[number,number] = [
+                -(minX + (maxX - minX) / 2),
+                -(minY + (maxY - minY) / 2)
+            ]
+            console.log(">>", minX, minY, maxX, maxY, centre);
+            const svg = document.querySelector("svg#graph") as SVGElement | undefined;
+            if (svg) {
+                centre[0] += svg.clientWidth / 2;
+                centre[1] += svg.clientHeight / 2;
+            }
+            state.offset = centre; // TODO make it centre
+        },
+        setOffset: (state: State, action:{payload:[number,number]})=>{
+            state.offset = action.payload;
         }
     }
 });
@@ -257,4 +287,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, clearSelection, commitRecords, setCell, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, clickNode,mouseUpNode } = mainSlice.actions;
+export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, clickNode,mouseUpNode } = mainSlice.actions;
