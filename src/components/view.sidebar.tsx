@@ -123,7 +123,6 @@ function ViewDropdown(props: { title: string, options: { label: string, key: num
         label={props.title}
         placeholder="None"
         selectionMode="single"
-        // className="max-w-xs"
         startContent={props.icon}
         selectedKeys={[props.view[props.property] + ""]}
         onChange={e => props.updateView({ ...props.view, [props.property]: parseInt(e.target.value) })}
@@ -136,6 +135,14 @@ function ViewDropdown(props: { title: string, options: { label: string, key: num
             </SelectItem>
         ))}
     </Select>
-        <Button isIconOnly={true} variant="flat">{ICONS.edit}</Button>
+        <Dropdown>
+      <DropdownTrigger>
+      <Button isIconOnly={true} variant="flat">{ICONS.edit}</Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Static Actions" disabledKeys={["todo"]}>
+        <DropdownItem key="todo">add more here</DropdownItem>
+        <DropdownItem key="remove" className="text-danger" color="danger" onClick={()=>props.updateView({ ...props.view, [props.property]: null})}>Remove</DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
     </div>
 }
