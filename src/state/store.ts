@@ -92,7 +92,7 @@ const initialState: State = {
             title: 0,
             text: 1,
             colour: 4,
-            emoji: 3,
+            emoji: null,
             row: null,
             swimlane: null,
             arrows: 7,
