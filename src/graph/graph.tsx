@@ -41,8 +41,7 @@ export function Graph(props: { viewIdx: number }) {
         
     }
 
-    return <PannableSvg>
-        {view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]} view={view} />}
+    return <PannableSvg dontPan={view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]} view={view} />}>
         <GraphNodes transformer={transformer} />
         <GhostNode />
         <marker id="arrowhead0" viewBox="0 0 60 60" refX="44" refY="34" markerUnits="strokeWidth" markerWidth="8" markerHeight="10" orient="auto">
@@ -62,7 +61,7 @@ export function Graph(props: { viewIdx: number }) {
  * Creates a SVG and pans the background and the main <g>
  * without re-rendering the child components
  */
-function PannableSvg({ children }) {
+function PannableSvg({ children, dontPan }) {
     const offset = useSelector((state: RootState) => state.main.offset);
     const nodeSelected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "node" && state.main.selected.mouseDown);// if a node is selected
     const linkSelected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "link" && state.main.selected.pos ? state.main.selected : null);
@@ -87,6 +86,7 @@ function PannableSvg({ children }) {
         onMouseLeave={() => dispatch(releaseNode())}
         style={{ backgroundPosition: `${offset[0]}px ${offset[1]}px` }}
         onContextMenu={(e) => e.preventDefault()}>
+        {dontPan}
         <g transform={`translate(${offset[0]},${offset[1]})`}>
             {children}
         </g>
