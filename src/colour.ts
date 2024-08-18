@@ -31,6 +31,15 @@ export function interpolateHsl(value:string, min:HSL, max:HSL):HSL{
 export function hslToBorder(hsl: HSL): string {
     return `hsl(${hsl[0]}deg,${hsl[1]}%,${hsl[2]}%)`;
 }
+
+export function hslToOutline(hsl: HSL): string {
+    // return `hsl(${hsl[0]}deg,${hsl[1]}%,${hsl[2]}%)`;
+    let lightness = hsl[2];
+    const r = 100 - lightness;
+    lightness = 100 - r/2;
+    return `hsl(${hsl[0]}deg,${hsl[1]}%,${lightness}%)`;
+}
+
 export function hslToFill(hsl: HSL): string {
     let lightness = hsl[2];
     const r = 100 - lightness;

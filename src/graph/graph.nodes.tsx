@@ -2,7 +2,7 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clickNode, mouseUpNode, RootState, setSelection } from "../state/store";
 import { Record } from "../model/data";
-import { hslToBorder, hslToFill } from "../colour";
+import { hslToBorder, hslToFill, hslToOutline } from "../colour";
 import { calculateWrap, measureText } from "../text-measure-util";
 
 export function GraphNodes(props: { transformer: NodeViewTransformer }) {
@@ -47,15 +47,18 @@ function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
         <rect
             x={0} y={0}
             width={200} height={60}
-            fill={hslToFill(hsl)}
-            stroke={hslToBorder(hsl)}
-            strokeWidth={2}
-            rx={10}
-            className="hoverable"
+            fill="white"
+            stroke={hslToOutline(hsl)}
+            strokeWidth={1}
+            rx={5}
+            className="hoverable node"
             onMouseDown={evt => { dispatch(clickNode({ idx: props.idx, pos: [x, y] })); evt.stopPropagation(); }}
             onMouseUp={evt => { dispatch(mouseUpNode({ idx: props.idx, pos: [x, y] })); evt.stopPropagation(); }}
+            style={{  filter: `drop-shadow(0 2px 4px ${hslToFill(hsl)})`}}
         >
         </rect>
+        <line x1={0} y1={0} x2={0} y2={60} strokeWidth={10} stroke={hslToBorder(hsl)} clipPath="url(#nodeClip)"/>
+
         <text x={100} y="15" textAnchor="middle">{props.transformer.getTitle(record)}</text>
         {textLines.map((t,i)=><text x={100} y={30 + fs * i} textAnchor="middle" fontSize={fs} key={i}>{t}</text>)}
     </g>

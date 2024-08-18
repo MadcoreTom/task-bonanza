@@ -46,6 +46,11 @@ export function Graph(props: { viewIdx: number }) {
         <GhostNode />
         <marker id="arrowhead0" viewBox="0 0 60 60" refX="44" refY="34" markerUnits="strokeWidth" markerWidth="8" markerHeight="10" orient="auto">
             <path d="M 0 0 L 60 30 L 0 60 z" fill="black" /> </marker>
+            <defs>
+            <clipPath id="nodeClip">
+                <rect x={0} y={0} width={200} height={60} rx={5} />
+            </clipPath>
+        </defs>
         <Arrows />
         <PendingArrows />
     </PannableSvg>

@@ -26,7 +26,33 @@ function commitRecordsA(state: State) {
         state.records[q.row].columns[q.column] = q.value;
     }
 }
-
+function reCentreFunc(state: State)  {
+    const view = state.views[state.tab];
+    if(view.data.length ==0){
+return;
+    }
+    let minX = view.data[0].pos[0];
+    let minY = view.data[0].pos[1];
+    let maxX = minX;
+    let maxY = minY;
+    view.data.forEach(d => {
+        minX = Math.min(minX, d.pos[0]);
+        maxX = Math.max(maxX, d.pos[0]);
+        minY = Math.min(minY, d.pos[1]);
+        maxY = Math.max(maxY, d.pos[1]);
+    });
+    const centre: [number, number] = [
+        -(minX + (maxX - minX) / 2),
+        -(minY + (maxY - minY) / 2)
+    ]
+    console.log(">>", minX, minY, maxX, maxY, centre);
+    const svg = document.querySelector("svg#graph") as SVGElement | undefined;
+    if (svg) {
+        centre[0] += svg.clientWidth / 2;
+        centre[1] += svg.clientHeight / 2;
+    }
+    state.offset = centre; // TODO make it centre
+}
 function calcSwimlanes(state: State) {
     const def = state.views[state.tab];
     def.swimlanes = getUniqueValues(state.records.map(r => r.columns[def.swimlane as number]));
@@ -123,6 +149,7 @@ const mainSlice = createSlice({
                     if (state.views[state.tab].swimlanes == undefined) {
                         calcSwimlanes(state);
                     }
+                    reCentreFunc(state);
                     state.views[state.tab].dirty = false;
                 }
             } else {
@@ -252,30 +279,7 @@ const mainSlice = createSlice({
                 state.selected = { ...state.selected, mouseDown: false };
             }
         },
-        reCentre: (state: State) => {
-            const view = state.views[state.tab];
-            let minX = view.data[0].pos[0];
-            let minY = view.data[0].pos[1];
-            let maxX = minX;
-            let maxY = minY;
-            view.data.forEach(d => {
-                minX = Math.min(minX, d.pos[0]);
-                maxX = Math.max(maxX, d.pos[0]);
-                minY = Math.min(minY, d.pos[1]);
-                maxY = Math.max(maxY, d.pos[1]);
-            });
-            const centre: [number, number] = [
-                -(minX + (maxX - minX) / 2),
-                -(minY + (maxY - minY) / 2)
-            ]
-            console.log(">>", minX, minY, maxX, maxY, centre);
-            const svg = document.querySelector("svg#graph") as SVGElement | undefined;
-            if (svg) {
-                centre[0] += svg.clientWidth / 2;
-                centre[1] += svg.clientHeight / 2;
-            }
-            state.offset = centre; // TODO make it centre
-        },
+        reCentre: reCentreFunc,
         setOffset: (state: State, action: { payload: [number, number] }) => {
             state.offset = action.payload;
         },

@@ -57,38 +57,3 @@ createRoot(document.querySelector("#root") as HTMLElement)
       </Provider>
     </NextUIProvider>);
 
-const TESTCSV =`name,age,height
-a,b,c
-Tom,35,"6ft"
-"Cat""Dog",test,123
-Jim "Tiny" smith,48,210
-"billy,,test","23",111
-This has a newline,"start
-end",123`;
-
-const EXPECTED = `name|age|height
-a|b|c
-Tom|35|6ft
-Cat"Dog|test|123
-Jim "Tiny" smith|48|210
-billy,,test|23|111
-This has a newline|start
-end|123`;
-
-console.log(TESTCSV)
-
-const b = parseCsv(TESTCSV);
-  console.log(b.map(x=>x.join("|")).join("\n"))
-
-  console.log(EXPECTED)
-  
-
-  console.log(b.map(x=>x.join("|")).join("\n") == EXPECTED)
-
-  console.log("?",formatCsv([
-    ["a","b","c"],
-    ["Tom",35,"6ft"],
-    ['Cat"Dog',"test",123],
-    ["billy,,test","23",111],
-    ["This has a newline", "start\nend",123]
-  ]))
