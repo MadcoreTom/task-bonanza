@@ -62,12 +62,12 @@ function initLocations(state: State) {
     view.data = []
     if (view.swimlane == null) {
         state.records.forEach((r, i) => {
-            view.data[i] = { pos: [(i * 250) % 1000, (Math.floor(i / 4) * 70)] }
+            view.data[i] = { pos: [(i * 250) % 1000, (Math.floor(i / 4) * 80)] }
         });
     } else {
         state.records.forEach((r, i) => {
             const x = view.swimlane != null && view.swimlanes ? view.swimlanes.indexOf(r.columns[view.swimlane]) * 250 : 0;
-            view.data[i] = { pos: [x, (i * 70 + 30)] }
+            view.data[i] = { pos: [x, (i * 80 + 50)] }
         });
     }
 }
@@ -80,11 +80,15 @@ const initialState: State = {
         { columns: ["N-2", "Auto Arrows", "Automatically organise nodes when arrows change", "Node", "4", "Tom", "New", ""] },
         { columns: ["N-3", "Tidy Arrows", "The arrow experience could be better", "Node", "2", "Tom", "New", ""] },
         { columns: ["N-4", "Arrows to null", "Arrows to nodes with empty IDs appear", "Node", "2", "Tom", "New", ""] },
+        { columns: ["N-5", "Node styling", "Current rounded rectangles look ugly", "Node", "1", "Tom", "Done", ""] },
         { columns: ["V-2", "Sortable Swimlanes", "Make swimlanes sortable and filterable", "View", "3", "Tom", "In Progress", ""] },
         { columns: ["V-2", "Add/Remove View", "Add or remove views with the + button", "View", "1", "Tom", "Done", ""] },
-        { columns: ["F-1", "Export CSV", "Export data as CSV", "File", "4", "Tom", "New", "F-2"] },
-        { columns: ["F-2", "Save", "Save data and views", "File", "8", "Tom", "New", ""] },
+        { columns: ["F-1", "Export CSV", "Export data as CSV", "File", "4", "Tom", "Done", "F-2,F-3"] },
+        { columns: ["F-2", "Save", "Save data and views", "File", "4", "Tom", "New", ""] },
+        { columns: ["F-3", "Load", "Load data and views", "File", "4", "Tom", "New", ""] },
         { columns: ["C-1", "Ribbon Styling", "Tidy up the ribbon & tabs", "Controls", "3", "Tom", "New", ""] },
+        { columns: ["D-1", "Keyword Columns", "Better order and colour choice", "Columns", "3", "Tom", "In Progress", ""] },
+        { columns: ["D-2", "Number Columns", "Clearer colour choice, auto/manual min/max", "Columns", "3", "Tom", "In Progress", ""] },
         { columns: ["X-1", "Dataset", "Make the test dataset issue tracking for this project", "Other", "1", "Tom", "Done", ""] },
     ],
     changeQueue: [],
@@ -94,7 +98,7 @@ const initialState: State = {
         { name: "Summary", type: "Alphabetical" },
         { name: "Description", type: "Alphabetical" },
         { name: "Category", type: "Keyword", map: { "View": { colour: PALETTE[0] }, "Node": { colour: PALETTE[1] }, "File": { colour: PALETTE[4] }, "Controls": { colour: PALETTE[9] } } },
-        { name: "Effort", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60] },
+        { name: "Effort", type: "Number", minColour: [122.00000000000011, 80, 80], maxColour: [338, 80, 60], minVal:0, maxVal: 8 },
         { name: "Assignee", type: "Keyword", map: { "unassigned": { colour: PALETTE[0] }, "Tom": { colour: PALETTE[12] }, "Chim Richalds": { colour: PALETTE[6] } } },
         { name: "Status", type: "Keyword", map: { "New": { colour: PALETTE[0] }, "Done": { colour: PALETTE[2] }, "In Progress": { colour: PALETTE[4] }, "Testing": { colour: PALETTE[8] } } },
         { name: "Blocks", type: "Link", references: 0 }

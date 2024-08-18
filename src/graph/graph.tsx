@@ -16,6 +16,7 @@ export function Graph(props: { viewIdx: number }) {
 
     const colourColumn = view.colour == null ? null : columns[view.colour];
 
+
     function transformColour(record: Record): HSL {
         if (!colourColumn || view.colour == null) {
             return [0, 0, 0];
@@ -23,7 +24,7 @@ export function Graph(props: { viewIdx: number }) {
         const val = record.columns[view.colour];
         switch (colourColumn.type) {
             case "Number":
-                return interpolateHsl(val, colourColumn.minColour, colourColumn.maxColour);
+                return interpolateHsl(val, colourColumn.minColour, colourColumn.maxColour, colourColumn.minVal, colourColumn.maxVal);
             case "Keyword":
                 return colourColumn.map[val]?.colour ? colourColumn.map[val].colour : textToHsl(val);
             case "Alphabetical":

@@ -57,7 +57,9 @@ export type ColumnDef = {
         {
             type: "Number",
             minColour: HSL,
-            maxColour: HSL
+            maxColour: HSL,
+            minVal: number,
+            maxVal: number
         } | {
             type: "Alphabetical"
         } 

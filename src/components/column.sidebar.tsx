@@ -5,7 +5,7 @@ import { RootState, updateColumn } from "../state/store";
 import { ColumnDef } from "../model/view.model";
 import { ICONS } from "./icons";
 import { Column } from "../model/data";
-import { HSL, hslToBorder, textToHsl } from "../colour";
+import { HSL, hslToBorder, interpolateHsl, textToHsl } from "../colour";
 import { ColourPicker } from "./colour.picker";
 import { KeywordColumn } from "./column.keyword.sidebar";
 
@@ -81,7 +81,9 @@ function changeType(def: ColumnDef, type: "Number" | "Keyword" | "Alphabetical")
                 ...def,
                 type: "Number",
                 minColour: "minColour" in def ? def.minColour : [0, 0, 0],
-                maxColour: "maxColour" in def ? def.maxColour : [0, 0, 0]
+                maxColour: "maxColour" in def ? def.maxColour : [0, 0, 0],
+                minVal: 0,
+                maxVal: 100 // TODO auto
             }
         case "Alphabetical":
             return {
@@ -116,15 +118,27 @@ function NumberColumn(props: { column: ColumnDef, idx: number }) {
     if (def.type != "Number") {
         return null;
     }
+    
+    const background = `linear-gradient(90deg, ${hslToBorder(def.minColour)} 0%, ${hslToBorder(interpolateHsl(50,def.minColour, def.maxColour,0,100))} 50%, ${hslToBorder(def.maxColour)} 100%)`;
 
-
-    return <div>
+    return <div className="flex flex-col gap-2">
         {warning}
-        <ColourPicker colour={def.minColour} onChange={e => dispatch(updateColumn({ idx: props.idx, def: { ...props.column, minColour: e } }))}>
-            <Button aria-label="min colour" style={{ backgroundColor: hslToBorder(def.minColour) }}> {ICONS.colour} Minimum Colour</Button>
-        </ColourPicker>
-        <ColourPicker colour={def.maxColour} onChange={e => dispatch(updateColumn({ idx: props.idx, def: { ...props.column, maxColour: e } }))}>
-            <Button aria-label="max colour" style={{ backgroundColor: hslToBorder(def.maxColour) }}> {ICONS.colour} Maximum Colour</Button>
-        </ColourPicker>
+        <div className="flex items-end gap-1">
+        <Input type="number" label="Minimum value" aria-label="minimum value" labelPlacement="outside" value={"" + def.minVal} />
+            <ColourPicker colour={def.minColour} onChange={e => dispatch(updateColumn({ idx: props.idx, def: { ...def, minColour: e } }))}>
+                <Button aria-label="min colour" isIconOnly style={{ backgroundColor: hslToBorder(def.minColour) }}>{ICONS.colour}</Button>
+            </ColourPicker>
+            </div>
+            <div className="flex items-end gap-1">
+            <Input type="number" label="Maximum value" aria-label="maximum value" labelPlacement="outside" value={"" + def.maxVal} />
+            <ColourPicker colour={def.maxColour} onChange={e => dispatch(updateColumn({ idx: props.idx, def: { ...def, maxColour: e } }))}>
+                <Button aria-label="max colour" isIconOnly style={{ backgroundColor: hslToBorder(def.maxColour) }}>{ICONS.colour}</Button>
+            </ColourPicker>
+        </div>
+        <div>
+            <div className="rounded-full" style={{background, height: 20}}>
+
+            </div>
+        </div>
     </div>
 }

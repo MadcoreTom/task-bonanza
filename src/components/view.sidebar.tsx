@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Tabs, Card, Tab, Dropdown, DropdownTrigger, Button, DropdownMenu, DropdownItem, Select, SelectItem, Input, Divider } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, updateView } from "../state/store";
+import { RootState, setSelection, updateView } from "../state/store";
 import { ViewDef } from "../model/view.model";
 import { ICONS } from "./icons";
 
@@ -116,6 +116,7 @@ export function ViewSidebar() {
 }
 
 function ViewDropdown(props: { title: string, options: { label: string, key: number, type: string | null }[], view: ViewDef, updateView: (view: ViewDef) => void, property: keyof ViewDef, icon: any }) {
+    const dispatch = useDispatch();
     if (props.view[props.property] == null || props.view[props.property] as number < 0) {
         return null;
     }
@@ -141,6 +142,7 @@ function ViewDropdown(props: { title: string, options: { label: string, key: num
       </DropdownTrigger>
       <DropdownMenu aria-label="Static Actions" disabledKeys={["todo"]}>
         <DropdownItem key="todo">add more here</DropdownItem>
+        <DropdownItem key="goto" onClick={()=>{dispatch(setSelection({type:"column",idx:props.view[props.property] as number}))}}>Jump to column</DropdownItem>
         <DropdownItem key="remove" className="text-danger" color="danger" onClick={()=>props.updateView({ ...props.view, [props.property]: null})}>Remove</DropdownItem>
       </DropdownMenu>
     </Dropdown>
