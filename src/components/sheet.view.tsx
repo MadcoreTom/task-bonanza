@@ -1,5 +1,5 @@
 import * as React from "react";
-import Spreadsheet, { CellBase, EntireColumnsSelection, Matrix, Selection as SheetSelection } from "react-spreadsheet";
+import Spreadsheet, { CellBase, EntireColumnsSelection, EntireRowsSelection, Matrix, Selection as SheetSelection } from "react-spreadsheet";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, setCell, setSelection } from "../state/store";
 

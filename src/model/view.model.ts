@@ -31,10 +31,10 @@ export type NodeSelection = {
 
 export type LinkSelection = {
     type: "link",
-    startIdx?:number,
-    endIdx?:number,
-    pos?:[number,number],
-    mouse?:[number,number]
+    startIdx?: number,
+    endIdx?: number,
+    pos?: [number, number],
+    mouse?: [number, number]
 };
 
 export type Selection = ColumnSelection | ViewSelection | NodeSelection | LinkSelection;
