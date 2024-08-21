@@ -1,11 +1,9 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dragNode, releaseNode, RootState, setOffset, setSelection } from "../state/store";
-import { GhostNode, GraphNodes, NodeViewTransformer } from "./graph.nodes";
-import { HSL, interpolateHsl, textToHsl } from "../colour";
-import { ColumnDef, ViewDef } from "../model/view.model";
-import { Record } from "../model/data";
+import { GhostNode, GraphNodes } from "./graph.nodes";
 import { Swimlanes } from "./graph.swimlane";
+import { getTransformerForView } from "./graph.transformer";
 
 export function Graph(props: { viewIdx: number }) {
     // TODO the view data casuues this to re-render on every drag
@@ -13,33 +11,7 @@ export function Graph(props: { viewIdx: number }) {
     const columns = useSelector((state: RootState) => state.main.columns);
 
     console.log("💲💲 Graph redraw")
-
-    const colourColumn = view.colour == null ? null : columns[view.colour];
-
-
-    function transformColour(record: Record): HSL {
-        if (!colourColumn || view.colour == null) {
-            return [0, 0, 0];
-        }
-        const val = record.columns[view.colour];
-        switch (colourColumn.type) {
-            case "Number":
-                return interpolateHsl(val, colourColumn.minColour, colourColumn.maxColour, colourColumn.minVal, colourColumn.maxVal);
-            case "Keyword":
-                return colourColumn.map[val]?.colour ? colourColumn.map[val].colour : textToHsl(val);
-            case "Alphabetical":
-            default:
-                return textToHsl(val);
-        }
-    }
-
-    const transformer: NodeViewTransformer = {
-        getColour: transformColour,
-        getTitle: (record) => view.title != null ? record.columns[view.title] : "null",
-        getText: (record) => view.text != null ? record.columns[view.text] : "",
-        getX: view.swimlane == null ? (() => null) : ((record) => view.swimlanes?.map((s, i) => [s, i * 250 + 10]).filter(s => s[0] == record.columns[view.swimlane as number]).map(s => s[1])[0] as number)
-        
-    }
+    const transformer = getTransformerForView(view, columns);
 
     return <PannableSvg dontPan={view.swimlane == null ? null : <Swimlanes column={columns[view.swimlane]} view={view} />}>
         <GraphNodes transformer={transformer} />

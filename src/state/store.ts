@@ -2,7 +2,7 @@ import { configureStore, createSlice } from "@reduxjs/toolkit"
 import { ColumnDef, LinkSelection, Selection, ViewDef } from "../model/view.model"
 import { Record } from "../model/data"
 import { PALETTE } from "../colour"
-import { getUniqueValues } from "../components/column.keyword.sidebar"
+import { LayoutHelpers } from "./layout.reducer"
 
 export type State = {
     records: Record[],
@@ -26,51 +26,7 @@ function commitRecordsA(state: State) {
         state.records[q.row].columns[q.column] = q.value;
     }
 }
-function reCentreFunc(state: State)  {
-    const view = state.views[state.tab];
-    if(view.data.length ==0){
-return;
-    }
-    let minX = view.data[0].pos[0];
-    let minY = view.data[0].pos[1];
-    let maxX = minX;
-    let maxY = minY;
-    view.data.forEach(d => {
-        minX = Math.min(minX, d.pos[0]);
-        maxX = Math.max(maxX, d.pos[0]);
-        minY = Math.min(minY, d.pos[1]);
-        maxY = Math.max(maxY, d.pos[1]);
-    });
-    const centre: [number, number] = [
-        -(minX + (maxX - minX) / 2),
-        -(minY + (maxY - minY) / 2)
-    ]
-    console.log(">>", minX, minY, maxX, maxY, centre);
-    const svg = document.querySelector("svg#graph") as SVGElement | undefined;
-    if (svg) {
-        centre[0] += svg.clientWidth / 2;
-        centre[1] += svg.clientHeight / 2;
-    }
-    state.offset = centre; // TODO make it centre
-}
-function calcSwimlanes(state: State) {
-    const def = state.views[state.tab];
-    def.swimlanes = getUniqueValues(state.records.map(r => r.columns[def.swimlane as number]));
-}
-function initLocations(state: State) {
-    const view = state.views[state.tab];
-    view.data = []
-    if (view.swimlane == null) {
-        state.records.forEach((r, i) => {
-            view.data[i] = { pos: [(i * 250) % 1000, (Math.floor(i / 4) * 80)] }
-        });
-    } else {
-        state.records.forEach((r, i) => {
-            const x = view.swimlane != null && view.swimlanes ? view.swimlanes.indexOf(r.columns[view.swimlane]) * 250 : 0;
-            view.data[i] = { pos: [x, (i * 80 + 50)] }
-        });
-    }
-}
+
 
 const initialState: State = {
     selected: null,
@@ -148,16 +104,15 @@ const mainSlice = createSlice({
             if (state.tab >= 0) {
                 state.selected = { type: "view", idx: state.tab };
                 if (state.views[state.tab].dirty) {
-                    // TODO sort by  arrows
-                    initLocations(state);
-                    if (state.views[state.tab].swimlanes == undefined) {
-                        calcSwimlanes(state);
-                    }
-                    reCentreFunc(state);
-                    state.views[state.tab].dirty = false;
+                    LayoutHelpers.layout(state);
                 }
             } else {
                 state.selected = null;
+            }
+        },
+        autoAlign:(state:State)=>{
+            if (state.tab >= 0) {
+                LayoutHelpers.layout(state);
             }
         },
         setSelection: (state: State, action: { payload: Selection | "currentView" | null }) => {
@@ -188,7 +143,7 @@ const mainSlice = createSlice({
             // If there are swimlanes, populate them
             if (def.swimlane != null) {
                 if (def.swimlanes == undefined || def.swimlane != oldSwimlane) {
-                    calcSwimlanes(state);
+                    LayoutHelpers.calcSwimlanes(state);
                 }
             } else if (def.swimlanes != undefined) {
                 def.swimlanes == undefined;
@@ -283,7 +238,7 @@ const mainSlice = createSlice({
                 state.selected = { ...state.selected, mouseDown: false };
             }
         },
-        reCentre: reCentreFunc,
+        reCentre: LayoutHelpers.reCentreFunc,
         setOffset: (state: State, action: { payload: [number, number] }) => {
             state.offset = action.payload;
         },
@@ -324,4 +279,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView } = mainSlice.actions;
+export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;

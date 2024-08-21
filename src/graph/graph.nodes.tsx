@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clickNode, mouseUpNode, RootState, setSelection } from "../state/store";
-import { Record } from "../model/data";
+import { clickNode, mouseUpNode, RootState } from "../state/store";
 import { hslToBorder, hslToFill, hslToOutline } from "../colour";
-import { calculateWrap, measureText } from "../text-measure-util";
+import { calculateWrap } from "../text-measure-util";
+import { NodeViewTransformer } from "./graph.transformer";
 
 export function GraphNodes(props: { transformer: NodeViewTransformer }) {
     const recordCount = useSelector((state: RootState) => state.main.records.length);
@@ -18,13 +18,6 @@ export function GraphNodes(props: { transformer: NodeViewTransformer }) {
     return <React.Fragment>
         {nodes}
     </React.Fragment>
-}
-
-export type NodeViewTransformer = {
-    getTitle: (record: Record) => string,
-    getText: (record: Record) => string,
-    getColour: (record: Record) => [number,number,number],
-    getX: (record:Record) => null | number
 }
 
 function GraphNode(props: { idx: number, transformer: NodeViewTransformer }) {
