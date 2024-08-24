@@ -3,6 +3,7 @@ import { ColumnDef, LinkSelection, Selection, ViewDef } from "../model/view.mode
 import { Record } from "../model/data"
 import { PALETTE } from "../colour"
 import { LayoutHelpers } from "./layout.reducer"
+import { formatCsv } from "../csv"
 
 export type State = {
     records: Record[],
@@ -280,6 +281,25 @@ const mainSlice = createSlice({
             } else {
                 state.selected = null;
             }
+        },
+        save:(state:State,action:{payload:string})=>{
+            const name =action.payload;
+            const o = {} as any;
+            o.metadata = {
+                version:0.1,
+                timestamp: Date.now(),
+                columns: state.columns
+            };
+            o.views = state.views;
+            o.data = formatCsv(state.records.map(r=>r.columns))
+            console.log(JSON.stringify(o, null, 2));
+            let filenames = JSON.parse(window.localStorage.getItem("Madcoretom.TB.filenames")  || "[]") as string[];
+            if(filenames.indexOf(name) < 0){
+                filenames.push(name);
+                filenames = filenames.filter(a=> a!=null && a.trim().length > 0);
+                window.localStorage.setItem("Madcoretom.TB.filenames", JSON.stringify(filenames))
+            }
+            window.localStorage.setItem("Madcoretom.TB.file." + name, JSON.stringify(o))
         }
     }
 });
@@ -290,4 +310,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab,deleteRow, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;
+export const { save, setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab,deleteRow, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;

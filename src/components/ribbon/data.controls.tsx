@@ -2,7 +2,7 @@ import { Button, Divider } from "@nextui-org/react";
 import * as React from "react";
 import { ImportModal } from "../import.modal";
 import { useDispatch } from "react-redux";
-import { addColumn, addRow, commitRecords } from "../../state/store";
+import { addColumn, addRow, commitRecords, save } from "../../state/store";
 import { ICONS } from "../icons";
 import { ExportModal } from "../export.modal";
 
@@ -18,6 +18,7 @@ export function DataControls() {
         <Divider orientation="vertical" />
         <Button variant="bordered" color="primary" onClick={() => setImportOpen(true)} startContent={ICONS.import}>Import</Button>
         <Button variant="bordered" color="primary" onClick={() => setExportOpen(true)} startContent={ICONS.export}>Export</Button>
+        <Button variant="bordered" color="primary" onClick={() => dispatch(save("autosave"))} startContent={ICONS.export}>Save (test)</Button>
         <ImportModal open={importOpen} onChange={setImportOpen} />
         <ExportModal open={exportOpen} onChange={setExportOpen} />
     </React.Fragment>
