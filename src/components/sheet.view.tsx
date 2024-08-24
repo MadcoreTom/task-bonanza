@@ -15,6 +15,8 @@ export function SheetView() {
     function sel(s: SheetSelection) {
         if (s instanceof EntireColumnsSelection) {
             dispatch(setSelection({ type: "column", idx: s.start }));
+        } else if (s instanceof EntireRowsSelection) {
+            dispatch(setSelection({ type: "node", idx: s.start, mouseDown: false }));
         }
     }
 

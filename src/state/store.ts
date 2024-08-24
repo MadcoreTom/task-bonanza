@@ -242,6 +242,16 @@ const mainSlice = createSlice({
         setOffset: (state: State, action: { payload: [number, number] }) => {
             state.offset = action.payload;
         },
+        deleteRow: (state: State, action: { payload: number }) => {
+            commitRecordsA(state);
+            const i = action.payload;
+            if (i >= 0 && i < state.records.length && state.records.length > 1) {
+                state.records.splice(i, 1);
+                state.views.forEach(v => {
+                    v.data.splice(i, 1);
+                })
+            }
+        },
         addView: (state: State) => {
             state.views.push({
                 name: "New View",
@@ -279,4 +289,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;
+export const { setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab,deleteRow, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;
