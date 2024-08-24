@@ -37,6 +37,7 @@ const initialState: State = {
         { columns: ["N-3", "Tidy Arrows", "The arrow experience could be better", "Node", "2", "Tom", "New", ""] },
         { columns: ["N-4", "Arrows to null", "Arrows to nodes with empty IDs appear", "Node", "2", "Tom", "New", ""] },
         { columns: ["N-5", "Node styling", "Current rounded rectangles look ugly", "Node", "1", "Tom", "Done", ""] },
+        { columns: ["N-6", "Delete node", "Delete node/row", "Node", "1", "Tom", "Done", ""] },
         { columns: ["V-2", "Sortable Swimlanes", "Make swimlanes sortable and filterable", "View", "3", "Tom", "In Progress", ""] },
         { columns: ["V-2", "Add/Remove View", "Add or remove views with the + button", "View", "1", "Tom", "Done", ""] },
         { columns: ["F-1", "Export CSV", "Export data as CSV", "File", "4", "Tom", "Done", "F-2,F-3"] },
