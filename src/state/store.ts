@@ -3,7 +3,7 @@ import { ColumnDef, LinkSelection, Selection, ViewDef } from "../model/view.mode
 import { Record } from "../model/data"
 import { PALETTE } from "../colour"
 import { LayoutHelpers } from "./layout.reducer"
-import { formatCsv } from "../csv"
+import { formatCsv, parseCsv } from "../csv"
 
 export type State = {
     records: Record[],
@@ -283,6 +283,7 @@ const mainSlice = createSlice({
             }
         },
         save:(state:State,action:{payload:string})=>{
+            commitRecordsA(state);
             const name =action.payload;
             const o = {} as any;
             o.metadata = {
@@ -300,6 +301,19 @@ const mainSlice = createSlice({
                 window.localStorage.setItem("Madcoretom.TB.filenames", JSON.stringify(filenames))
             }
             window.localStorage.setItem("Madcoretom.TB.file." + name, JSON.stringify(o))
+        },
+        load:(state:State,action:{payload:string})=>{
+            const name =action.payload;
+            const data = window.localStorage.getItem("Madcoretom.TB.file." + name);
+            if(data){
+                const json = JSON.parse(data);
+                const csv = parseCsv(json.data);
+                state.columns = json.metadata.columns;
+                state.views = json.views;
+                state.records = csv.map(r=>{return {columns:r}})
+            } else {
+                console.warn("No data")
+            }
         }
     }
 });
@@ -310,4 +324,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { save, setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab,deleteRow, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;
+export const { save, load, setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab,deleteRow, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;
