@@ -2,13 +2,14 @@ import * as React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../state/store";
 
-function Arrow(props: { start: [number, number], end: [number, number] }) {
+function Arrow(props: { start: [number, number], end: [number, number], pending?:boolean }) {
     const width = 200;
     const yOffset = 30;
     const curved = 50;
     return <path
         d={`M ${props.start[0] + width} ${props.start[1] + yOffset} C ${props.start[0] + width + curved} ${props.start[1] + yOffset}, ${props.end[0] - curved} ${props.end[1] + yOffset} ${props.end[0]} ${props.end[1] + yOffset}`}
         stroke="black" fill="transparent" strokeWidth="2" markerEnd="url(#arrowhead0)"
+        strokeDasharray={props.pending ? "4,2" : "1,0"}
     />
 }
 
@@ -47,7 +48,7 @@ export function PendingArrows() {
     const selected = useSelector((state: RootState) => state.main.selected && state.main.selected.type == "link" && state.main.selected.pos ? state.main.selected : null);
     if (selected && selected.endIdx == undefined && selected.mouse) {
         // start to mouse
-        return <Arrow start={selected.pos as [number, number]} end={selected.mouse} />
+        return <Arrow start={selected.pos as [number, number]} end={selected.mouse} pending={true} />
     }
 
     return null;

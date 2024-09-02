@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { dragNode, releaseNode, RootState, setOffset, setSelection } from "../state/store";
-import { GhostNode, GraphNodes } from "./graph.nodes";
+import { GhostNode, GraphNodes, SelectedNode } from "./graph.nodes";
 import { Swimlanes } from "./graph.swimlane";
 import { getTransformerForView } from "./graph.transformer";
 import { Arrows, PendingArrows } from "./graph.arrows";
@@ -26,6 +26,7 @@ export function Graph(props: { viewIdx: number }) {
         </defs>
         <Arrows />
         <PendingArrows />
+        <SelectedNode/>
     </PannableSvg>
 }
 
@@ -44,11 +45,12 @@ function PannableSvg({ children, dontPan }) {
         if (evt.buttons > 0) {
             if (nodeSelected) {
                 dispatch(dragNode({ delta: [evt.movementX, evt.movementY] }));
-            } else if(linkSelected && linkSelected.mouse){
-                dispatch(setSelection({...linkSelected, mouse: [linkSelected.mouse[0] + evt.movementX, linkSelected.mouse[1] + evt.movementY]}))
-            }else {
+            } else {
                 dispatch(setOffset([offset[0] + evt.movementX, offset[1] + evt.movementY]));
             }
+        }
+        else if(linkSelected && linkSelected.mouse){
+            dispatch(setSelection({...linkSelected, mouse: [linkSelected.mouse[0] + evt.movementX, linkSelected.mouse[1] + evt.movementY]}))
         }
     }
 

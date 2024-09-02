@@ -1,41 +1,34 @@
- ## Feature Structure
-* View
-    * Text field
-    * Colour field
-    * Emoji Field
-    * Link Field
-    * Row field
-    * Column Field
-* Column Types
-    * Number (colour)
-    * Keyword (colour, emoji, text, row, column)
-    * Free Text (text)
-    * X
-    * Y
-* File
-    * Save
-    * Load
-        * Wizard?
-    * Export
-    * Import (with validation)
-* Data
-    * Edit row
-    * Add row
-    * Remove row
-* Graph
-    * Move Node
-    * Edit Node
+# [Try it out here](https://madcoretom.github.io/task-bonanza/)
 
-### Potential better layout
+# What is it
 
-In the top bar, choose
-* view mode
-* save/load
-* file name
-* open view
+**Task Bonanza** is a tool that helps visualise tasks from a simple spreadsheet.
 
-in the panel, see
-* view settings
-* column settings
-* domain edit
-* save/load
+Load or create your data in the **Data** tab, and create any number of **View** tabs to visualise the data.
+
+## Modifying Data
+
+TODO
+
+### Column types
+
+TODO
+
+## Setting up views
+
+TODO
+
+## View properties
+
+TODO
+
+## Saving, Loading, Importing and Exporting
+
+TODO
+
+# Roadmap
+
+* Filters
+* Arrow sorting
+* Rows
+* Emoji
