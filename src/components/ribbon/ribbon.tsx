@@ -8,24 +8,20 @@ import { ViewControls } from "./view.controls";
 
 export function Ribbon() {
     const dispatch = useDispatch();
-    return <div className="flex flex-col content-start" style={{ borderBottom: "2px solid hsl(var(--nextui-secondary))" }}>
+    return <div className="flex flex-col content-start shadow-md rounded-b-md p-1" style={{zIndex:100}}>
         <div className="flex gap-3 p-2 justify-start" style={{ alignItems: "baseline" }}>
             <span className="text-xl" id="title" style={{ alignSelf: "center" }}>Task&nbsp;Bonanza</span>
             <ViewTabs />
             <Button isIconOnly title="Add View" size="sm" color="success" onClick={()=>dispatch(addView())}>{ICONS.add}</Button>
         </div>
-        <div className="p-2">
-            <Card className="shadow-md rounded-b-md p-2 flex gap-2 flex flex-row" style={{height:55}} >
-                <Controls />
-            </Card>
+        <div className="p-2 gap-2 flex flex-row" style={{height:55}} >
+            <Controls />
         </div>
     </div>
 }
 
 function Controls() {
     const tab = useSelector((state: RootState) => state.main.tab);
-    console.log("TAB", tab)
-
     return tab == -1 ? <DataControls /> : <ViewControls/>;
 }
 
@@ -51,7 +47,7 @@ function ViewTabs() {
     })
 
 
-    return (<Tabs aria-label="View tabs" items={tabs} color="secondary" variant="light"
+    return (<Tabs aria-label="View tabs" items={tabs} color="secondary" variant="underlined"
         onSelectionChange={e => dispatch(setTab(e as number))} selectedKey={"" + tab}>
         {(item) => (
             <Tab key={item.idx} title={item.label} value={item.idx}>

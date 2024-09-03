@@ -14,13 +14,13 @@ export function DataControls() {
     const dispatch = useDispatch();
 
     return <React.Fragment>
-        <Button variant="bordered" color="primary" onClick={() => dispatch(commitRecords())}>Save Changes</Button>
-        <Button variant="bordered" color="primary" onClick={() => dispatch(addRow())} startContent={ICONS.add}>Add Row</Button>
-        <Button variant="bordered" color="primary" onClick={() => dispatch(addColumn())} startContent={ICONS.add}>Add Column</Button>
+        <Button variant="light" color="primary" onClick={() => dispatch(commitRecords())}>Save Changes</Button>
+        <Button variant="light" color="primary" onClick={() => dispatch(addRow())} startContent={ICONS.add}>Add Row</Button>
+        <Button variant="light" color="primary" onClick={() => dispatch(addColumn())} startContent={ICONS.add}>Add Column</Button>
         <Divider orientation="vertical" />
-        <Button variant="bordered" color="primary" onClick={() => setImportOpen(true)} startContent={ICONS.import}>Import</Button>
-        <Button variant="bordered" color="primary" onClick={() => setExportOpen(true)} startContent={ICONS.export}>Export</Button>
-        <Button variant="bordered" color="primary" onClick={() => setLocalOpen(true)} startContent={ICONS.file}>Browser Storage</Button>
+        <Button variant="light" color="primary" onClick={() => setImportOpen(true)} startContent={ICONS.import}>Import</Button>
+        <Button variant="light" color="primary" onClick={() => setExportOpen(true)} startContent={ICONS.export}>Export</Button>
+        <Button variant="light" color="primary" onClick={() => setLocalOpen(true)} startContent={ICONS.file}>Browser Storage</Button>
         <ImportModal open={importOpen} onChange={setImportOpen} />
         <ExportModal open={exportOpen} onChange={setExportOpen} />
         <LocalStorageModal open={localOpen} onChange={setLocalOpen} />

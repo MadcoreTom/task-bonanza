@@ -11,13 +11,13 @@ export function ViewControls() {
     const dispatch = useDispatch();
 
     return <React.Fragment>
-        <Button variant="bordered" color="primary" onClick={() => dispatch(addRow())} startContent={ICONS.add}>Add Node</Button>
+        <Button variant="light" color="primary" onClick={() => dispatch(addRow())} startContent={ICONS.add}>Add Node</Button>
         <Divider orientation="vertical" />
-        <Button variant="bordered" color="primary" startContent={ICONS.crosshair} onClick={() => dispatch(reCentre())}>Re-centre</Button>
-        <Button variant="bordered" color="primary" startContent={ICONS.move} onClick={() => dispatch(autoAlign())}>Auto-align</Button>
+        <Button variant="light" color="primary" startContent={ICONS.crosshair} onClick={() => dispatch(reCentre())}>Re-centre</Button>
+        <Button variant="light" color="primary" startContent={ICONS.move} onClick={() => dispatch(autoAlign())}>Auto-align</Button>
         <Divider orientation="vertical" />
-        <Button variant={selected != null && selected.type == "view" ? "solid" : "bordered"} color="primary" onClick={() => { dispatch(setSelection("currentView")) }}>View Settings</Button>
-        <Button variant="bordered" color="danger" onClick={() => dispatch(removeSelectedView())}>Delete View</Button>
+        <Button variant={selected != null && selected.type == "view" ? "solid" : "light"} color="primary" onClick={() => { dispatch(setSelection("currentView")) }}>View Settings</Button>
+        <Button variant="light" color="danger" onClick={() => dispatch(removeSelectedView())}>Delete View</Button>
         <ImportModal open={importOpen} onChange={setImportOpen} />
     </React.Fragment>
 }

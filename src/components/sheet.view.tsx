@@ -21,7 +21,7 @@ export function SheetView() {
     }
 
     return <div style={{ flexGrow: 1, flexShrink: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-        <div style={{ overflow: "scroll", flexGrow: 1 }}>
+        <div style={{ overflow: "scroll", flexGrow: 1, padding: 10 }}>
             <Spreadsheet data={matrix} columnLabels={columns.map(c => c.name)}
                 onSelect={sel}
                 onCellCommit={(prev, cell, coords) => {
