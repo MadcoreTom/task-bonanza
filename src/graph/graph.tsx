@@ -56,6 +56,7 @@ function PannableSvg({ children, dontPan }) {
 
     return <svg height="600"
         id="graph"
+        className="rounded-small"
         onMouseMoveCapture={onDrag}
         onMouseUp={() => dispatch(releaseNode())}
         onMouseLeave={() => dispatch(releaseNode())}

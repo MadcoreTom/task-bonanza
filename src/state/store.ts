@@ -13,7 +13,8 @@ export type State = {
     columns: ColumnDef[],
     views: ViewDef[],
     stagedData: string[][] | null,
-    offset: [number, number]
+    offset: [number, number],
+    filename:string
 }
 
 export type RootState = {
@@ -44,7 +45,7 @@ const initialState: State = {
         { columns: ["F-1", "Export CSV", "Export data as CSV", "File", "4", "Tom", "Done", "F-2,F-3"] },
         { columns: ["F-2", "Save", "Save data and views", "File", "4", "Tom", "New", ""] },
         { columns: ["F-3", "Load", "Load data and views", "File", "4", "Tom", "New", ""] },
-        { columns: ["C-1", "Ribbon Styling", "Tidy up the ribbon & tabs", "Controls", "3", "Tom", "New", ""] },
+        { columns: ["C-1", "Ribbon Styling", "Tidy up the ribbon & tabs", "Controls", "3", "Tom", "In Progress", ""] },
         { columns: ["D-1", "Keyword Columns", "Better order and colour choice", "Columns", "3", "Tom", "In Progress", ""] },
         { columns: ["D-2", "Number Columns", "Clearer colour choice, auto/manual min/max", "Columns", "3", "Tom", "In Progress", ""] },
         { columns: ["X-1", "Dataset", "Make the test dataset issue tracking for this project", "Other", "1", "Tom", "Done", ""] },
@@ -89,7 +90,8 @@ const initialState: State = {
         }
     ],
     stagedData: null,
-    offset: [0, 0]
+    offset: [0, 0],
+    filename: "untitled"
 }
 
 const mainSlice = createSlice({

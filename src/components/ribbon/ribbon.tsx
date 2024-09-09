@@ -1,23 +1,36 @@
-import { Button, Card, Tab, Tabs } from "@nextui-org/react";
+import { Button, ButtonGroup, Card, Divider, Input, Tab, Tabs } from "@nextui-org/react";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ICONS } from "../icons";
 import { addView, RootState, setTab } from "../../state/store";
 import { DataControls } from "./data.controls";
 import { ViewControls } from "./view.controls";
+import { SaveLoadModal } from "../saveLoad.modal";
 
 export function Ribbon() {
     const dispatch = useDispatch();
-    return <div className="flex flex-col content-start shadow-md rounded-b-md p-1" style={{zIndex:100}}>
-        <div className="flex gap-3 p-2 justify-start" style={{ alignItems: "baseline" }}>
+    return <div className="flex flex-col content-start rounded-b-md p-1" style={{ zIndex: 100 }}>
+        <div className="p-2 gap-2 flex flex-row" style={{ height: 55 }} >
             <span className="text-xl" id="title" style={{ alignSelf: "center" }}>Task&nbsp;Bonanza</span>
-            <ViewTabs />
-            <Button isIconOnly title="Add View" size="sm" color="success" onClick={()=>dispatch(addView())}>{ICONS.add}</Button>
-        </div>
-        <div className="p-2 gap-2 flex flex-row" style={{height:55}} >
+            <FileControls />
+            <Divider orientation="vertical" />
             <Controls />
         </div>
+        <div className="flex gap-3 p-2 justify-center" style={{ alignItems: "baseline" }}>
+            <ViewTabs />
+            <Button isIconOnly title="Add View" size="sm" color="success" onClick={() => dispatch(addView())}>{ICONS.add}</Button>
+        </div>
     </div>
+}
+
+function FileControls() {
+    const filename = useSelector((state: RootState) => state.main.filename);
+    const [modalOpen, setModalOpen] = React.useState(false);
+    return <ButtonGroup>
+        <Input defaultValue="untitled" className="max-w-xs" radius="none" variant="bordered" />
+        <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={()=>setModalOpen(true)}>{ICONS.file}</Button>
+        <SaveLoadModal open={modalOpen} onChange={setModalOpen}/>
+    </ButtonGroup>
 }
 
 function Controls() {
