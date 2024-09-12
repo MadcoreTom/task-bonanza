@@ -1,73 +1,146 @@
 import * as React from "react";
 import Spreadsheet, { CellBase, EntireColumnsSelection, Matrix, Selection as SheetSelection } from "react-spreadsheet";
 import { useDispatch, useSelector } from "react-redux";
-import { addColumn, addRow, commitRecords, importStagedData, load, RootState, save, setCell, setSelection, stageData } from "../state/store";
+import { addColumn, addRow, commitRecords, importStagedData, load, RootState, save, setCell, setFilename, setSelection, stageData } from "../state/store";
 import { Button, ButtonGroup, Divider, Input, Listbox, ListboxItem, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip } from "@nextui-org/react";
-import { Record } from "../model/data";
-import { ColumnDef } from "../model/view.model";
-import { formatCsv } from "../csv";
+
 import { ICONS } from "./icons";
 
-export function SaveLoadModal(props:{open:boolean, onChange:(open:boolean)=>void}) {
+export function SaveLoadModal() {
     const dispatch = useDispatch();
-    const [saveLoad, setSaveLoad] = React.useState("none" as "save" | "load" | "none");
-    const [location, setLocation] = React.useState("none" as "browser" | "file" | "none");
-    const [importExportType, setImportExportType] = React.useState("data" as "data" | "all" | "none");
+    const dialogue = useSelector((state: RootState) => state.main.dialogue);
 
-    // const items = (JSON.parse(window.localStorage.getItem("Madcoretom.TB.filenames") || "[]") as string[]).map(i => { return { key: i } })
+    const isSave = !!dialogue?.save;
+    const isLoad = !!dialogue?.load;
+
+    const title = isSave ? "Save file" : (isLoad? "Load file" : "");
+    const mainButtonText =  isSave ? "Save" : (isLoad? "Load" : "");
+    const mainSaveFunction = ()=>{(isSave ? ()=>dispatch(save()): (isLoad?()=>dispatch(load()): ()=>{}))(); dispatch(setFilename({dialogue:{}}))}
 
     return <Modal
-        isOpen={props.open}
+        isOpen={isSave || isLoad}
         placement="top-center"
-        onOpenChange={props.onChange}
+        onOpenChange={open=>dispatch(setFilename({dialogue:{}}))}
     >
         <ModalContent>
             {(onClose) => (
                 <>
-                    <ModalHeader className="flex flex-col gap-1">Incomplete save dialogue</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
                     <ModalBody>
-                        <div className="w-full max-w-[260px] border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100 gap-2 flex flex-col">
-                            <ButtonGroup fullWidth={true}>
-                                <Button onClick={() => setSaveLoad("save")} variant={saveLoad == "save" ? "solid" : "bordered"} color="primary">Save</Button>
-                                <Button onClick={() => setSaveLoad("load")} variant={saveLoad == "load" ? "solid" : "bordered"} color="primary">Load</Button>
-                            </ButtonGroup>
-                            {saveLoad == "none" ? null :
-                                <React.Fragment>
-                                    <Divider orientation="horizontal" />
-                                    <ButtonGroup fullWidth={true}>
-                                        <Button onClick={() => setLocation("browser")} variant={location == "browser" ? "solid" : "bordered"} color="primary">Browser</Button>
-                                        <Button onClick={() => setLocation("file")} variant={location == "file" ? "solid" : "bordered"} color="primary">My Computer</Button>
-                                    </ButtonGroup>
-                                </React.Fragment>
+                        <div className="w-full max-w-[260px] gap-2 flex flex-col">
+                            {
+                                isSave ? <SaveDialog /> : <LoadDialog/>
                             }
-                                 {saveLoad != "save" || location != "file"  ? null :
-                                <React.Fragment>
-                                    <Divider orientation="horizontal" />
-                                    <ButtonGroup fullWidth={true}>
-                                    <Button onClick={() => setImportExportType("data")} variant={importExportType == "data" ? "solid" : "bordered"} color="primary">Data only</Button>
-                                    <Button onClick={() => setImportExportType("all")} variant={importExportType == "all" ? "solid" : "bordered"} color="primary" isDisabled>All</Button>
-                                    </ButtonGroup>
-                                </React.Fragment>
-                            }
-                             {saveLoad != "load" || location != "file"  ? null :
-                                <React.Fragment>
-                                    <Divider orientation="horizontal" />
-                                    <ButtonGroup fullWidth={true}>
-                                    <Button onClick={() => setImportExportType("data")} variant={importExportType == "data" ? "solid" : "bordered"} color="primary">CSV data</Button>
-                                    <Button onClick={() => setImportExportType("all")} variant={importExportType == "all" ? "solid" : "bordered"} color="primary" isDisabled>Everything</Button>
-                                    </ButtonGroup>
-                                </React.Fragment>
-                            }
-
                         </div>
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" variant="light" onPress={onClose}>
                             Cancel
                         </Button>
+                        <Button color="primary" onPress={mainSaveFunction}>
+                            {mainButtonText}
+                        </Button>
                     </ModalFooter>
                 </>
             )}
         </ModalContent>
     </Modal >
+}
+
+function SaveDialog() {
+    const location = useSelector((state: RootState) => state.main.dialogue?.save?.location);
+    const dispatch = useDispatch();
+
+    let content: any;
+    switch (location) {
+        case "browser":
+            content = <BrowserList mode="save" />;
+            break;
+        case "file":
+            content = <SaveExportDialog />;
+            break;
+        default:
+            content = null;
+    }
+
+
+    return <React.Fragment>
+        <ButtonGroup fullWidth={true}>
+            <Button onClick={() => dispatch(setFilename({dialogue:{save:{location:"browser"}}}))} variant={location == "browser" ? "solid" : "bordered"} color="primary">Browser</Button>
+            <Button onClick={() => dispatch(setFilename({dialogue:{save:{location:"file"}}}))}  variant={location == "file" ? "solid" : "bordered"} color="primary">Download</Button>
+        </ButtonGroup>
+        {content}
+    </React.Fragment>
+}
+
+function BrowserList({ mode }: { mode: "save" | "load" }) {
+    const filename = useSelector((state: RootState) => state.main.filename);
+    const dispatch = useDispatch();
+    const [selected, setSelected] = React.useState(null as string | null);
+
+    const items = (JSON.parse(window.localStorage.getItem("Madcoretom.TB.filenames") || "[]") as string[]).map(i => { return { key: i } });
+    console.log(selected, items)
+
+    return <React.Fragment>        <div className="w-full max-w-[260px] border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100">
+        <Listbox
+            items={items}
+            aria-label="Dynamic Actions"
+            // onAction={key => { setSelected(key.toString()) }}
+            selectionMode="single"
+            selectedKeys={selected ? [selected] : []}
+            onSelectionChange={s => { setSelected([...s][0] as string); dispatch(setFilename({ filename: [...s][0] as string })) }}
+            variant="flat"
+        >
+            {(item) => (
+                <ListboxItem
+                    key={item.key}
+                    startContent={ICONS.file}
+                >
+                    {item.key}
+                </ListboxItem>
+            )}
+        </Listbox></div>
+        {mode == "save" ?
+            <div>
+                <Input labelPlacement="outside" value={filename} onChange={e => dispatch(setFilename({ filename: e.target.value }))} />
+            </div> : null}
+    </React.Fragment>
+}
+
+function SaveExportDialog() {
+    const filename = useSelector((state: RootState) => state.main.filename);
+
+
+    return <React.Fragment>
+
+        <Input labelPlacement="outside" value={filename}/* onChange={e => setFilename(e.target.value)}*/ />
+
+    </React.Fragment>
+}
+
+function LoadDialog() {
+    const location = useSelector((state: RootState) => state.main.dialogue?.load?.location);
+    const dispatch = useDispatch();
+
+    let content: any;
+    switch (location) {
+        case "browser":
+            content = <BrowserList mode="load" />;
+            break;
+        case "file":
+            content = <div>TODO</div>;
+            break;
+        default:
+            content = null;
+    }
+    console.log("LOC",location)
+
+
+    return <React.Fragment>
+        <ButtonGroup fullWidth={true}>
+            <Button onClick={() => dispatch(setFilename({dialogue:{load:{location:"browser"}}}))} variant={location == "browser" ? "solid" : "bordered"} color="primary">Browser</Button>
+            <Button onClick={() => dispatch(setFilename({dialogue:{load:{location:"file"}}}))}  variant={location == "file" ? "solid" : "bordered"} color="primary">Upload</Button>
+        </ButtonGroup>
+        {content}
+    </React.Fragment>
 }

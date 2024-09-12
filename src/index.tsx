@@ -9,6 +9,7 @@ import { Provider, useSelector } from 'react-redux'
 import { Graph } from "./graph/graph";
 import { NodeSidebar } from "./components/node.sidebar";
 import { Ribbon } from "./components/ribbon/ribbon";
+import { SaveLoadModal } from "./components/saveLoad.modal";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
       {content}
       <Side />
     </div>
+    <SaveLoadModal />
   </div>
 
 }

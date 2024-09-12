@@ -5,6 +5,14 @@ import { PALETTE } from "../colour"
 import { LayoutHelpers } from "./layout.reducer"
 import { formatCsv, parseCsv } from "../csv"
 
+export type SaveState = {
+    filename: string,
+    dialogue?: {
+        save?: { location?:"browser" | "file"},
+        load?: { location?:"browser" | "file"},
+    }
+}
+
 export type State = {
     records: Record[],
     selected: Selection | null,
@@ -14,8 +22,7 @@ export type State = {
     views: ViewDef[],
     stagedData: string[][] | null,
     offset: [number, number],
-    filename:string
-}
+} & SaveState;
 
 export type RootState = {
     main: State
@@ -284,9 +291,9 @@ const mainSlice = createSlice({
                 state.selected = null;
             }
         },
-        save:(state:State,action:{payload:string})=>{
+        save:(state:State)=>{
             commitRecordsA(state);
-            const name =action.payload;
+            const name =state.filename;
             const o = {} as any;
             o.metadata = {
                 version:0.1,
@@ -304,8 +311,8 @@ const mainSlice = createSlice({
             }
             window.localStorage.setItem("Madcoretom.TB.file." + name, JSON.stringify(o))
         },
-        load:(state:State,action:{payload:string})=>{
-            const name =action.payload;
+        load:(state:State)=>{
+            const name = state.filename;
             const data = window.localStorage.getItem("Madcoretom.TB.file." + name);
             if(data){
                 const json = JSON.parse(data);
@@ -315,6 +322,14 @@ const mainSlice = createSlice({
                 state.records = csv.map(r=>{return {columns:r}})
             } else {
                 console.warn("No data")
+            }
+        },
+        setFilename:(state:State, action:{payload:Partial<SaveState>})=>{
+            if(action.payload.filename){
+                state.filename = action.payload.filename;
+            }
+            if(action.payload.dialogue){
+                state.dialogue = action.payload.dialogue
             }
         }
     }
@@ -326,4 +341,4 @@ export const STORE = configureStore({
     }
 });
 
-export const { save, load, setSelection, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab,deleteRow, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;
+export const { save, load, setSelection, setFilename, setOffset, clearSelection, commitRecords, setCell, reCentre, setTab,deleteRow, updateColumn, updateView, releaseNode, dragNode, addRow, addColumn, stageData, importStagedData, removeSelectedView,clickNode, mouseUpNode, addView, autoAlign } = mainSlice.actions;

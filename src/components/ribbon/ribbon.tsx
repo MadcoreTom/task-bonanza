@@ -1,11 +1,10 @@
-import { Button, ButtonGroup, Card, Divider, Input, Tab, Tabs } from "@nextui-org/react";
+import { Button, ButtonGroup, Card, Checkbox, Divider, Input, Tab, Tabs, Tooltip } from "@nextui-org/react";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ICONS } from "../icons";
-import { addView, RootState, setTab } from "../../state/store";
+import { addView, RootState, setFilename, setTab } from "../../state/store";
 import { DataControls } from "./data.controls";
 import { ViewControls } from "./view.controls";
-import { SaveLoadModal } from "../saveLoad.modal";
 
 export function Ribbon() {
     const dispatch = useDispatch();
@@ -25,17 +24,25 @@ export function Ribbon() {
 
 function FileControls() {
     const filename = useSelector((state: RootState) => state.main.filename);
-    const [modalOpen, setModalOpen] = React.useState(false);
-    return <ButtonGroup>
-        <Input defaultValue="untitled" className="max-w-xs" radius="none" variant="bordered" />
-        <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={()=>setModalOpen(true)}>{ICONS.file}</Button>
-        <SaveLoadModal open={modalOpen} onChange={setModalOpen}/>
-    </ButtonGroup>
+    const dispatch = useDispatch();
+
+    return <React.Fragment>
+        <ButtonGroup>
+            <Input value={filename} onChange={e => dispatch(setFilename({ filename: e.target.value }))} className="max-w-xs" radius="none" variant="bordered" />
+            <Tooltip showArrow={true} content="Save">
+                <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={() => dispatch(setFilename({ dialogue: { save: {} } }))}>{ICONS.file}</Button>
+            </Tooltip>
+            <Tooltip showArrow={true} content="Load">
+                <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={() => dispatch(setFilename({ dialogue: { load: {} } }))}>load</Button>
+            </Tooltip>
+        </ButtonGroup>
+        <Checkbox defaultSelected>Autosave</Checkbox>
+    </React.Fragment>
 }
 
 function Controls() {
     const tab = useSelector((state: RootState) => state.main.tab);
-    return tab == -1 ? <DataControls /> : <ViewControls/>;
+    return tab == -1 ? <DataControls /> : <ViewControls />;
 }
 
 function ViewTabs() {
