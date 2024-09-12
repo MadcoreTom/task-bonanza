@@ -30,13 +30,13 @@ function FileControls() {
         <ButtonGroup>
             <Input value={filename} onChange={e => dispatch(setFilename({ filename: e.target.value }))} className="max-w-xs" radius="none" variant="bordered" />
             <Tooltip showArrow={true} content="Save">
-                <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={() => dispatch(setFilename({ dialogue: { save: {} } }))}>{ICONS.file}</Button>
+                <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={() => dispatch(setFilename({ dialogue: { save: {} } }))}>{ICONS.save}</Button>
             </Tooltip>
             <Tooltip showArrow={true} content="Load">
-                <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={() => dispatch(setFilename({ dialogue: { load: {} } }))}>load</Button>
+                <Button value={filename} color="primary" variant="flat" isIconOnly aria-label="Save or Load" onClick={() => dispatch(setFilename({ dialogue: { load: {} } }))}>{ICONS.load}</Button>
             </Tooltip>
         </ButtonGroup>
-        <Checkbox defaultSelected>Autosave</Checkbox>
+        {/* <Checkbox defaultSelected>Autosave</Checkbox> */}
     </React.Fragment>
 }
 
