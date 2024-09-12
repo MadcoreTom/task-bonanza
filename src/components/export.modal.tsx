@@ -8,21 +8,13 @@ import { ColumnDef } from "../model/view.model";
 import { formatCsv } from "../csv";
 
 
-export function ExportModal(props: { open: boolean, onChange: (open: boolean) => any }) {
+export function ExportModal() {
     const records = useSelector((state: RootState) => state.main.records);
     const columns = useSelector((state: RootState) => state.main.columns);
     const [filename, setFilename] = React.useState("untitled.csv");
 
-    return <Modal
-        isOpen={props.open}
-        placement="top-center"
-        onOpenChange={props.onChange}
-    >
-        <ModalContent>
-            {(onClose) => (
-                <>
-                    <ModalHeader className="flex flex-col gap-1">Export CSV</ModalHeader>
-                    <ModalBody>
+    return   <React.Fragment>
+ 
                         <p>
                             Exports your data as a CSV file (comma-separated values).
                         </p>
@@ -32,19 +24,15 @@ export function ExportModal(props: { open: boolean, onChange: (open: boolean) =>
                         <div>
                             <Input labelPlacement="outside"  value={filename} onChange={e=>setFilename(e.target.value)}/>
                         </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" variant="light" onPress={onClose}>
+                
+                        <Button color="primary" variant="light"/* onPress={onClose}*/ >
                             Cancel
                         </Button>
-                        <Button color="primary"  onPress={() => { exportRecords(records, columns, filename); onClose() }} >
+                        <Button color="primary"  onPress={() => { exportRecords(records, columns, filename); }} >
                             Export
                         </Button>
-                    </ModalFooter>
-                </>
-            )}
-        </ModalContent>
-    </Modal >
+     
+    </React.Fragment >
 }
 
 

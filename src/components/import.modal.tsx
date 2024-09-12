@@ -6,20 +6,11 @@ import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, Mo
 import { parseCsv } from "../csv";
 
 
-export function ImportModal(props: { open: boolean, onChange: (open: boolean) => any }) {
+export function ImportDialog() {
     const dispatch = useDispatch();
     const stagedData = useSelector((state: RootState) => state.main.stagedData);
 
-    return <Modal
-        isOpen={props.open}
-        placement="top-center"
-        onOpenChange={props.onChange}
-    >
-        <ModalContent>
-            {(onClose) => (
-                <>
-                    <ModalHeader className="flex flex-col gap-1">Import CSV</ModalHeader>
-                    <ModalBody>
+    return <React.Fragment>
                         <p>
                             Load a CSV file (comma-separated values). The file must have a header.
                         </p>
@@ -32,19 +23,11 @@ export function ImportModal(props: { open: boolean, onChange: (open: boolean) =>
                         {stagedData != null ? <p>
                             {stagedData.length} rows and {stagedData[0].length} columns.
                         </p> : null}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" variant="light" onPress={onClose}>
-                            Cancel
-                        </Button>
-                        <Button color="primary" isDisabled={stagedData == null} onPress={() => { dispatch(importStagedData()); onClose() }} >
+               
+                        <Button color="primary" isDisabled={stagedData == null} onPress={() => { dispatch(importStagedData()); }} >
                             Import
                         </Button>
-                    </ModalFooter>
-                </>
-            )}
-        </ModalContent>
-    </Modal >
+                        </React.Fragment>
 }
 
 

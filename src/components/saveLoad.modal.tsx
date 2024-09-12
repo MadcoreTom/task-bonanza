@@ -5,6 +5,8 @@ import { addColumn, addRow, commitRecords, importStagedData, load, RootState, sa
 import { Button, ButtonGroup, Divider, Input, Listbox, ListboxItem, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip } from "@nextui-org/react";
 
 import { ICONS } from "./icons";
+import { ImportDialog } from "./import.modal";
+import { ExportModal } from "./export.modal";
 
 export function SaveLoadModal() {
     const dispatch = useDispatch();
@@ -33,14 +35,12 @@ export function SaveLoadModal() {
                             }
                         </div>
                     </ModalBody>
-                    <ModalFooter>
                         <Button color="primary" variant="light" onPress={onClose}>
                             Cancel
                         </Button>
                         <Button color="primary" onPress={mainSaveFunction}>
                             {mainButtonText}
                         </Button>
-                    </ModalFooter>
                 </>
             )}
         </ModalContent>
@@ -57,7 +57,7 @@ function SaveDialog() {
             content = <BrowserList mode="save" />;
             break;
         case "file":
-            content = <SaveExportDialog />;
+            content = <ExportModal />;
             break;
         default:
             content = null;
@@ -107,16 +107,6 @@ function BrowserList({ mode }: { mode: "save" | "load" }) {
     </React.Fragment>
 }
 
-function SaveExportDialog() {
-    const filename = useSelector((state: RootState) => state.main.filename);
-
-
-    return <React.Fragment>
-
-        <Input labelPlacement="outside" value={filename}/* onChange={e => setFilename(e.target.value)}*/ />
-
-    </React.Fragment>
-}
 
 function LoadDialog() {
     const location = useSelector((state: RootState) => state.main.dialogue?.load?.location);
@@ -128,7 +118,7 @@ function LoadDialog() {
             content = <BrowserList mode="load" />;
             break;
         case "file":
-            content = <div>TODO</div>;
+            content = <ImportDialog/>;
             break;
         default:
             content = null;
